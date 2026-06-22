@@ -658,6 +658,7 @@ stubs until the tests pass. Located in `challenges/`.
 | Capstone | Focus | Tests | Status |
 |----------|-------|-------|--------|
 | DQN trading agent | Reinforcement Learning x Finance | 7 | Done |
+| GNN fraud-ring detector | Graph Neural Networks x Cyber/Finance | 6 | Done |
 
-Total: **16 challenges (101 tests) + 1 capstone (7 tests)**, all reference-verified. Build progress
+Total: **16 challenges (101 tests) + 2 capstones (13 tests)**, all reference-verified. Build progress
 is also tracked in `challenges/README.md`.
