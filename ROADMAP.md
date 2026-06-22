@@ -146,6 +146,16 @@ explainable and auditable.
 
 ---
 
+## Detailed per-topic study guides
+
+The phases below are the **overview**. For each phase there's a companion guide in
+[`phases/`](phases/README.md) that breaks the phase into **specific topics**, maps **each topic to
+the exact video/chapter/article** that covers it (so a course's own flow can't derail you), and adds
+**✅ checkpoint exercises** to verify understanding before moving on. Built so far: Phase 0, 1, 2
+(more being added). Use the overview here to see the arc; use the phase guides to actually study.
+
+---
+
 ## Phase 0 — Python for a Java dev + DSA bridge  (≈2–3 weeks)
 
 **Goal:** Become fluent in Python idioms (you know the CS, you need the language): dynamic typing,
