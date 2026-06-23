@@ -62,7 +62,7 @@ jupyter notebook        # or use VS Code's notebook support
 | 4 | [Deep Learning foundations](phase-4-deep-learning.md) | ✅ |
 | 5 | [NLP + Transformers](phase-5-nlp-transformers.md) | ✅ |
 | 6 | [LLMs, RAG & Agents](phase-6-llms-rag-agents.md) | ✅ |
-| 6B | LLM in-depth | ⏳ to be added |
-| 7 | MLOps & Productionization | ⏳ to be added |
-| 8 | Agentic systems + Interview readiness | ⏳ to be added |
+| 6B | [LLM in-depth](phase-6b-llm-indepth.md) | ✅ |
+| 7 | [MLOps & Productionization](phase-7-mlops.md) | ✅ |
+| 8 | [Agentic systems + Interview readiness](phase-8-agentic-interview.md) | ✅ |
 | — | [**Research skills: reading, verifying & writing papers**](research-skills.md) | ✅ |
