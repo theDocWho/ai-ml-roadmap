@@ -60,8 +60,8 @@ jupyter notebook        # or use VS Code's notebook support
 | 2 | [Math foundations (visual-first)](phase-2-math.md) | ✅ |
 | 3 | [Classic Machine Learning](phase-3-classic-ml.md) | ✅ |
 | 4 | [Deep Learning foundations](phase-4-deep-learning.md) | ✅ |
-| 5 | NLP + Transformers | ⏳ to be added |
-| 6 | LLMs, RAG & Agents | ⏳ to be added |
+| 5 | [NLP + Transformers](phase-5-nlp-transformers.md) | ✅ |
+| 6 | [LLMs, RAG & Agents](phase-6-llms-rag-agents.md) | ✅ |
 | 6B | LLM in-depth | ⏳ to be added |
 | 7 | MLOps & Productionization | ⏳ to be added |
 | 8 | Agentic systems + Interview readiness | ⏳ to be added |
