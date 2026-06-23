@@ -1,104 +1,106 @@
 # Phase 1 — Scientific Python Stack + Plotting (≈3–4 weeks)
 
-**Goal:** fluency in **NumPy**, **Pandas**, and **Matplotlib/Seaborn** — the tools every later phase
-sits on. You explicitly wanted charts/graphs and package usage; this is where you get it.
+**Goal:** fluency in **NumPy**, **Pandas**, **Matplotlib/Seaborn** — the tools every later phase sits on.
 
-**Primary free resources:**
-- Corey Schafer — *Pandas* playlist — https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS
-- Corey Schafer — *Matplotlib* playlist — https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_
-- *Python Data Science Handbook* (free) — https://jakevdp.github.io/PythonDataScienceHandbook/
-- Kaggle Learn (hands-on, free) — https://www.kaggle.com/learn
+**Environment:** mostly **🖥️ Local** in Jupyter; switch to **📊 Kaggle** for the EDA capstone (datasets
+are one click away). Each checkpoint is tagged.
+
+**🔄 Freshness:** libraries move — use **current NumPy 2.x / pandas 2.x / Matplotlib** (links point to
+"stable" docs). Core APIs are steady, but if a method is deprecated, the current docs will tell you.
+
+**Primary resources** (open the linked playlist/site, then the **bold** item):
+- [Corey Schafer — *Pandas* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) · [Corey Schafer — *Matplotlib* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_)
+- [*Python Data Science Handbook* (free, online)](https://jakevdp.github.io/PythonDataScienceHandbook/) · [NumPy docs (stable)](https://numpy.org/doc/stable/) · [pandas docs (stable)](https://pandas.pydata.org/docs/)
+- [Kaggle Learn](https://www.kaggle.com/learn) (hands-on, free certs) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (good "NumPy/Pandas from scratch" explainers)
 
 ---
 
 ## Module 1A — NumPy
 
-| # | Topic | Watch / read exactly this | ~Time |
-|---|-------|---------------------------|-------|
-| 1 | Why arrays beat lists; creating arrays, dtypes | PDS Handbook **Ch.2 "Understanding Data Types in NumPy"** + "The Basics of NumPy Arrays" | 40m |
-| 2 | Indexing, slicing, boolean masks, fancy indexing | PDS Handbook **Ch.2 "Comparisons, Masks, and Boolean Logic"** + "Fancy Indexing" | 40m |
-| 3 | Vectorized math (ufuncs) — no Python loops | PDS Handbook **Ch.2 "Computation on Arrays: Universal Functions"** | 25m |
-| 4 | **Aggregations & `axis`** (your exam Q4) | PDS Handbook **Ch.2 "Aggregations: Min, Max, and Everything in Between"** | 25m |
-| 5 | **Broadcasting** (critical for ML) | PDS Handbook **Ch.2 "Computation on Arrays: Broadcasting"** | 30m |
-| 6 | Linear algebra ops: `@`, `dot`, `reshape`, `linalg` | Kaggle Learn isn't enough here — read NumPy docs "Linear algebra (numpy.linalg)" quickstart | 30m |
+| # | Topic | Open exactly this | ~Time |
+|---|-------|-------------------|-------|
+| 1 | Arrays, dtypes, creation | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **Ch.2 "Understanding Data Types in NumPy"** + **"The Basics of NumPy Arrays"** | 40m |
+| 2 | Indexing, slicing, boolean & fancy indexing | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Comparisons, Masks, and Boolean Logic"** + **"Fancy Indexing"** | 40m |
+| 3 | Vectorized math (ufuncs) — no loops | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Computation on Arrays: Universal Functions"** | 25m |
+| 4 | **Aggregations & `axis`** (exam Q4) | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Aggregations: Min, Max, and Everything in Between"** | 25m |
+| 5 | **Broadcasting** (critical for ML) | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Computation on Arrays: Broadcasting"** | 30m |
+| 6 | Linear algebra ops: `@`, `dot`, `reshape`, `linalg` | [NumPy docs (stable)](https://numpy.org/doc/stable/reference/routines.linalg.html) — **"Linear algebra (numpy.linalg)"** | 30m |
 
-**✅ Checkpoint 1A** (in a notebook, no Python loops allowed) — one item per topic:
-- **(T1)** Create a `(3,4)` array of zeros, one with `arange`, and one of random floats; print their `.shape` and `.dtype`.
-- **(T2)** From `arange(10)`, select the even values with a **boolean mask**, and elements `[1,3,5]` with **fancy indexing**.
-- **(T3)** Apply a **ufunc**: compute `np.exp` and `np.sqrt` of an array without a loop; time it vs a list comprehension.
-- **(T4)** Recreate exam Q4: `np.sum([[1,2],[3,4]], axis=1)` and `axis=0`; explain each result in words.
-- **(T5)** Build a 5×5 multiplication table with **broadcasting** (`arange(1,6)` column × row).
-- **(T6)** Use `@`/`np.dot` to multiply a `(2,3)` by a `(3,2)`; get its `np.linalg.inv` if square, and `np.linalg.norm` of a vector.
-- *(integrative)* Standardize a random `(100,3)` matrix to zero-mean/unit-variance **per column** using `axis`.
+**✅ Checkpoint 1A** — 🖥️ Local (notebook), no Python loops — one per topic:
+- **(T1)** Create a `(3,4)` zeros array, an `arange` array, and a random-float array; print `.shape`/`.dtype`.
+- **(T2)** From `arange(10)` select evens with a **boolean mask** and `[1,3,5]` with **fancy indexing**.
+- **(T3)** Apply `np.exp`/`np.sqrt` to an array (a **ufunc**); time it vs a list comprehension.
+- **(T4)** Recreate exam Q4: `np.sum([[1,2],[3,4]], axis=1)` and `axis=0`; explain each.
+- **(T5)** Build a 5×5 multiplication table by **broadcasting** a column × a row.
+- **(T6)** Multiply `(2,3)@(3,2)`; take `np.linalg.inv` of a square matrix and `np.linalg.norm` of a vector.
+- *(integrative)* Standardize a `(100,3)` matrix to zero-mean/unit-var **per column** using `axis`.
 
 ---
 
 ## Module 1B — Pandas
 
-| # | Topic | Watch / read exactly this | ~Time |
-|---|-------|---------------------------|-------|
-| 7 | **Series & DataFrame** (your exam Q2), loading CSVs | Corey Schafer — Pandas **Part 1 (Getting Started)** + **Part 2 (DataFrame & Series Basics)** | 60m |
-| 8 | Selecting rows/cols: `loc` vs `iloc`, indexes | Corey Schafer — Pandas **Part 2** + **Part 3 (Indexes)** | 45m |
-| 9 | Filtering with conditionals | Corey Schafer — Pandas **Part 4 (Filtering)** | 25m |
-| 10 | Adding/updating/removing columns | Corey Schafer — Pandas **Part 5 & 6** | 40m |
-| 11 | **GroupBy + aggregation** (the analysis workhorse) | Corey Schafer — Pandas **Part 8 (Grouping and Aggregating)** | 35m |
-| 12 | Cleaning: dtypes & **missing values** | Corey Schafer — Pandas **Part 9 (Cleaning Data)** | 30m |
-| 13 | Merge / join / concat | Kaggle Learn — **Pandas** course, "Combining" + PDS Handbook Ch.3 "Combining Datasets: Merge and Join" | 40m |
-| 14 | Dates & time series (you'll need for finance) | Corey Schafer — Pandas **Part 10 (Dates and Time Series)** | 30m |
+| # | Topic | Open exactly this | ~Time |
+|---|-------|-------------------|-------|
+| 7 | **Series & DataFrame** (exam Q2), loading CSVs | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 1** + **Part 2** | 60m |
+| 8 | `loc` vs `iloc`, indexes | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 2** + **Part 3 (Indexes)** | 45m |
+| 9 | Filtering with conditionals | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 4 (Filtering)** | 25m |
+| 10 | Add/update/remove columns | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 5 & 6** | 40m |
+| 11 | **GroupBy + aggregation** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 8 (Grouping & Aggregating)** | 35m |
+| 12 | Cleaning: dtypes & **missing values** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 9 (Cleaning Data)** | 30m |
+| 13 | Merge / join / concat | [Kaggle Learn — Pandas](https://www.kaggle.com/learn/pandas) — **"Combining"** lesson | 40m |
+| 14 | Dates & time series (for finance) | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 10 (Dates & Time Series)** | 30m |
 
-**✅ Checkpoint 1B** — one item per topic (also finishes the free **Kaggle "Pandas"** course):
-- **(T7)** Load a real CSV; show `.head()`, `.info()`, `.describe()`; explain Series vs DataFrame (exam Q2).
-- **(T8)** Select one column (Series) and two columns (DataFrame); grab rows by label with `loc` and by position with `iloc`; set a column as the index.
-- **(T9)** Filter rows where col A > x **and** col B == "y" (combine masks with `&` and parentheses).
-- **(T10)** Add a derived column, update values matching a condition, and drop a column.
-- **(T11)** `groupby` a categorical column and compute `mean`/`count`/`sum` (`.agg`) of a numeric column.
-- **(T12)** Find missing values with `.isna().sum()`; handle them with `fillna` and `dropna`; fix a wrong dtype with `astype`.
-- **(T13)** `merge` two DataFrames on a key (inner vs left join) and `concat` two together.
-- **(T14)** Parse a date column with `pd.to_datetime`, set it as index, and resample/aggregate by month.
+**✅ Checkpoint 1B** — 🖥️ Local or 📊 Kaggle — finishes the free [Kaggle Pandas](https://www.kaggle.com/learn/pandas) cert — one per topic:
+- **(T7)** Load a CSV; show `.head()`, `.info()`, `.describe()`; explain Series vs DataFrame (exam Q2).
+- **(T8)** Select 1 column (Series) & 2 columns (DataFrame); grab rows with `loc` (label) and `iloc` (position); set an index.
+- **(T9)** Filter where A > x **and** B == "y" (masks + `&` + parentheses).
+- **(T10)** Add a derived column, update values on a condition, drop a column.
+- **(T11)** `groupby` a category and `.agg` mean/count/sum of a numeric column.
+- **(T12)** Find missing with `.isna().sum()`; fix with `fillna`/`dropna`; correct a dtype with `astype`.
+- **(T13)** `merge` two DataFrames (inner vs left) and `concat` two together.
+- **(T14)** Parse dates with `pd.to_datetime`, set as index, resample by month.
 
 ---
 
 ## Module 1C — Visualization (Matplotlib + Seaborn)
 
-| # | Topic | Watch / read exactly this | ~Time |
-|---|-------|---------------------------|-------|
-| 15 | Matplotlib anatomy: figure/axes, line plots | Corey Schafer — Matplotlib **Part 1 (Creating & Customizing Plots)** | 35m |
-| 16 | Bar charts from real CSV data | Corey Schafer — Matplotlib **Part 2 (Bar Charts)** | 25m |
-| 17 | Histograms (distributions) | Corey Schafer — Matplotlib **Part 6 (Histograms)** | 20m |
-| 18 | Scatter plots (relationships) | Corey Schafer — Matplotlib **Part 7 (Scatter Plots)** | 20m |
-| 19 | Subplots (multi-panel figures) | Corey Schafer — Matplotlib **Part 10 (Subplots)** | 25m |
-| 20 | Seaborn: distributions, `heatmap` (correlations), `pairplot` | Kaggle Learn — **Data Visualization** course (full, free) | 2h |
+| # | Topic | Open exactly this | ~Time |
+|---|-------|-------------------|-------|
+| 15 | Matplotlib anatomy: figure/axes, line plots | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 1 (Creating & Customizing Plots)** | 35m |
+| 16 | Bar charts from CSV data | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 2 (Bar Charts)** | 25m |
+| 17 | Histograms (distributions) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 6 (Histograms)** | 20m |
+| 18 | Scatter plots (relationships) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 7 (Scatter Plots)** | 20m |
+| 19 | Subplots (multi-panel) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 10 (Subplots)** | 25m |
+| 20 | Seaborn: distributions, `heatmap`, `pairplot` | [Kaggle Learn — Data Visualization](https://www.kaggle.com/learn/data-visualization) (full, free) | 2h |
 
-**✅ Checkpoint 1C** — one item per topic:
-- **(T15)** Plot two lines on one axes with title, axis labels, and a legend; save it to a PNG.
-- **(T16)** Make a **bar chart** of a categorical count from a DataFrame.
-- **(T17)** Make a **histogram** of a numeric column and describe its shape (skew, spread).
-- **(T18)** Make a **scatter** of two columns and say whether they look correlated.
-- **(T19)** Put a line, a bar, and a histogram in one figure using **subplots** (`plt.subplots(1,3)`).
-- **(T20)** With Seaborn, make a `histplot`, a correlation `heatmap`, and a `pairplot`; read off the strongest correlated pair.
+**✅ Checkpoint 1C** — 🖥️ Local — one per topic:
+- **(T15)** Plot two lines on one axes with title/labels/legend; save to PNG.
+- **(T16)** Bar chart of a categorical count from a DataFrame.
+- **(T17)** Histogram of a numeric column; describe its shape (skew/spread).
+- **(T18)** Scatter of two columns; say whether they look correlated.
+- **(T19)** Put line + bar + histogram in one figure via `plt.subplots(1,3)`.
+- **(T20)** Seaborn `histplot`, correlation `heatmap`, and `pairplot`; read off the strongest correlated pair.
 
 ---
 
 ## Module 1D — Your workbench (free compute)
 
-| # | Topic | Watch / read exactly this | ~Time |
-|---|-------|---------------------------|-------|
-| 21 | Jupyter notebooks (cells, markdown) | Corey Schafer — "Jupyter Notebook Tutorial: Introduction, Setup, and Walkthrough" | 30m |
-| 22 | Google Colab (free GPU later) | colab.research.google.com — "Welcome" notebook (skim) | 15m |
-| 23 | Kaggle Notebooks + datasets | kaggle.com/learn — **Intro to Programming / Python** if rusty; else just open a dataset | 15m |
+| # | Topic | Open exactly this | ~Time |
+|---|-------|-------------------|-------|
+| 21 | Jupyter notebooks (cells, markdown) | [Corey Schafer — "Jupyter Notebook Tutorial: Introduction, Setup, and Walkthrough"](https://www.youtube.com/@coreyms/search?query=jupyter%20notebook) | 30m |
+| 22 | Google Colab (free GPU later) | [colab.research.google.com](https://colab.research.google.com) — open "Welcome" notebook; *Runtime ▸ change to GPU* | 15m |
+| 23 | Kaggle Notebooks + datasets | [kaggle.com/code](https://www.kaggle.com/code) — New Notebook ▸ Add Data | 15m |
 
-**✅ Checkpoint 1D** — one item per topic:
-- **(T21)** In a Jupyter notebook, run a code cell and a markdown cell; use `Shift+Enter`; restart the kernel and re-run all.
-- **(T22)** Open the same notebook in **Google Colab**, switch the runtime to **GPU**, and confirm with `!nvidia-smi`.
-- **(T23)** Open a **Kaggle dataset** in a Kaggle Notebook and load its CSV into a DataFrame.
+**✅ Checkpoint 1D** — one per topic:
+- **(T21)** 🖥️ In Jupyter: run a code cell and a markdown cell; `Shift+Enter`; restart kernel & run-all.
+- **(T22)** ☁️ Open the same notebook in **Colab**, switch runtime to **GPU**, confirm with `!nvidia-smi`.
+- **(T23)** 📊 Open a **Kaggle** dataset in a Notebook and load its CSV into a DataFrame.
 
 ---
 
-## 🏁 Phase 1 capstone exercise — Real-world EDA notebook
-The resume piece from the roadmap:
-- Pick a messy public dataset (Kaggle, or scrape one). Load → clean (dtypes, missing) → engineer a
-  couple of columns → **8–10 well-labeled visualizations** → write a short markdown narrative of what
-  you found. Push the `.ipynb` to your GitHub repo.
+## 🏁 Phase 1 capstone — Real-world EDA notebook  (📊 Kaggle or 🖥️ Local)
+Pick a messy public dataset → clean (dtypes, missing) → engineer a couple of columns → **8–10 labeled
+visualizations** → a short markdown narrative. Push the `.ipynb` to your GitHub repo.
 
-**You're ready for Phase 2 when** you can take a raw CSV to a clean, well-visualized analysis
-end-to-end, and you understand NumPy `axis` + broadcasting cold (you'll use them in every model).
+**Ready for Phase 2 when** you can take a raw CSV to a clean, well-visualized analysis end-to-end, and
+you know NumPy `axis` + broadcasting cold (every model uses them).
