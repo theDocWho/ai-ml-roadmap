@@ -87,6 +87,11 @@ sits on. You explicitly wanted charts/graphs and package usage; this is where yo
 | 22 | Google Colab (free GPU later) | colab.research.google.com — "Welcome" notebook (skim) | 15m |
 | 23 | Kaggle Notebooks + datasets | kaggle.com/learn — **Intro to Programming / Python** if rusty; else just open a dataset | 15m |
 
+**✅ Checkpoint 1D** — one item per topic:
+- **(T21)** In a Jupyter notebook, run a code cell and a markdown cell; use `Shift+Enter`; restart the kernel and re-run all.
+- **(T22)** Open the same notebook in **Google Colab**, switch the runtime to **GPU**, and confirm with `!nvidia-smi`.
+- **(T23)** Open a **Kaggle dataset** in a Kaggle Notebook and load its CSV into a DataFrame.
+
 ---
 
 ## 🏁 Phase 1 capstone exercise — Real-world EDA notebook
