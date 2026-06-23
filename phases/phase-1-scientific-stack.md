@@ -22,10 +22,14 @@ sits on. You explicitly wanted charts/graphs and package usage; this is where yo
 | 5 | **Broadcasting** (critical for ML) | PDS Handbook **Ch.2 "Computation on Arrays: Broadcasting"** | 30m |
 | 6 | Linear algebra ops: `@`, `dot`, `reshape`, `linalg` | Kaggle Learn isn't enough here — read NumPy docs "Linear algebra (numpy.linalg)" quickstart | 30m |
 
-**✅ Checkpoint 1A** (in a notebook, no loops allowed):
-- Recreate your exam Q4: `np.sum([[1,2],[3,4]], axis=1)` and `axis=0`; explain each result.
-- Build a 5×5 multiplication table with broadcasting (`np.arange(1,6)` row × column).
-- Standardize a random `(100, 3)` matrix to zero-mean/unit-variance **per column** using `axis`.
+**✅ Checkpoint 1A** (in a notebook, no Python loops allowed) — one item per topic:
+- **(T1)** Create a `(3,4)` array of zeros, one with `arange`, and one of random floats; print their `.shape` and `.dtype`.
+- **(T2)** From `arange(10)`, select the even values with a **boolean mask**, and elements `[1,3,5]` with **fancy indexing**.
+- **(T3)** Apply a **ufunc**: compute `np.exp` and `np.sqrt` of an array without a loop; time it vs a list comprehension.
+- **(T4)** Recreate exam Q4: `np.sum([[1,2],[3,4]], axis=1)` and `axis=0`; explain each result in words.
+- **(T5)** Build a 5×5 multiplication table with **broadcasting** (`arange(1,6)` column × row).
+- **(T6)** Use `@`/`np.dot` to multiply a `(2,3)` by a `(3,2)`; get its `np.linalg.inv` if square, and `np.linalg.norm` of a vector.
+- *(integrative)* Standardize a random `(100,3)` matrix to zero-mean/unit-variance **per column** using `axis`.
 
 ---
 
@@ -42,11 +46,15 @@ sits on. You explicitly wanted charts/graphs and package usage; this is where yo
 | 13 | Merge / join / concat | Kaggle Learn — **Pandas** course, "Combining" + PDS Handbook Ch.3 "Combining Datasets: Merge and Join" | 40m |
 | 14 | Dates & time series (you'll need for finance) | Corey Schafer — Pandas **Part 10 (Dates and Time Series)** | 30m |
 
-**✅ Checkpoint 1B** — also finishes the **Kaggle "Pandas"** course (free certificate):
-- Load a real CSV; show `.head()`, `.info()`, `.describe()`.
-- `groupby` one categorical column and compute mean of a numeric column.
-- Filter rows on two conditions combined with `&`; handle missing values with `fillna`/`dropna`.
-- State the difference between `loc` and `iloc` in one sentence.
+**✅ Checkpoint 1B** — one item per topic (also finishes the free **Kaggle "Pandas"** course):
+- **(T7)** Load a real CSV; show `.head()`, `.info()`, `.describe()`; explain Series vs DataFrame (exam Q2).
+- **(T8)** Select one column (Series) and two columns (DataFrame); grab rows by label with `loc` and by position with `iloc`; set a column as the index.
+- **(T9)** Filter rows where col A > x **and** col B == "y" (combine masks with `&` and parentheses).
+- **(T10)** Add a derived column, update values matching a condition, and drop a column.
+- **(T11)** `groupby` a categorical column and compute `mean`/`count`/`sum` (`.agg`) of a numeric column.
+- **(T12)** Find missing values with `.isna().sum()`; handle them with `fillna` and `dropna`; fix a wrong dtype with `astype`.
+- **(T13)** `merge` two DataFrames on a key (inner vs left join) and `concat` two together.
+- **(T14)** Parse a date column with `pd.to_datetime`, set it as index, and resample/aggregate by month.
 
 ---
 
@@ -61,10 +69,13 @@ sits on. You explicitly wanted charts/graphs and package usage; this is where yo
 | 19 | Subplots (multi-panel figures) | Corey Schafer — Matplotlib **Part 10 (Subplots)** | 25m |
 | 20 | Seaborn: distributions, `heatmap` (correlations), `pairplot` | Kaggle Learn — **Data Visualization** course (full, free) | 2h |
 
-**✅ Checkpoint 1C:**
-- Plot a line chart with title, axis labels, and a legend.
-- From a DataFrame, make a histogram of one column and a scatter of two columns.
-- Make a Seaborn correlation `heatmap` of a numeric DataFrame and read off the strongest pair.
+**✅ Checkpoint 1C** — one item per topic:
+- **(T15)** Plot two lines on one axes with title, axis labels, and a legend; save it to a PNG.
+- **(T16)** Make a **bar chart** of a categorical count from a DataFrame.
+- **(T17)** Make a **histogram** of a numeric column and describe its shape (skew, spread).
+- **(T18)** Make a **scatter** of two columns and say whether they look correlated.
+- **(T19)** Put a line, a bar, and a histogram in one figure using **subplots** (`plt.subplots(1,3)`).
+- **(T20)** With Seaborn, make a `histplot`, a correlation `heatmap`, and a `pairplot`; read off the strongest correlated pair.
 
 ---
 

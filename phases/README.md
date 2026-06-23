@@ -13,8 +13,14 @@ understood it before continuing.
 2. Watch/read only what the row points to (don't binge the whole course).
 3. At each **✅ Checkpoint**, do the exercises *without looking things up*. If you can't, re-watch
    that cluster's resources.
-4. Many checkpoints are the **Build-Your-Own challenges** in [`../challenges`](../challenges) and
-   your **50-question exam** — that's the synergy: the exercises are real, not toy.
+4. Some checkpoints reuse the **Build-Your-Own challenges** in [`../challenges`](../challenges) and
+   your **50-question exam** — but those are a bonus, not the limit.
+
+## Coverage principle (important)
+**Every topic in a module has at least one checkpoint exercise.** The 50 exam questions cover only a
+*subset* of the field, so the exercises deliberately go beyond them to verify understanding of **all**
+topics — including the ones tagged *(beyond the exam)*. If a topic is taught, there is a question that
+tests it. Checkpoint items are numbered to the topic they verify (e.g. "(T8)" = topic 8 in that module).
 
 ## Guides
 | Phase | Guide | Status |

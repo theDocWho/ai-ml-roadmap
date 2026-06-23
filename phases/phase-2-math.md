@@ -28,11 +28,17 @@ optimization. Visual-first (3Blue1Brown, StatQuest) the way you like it. This di
 | 9 | SVD (used in PCA, dimensionality reduction) | Steve Brunton — "Singular Value Decomposition (SVD): Overview" (YouTube) | 15m |
 | 10 | Do it in NumPy | Practice: `np.linalg.eig`, `np.linalg.svd`, `@`, `np.dot` | 30m |
 
-**✅ Checkpoint 2A:**
-- **By hand**, find the eigenvalues of `[[1,8],[2,1]]` (exam Q10); verify with `np.linalg.eig`.
-- Given the custom inner product `⟨x,y⟩ = 3x₁y₁ + 2x₂y₂`, check which pair is orthogonal (exam Q1).
-- Explain geometrically: what is an eigenvector, and why is PCA an eigenproblem?
-- 🔨 Start **[BYO-4 (K-Means + PCA)](../challenges/byo-04-kmeans-pca/README.md)** — implement PCA via eigendecomposition.
+**✅ Checkpoint 2A** — one item per topic:
+- **(T1)** Write `(5,3)` as a linear combination of `(1,0)` and `(0,1)`; in one sentence, what is the *span* of two non-parallel 2-D vectors?
+- **(T2)** Apply the matrix `[[2,0],[0,3]]` to vector `(1,1)` by hand; what transformation is it (geometrically)?
+- **(T3)** Multiply `[[1,1],[0,1]] @ [[2,0],[0,2]]` by hand; explain it as *composing* two transformations.
+- **(T4)** Compute `det([[2,1],[1,3]])`; what does its value say about area scaling, and what would `det = 0` mean?
+- **(T5)** Invert `[[2,1],[1,1]]`; state what the **rank** and **null space** tell you about whether `Ax=b` is solvable.
+- **(T6)** With the custom inner product `⟨x,y⟩ = 3x₁y₁ + 2x₂y₂`, find the orthogonal pair (exam Q1); separately, are `(1,2)` and `(2,−1)` orthogonal under the *standard* dot product?
+- **(T7)** Express the vector `(3,1)` in the basis `{(1,1),(1,−1)}` (solve for the coordinates).
+- **(T8)** **By hand**, find the eigenvalues of `[[1,8],[2,1]]` (exam Q10); verify with `np.linalg.eig`; explain what an eigenvector *means* geometrically.
+- **(T9)** Run `np.linalg.svd` on a `(4,3)` matrix; what do the singular values represent, and how does SVD relate to PCA?
+- **(T10)** 🔨 Start **[BYO-4 (K-Means + PCA)](../challenges/byo-04-kmeans-pca/README.md)** — implement PCA via covariance eigendecomposition.
 
 ---
 
@@ -49,10 +55,15 @@ optimization. Visual-first (3Blue1Brown, StatQuest) the way you like it. This di
 | 17 | **Partial derivatives & the gradient** (multivariable) | Khan Academy — "Multivariable calculus → Derivatives of multivariable functions → Gradient and directional derivatives" | 60m |
 | 18 | Taylor series (used in optimization theory) | 3B1B **Ch.11 "Taylor series"** | 22m |
 
-**✅ Checkpoint 2B:**
-- Find the critical points of `f(x)=2x³−3x²−12x+5` and classify them (exam Q15 + Q6). Verify by plotting.
-- State the first- and second-derivative tests for a local maximum in your own words.
-- Compute the gradient of `f(x,y)=3x² + 2y²` by hand; what direction does it point?
+**✅ Checkpoint 2B** — one item per topic:
+- **(T11)** In one sentence, define the derivative as a limit; what does `f'(x)` measure at a point?
+- **(T12)** Differentiate `f(x)=3x² + 5x` using the power rule; check the slope at `x=1` numerically.
+- **(T13)** Use the **chain rule** to differentiate `f(x)=(2x+1)³`; explain why the chain rule is the heart of backprop.
+- **(T14)** What is `d/dx eˣ`? Why does `e` keep showing up in softmax/logistic functions?
+- **(T15)** Compute `f''(x)` for `f(x)=2x³−3x²`; how does the sign of `f''` tell you concave up vs down?
+- **(T16)** Find the critical points of `f(x)=2x³−3x²−12x+5` and classify each as min/max using the second-derivative test (exam Q15 + Q6); verify by plotting.
+- **(T17)** Compute the **gradient** of `f(x,y)=3x² + 2y²` by hand; which direction does it point, and what does that mean for gradient *descent*?
+- **(T18)** Write the first 3 terms of the Taylor series of `eˣ` around 0; why are Taylor approximations useful in optimization?
 
 ---
 
@@ -69,10 +80,15 @@ optimization. Visual-first (3Blue1Brown, StatQuest) the way you like it. This di
 | 25 | *(beyond exam)* Entropy, cross-entropy, KL (loss functions) | StatQuest — "Entropy (for data science) Clearly Explained!!!" + Aurélien Géron — "A Short Introduction to Entropy, Cross-Entropy and KL-Divergence" | 35m |
 | 26 | *(beyond exam)* Hypothesis testing, p-values, A/B testing | StatQuest — "Hypothesis Testing and the Null Hypothesis" + "p-values, clearly explained" | 40m |
 
-**✅ Checkpoint 2C:**
-- State Bayes' theorem and label posterior / likelihood / prior / evidence (exam Q13).
-- Explain why the Bayes classifier's max-discriminant = max-posterior = min-conditional-risk (exam Q12).
-- Compute cross-entropy between `[1,0,0]` and a softmax output `[0.7,0.2,0.1]` by hand.
+**✅ Checkpoint 2C** — one item per topic:
+- **(T19)** Compute the mean, variance, and std of `[2,4,4,4,5,5,7,9]` by hand; sketch what a Normal distribution's μ and σ control.
+- **(T20)** Compute the **expected value** of a die roll; of a bet that pays +10 with p=0.3 and −5 otherwise.
+- **(T21)** In one sentence, distinguish *probability* (fixed model, varying data) from *likelihood* (fixed data, varying model).
+- **(T22)** Explain what **maximum likelihood** estimates; intuitively, why does fitting a model = maximizing likelihood?
+- **(T23)** State **Bayes' theorem** and label posterior / likelihood / prior / evidence (exam Q13); explain why max-discriminant = max-posterior = min-conditional-risk (exam Q12).
+- **(T24)** Compute the **covariance** sign for two up-trending variables; what does a correlation of −0.9 mean?
+- **(T25)** *(beyond exam)* Compute the **entropy** of a fair coin vs a 90/10 coin; compute **cross-entropy** between `[1,0,0]` and softmax `[0.7,0.2,0.1]`; one line on what **KL divergence** measures.
+- **(T26)** *(beyond exam)* In words: what is a **p-value**, what's a null hypothesis, and what does an **A/B test** decide?
 
 ---
 
@@ -85,11 +101,12 @@ optimization. Visual-first (3Blue1Brown, StatQuest) the way you like it. This di
 | 29 | Learning rate intuition; convexity vs local minima | 3B1B Neural Networks **Ch.2 "Gradient descent, how neural networks learn"** (first ~10 min) | 12m |
 | 30 | **Adaptive optimizers: Adagrad / RMSprop / Adam** (exam Q7, Q8) | Read: "An overview of gradient descent optimization algorithms" — https://www.ruder.io/optimizing-gradient-descent/ (sections on Adagrad/RMSprop/Adam) | 40m |
 
-**✅ Checkpoint 2D:**
-- Write the steepest-descent update `w(n+1) = w(n) − η·∇E` and explain each symbol (exam Q35).
-- In one line each, say how Adagrad and RMSprop differ from plain SGD (exam Q7, Q8).
-- 🔨 Do **[BYO-2 (regression engine)](../challenges/byo-02-regression/README.md)** — implement gradient
-  descent and watch the loss fall. This is your math made real.
+**✅ Checkpoint 2D** — one item per topic:
+- **(T27)** Write the steepest-descent update `w(n+1) = w(n) − η·∇E` and explain each symbol (exam Q35); what does `η` (learning rate) control?
+- **(T28)** Explain how **stochastic** GD differs from full-batch GD, and one pro/con of each.
+- **(T29)** Describe what happens if `η` is too large vs too small; why can non-convex losses trap GD in a *local* minimum?
+- **(T30)** In one line each, say how **Adagrad** (exam Q8) and **RMSprop** accumulate gradient history, and how **Adam** combines momentum + RMSprop (exam Q7).
+- *(integrative)* 🔨 Do **[BYO-2 (regression engine)](../challenges/byo-02-regression/README.md)** — implement gradient descent and watch the loss fall. Your math, made real.
 
 ---
 

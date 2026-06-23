@@ -22,10 +22,12 @@ already know; spend your time on the **Pythonic** rows and OOP differences.
 | 4 | **Mutability vs immutability** (exam Q5) | Real Python — "Immutable vs Mutable Data Types in Python" | 25m |
 | 5 | Truthiness & `min/max/bool` behavior (exam Q3) | Real Python — "Python Booleans" + try the exam Q3 snippet in a REPL | 20m |
 
-**✅ Checkpoint 0A** (do in a Python REPL, no notes):
-- Predict then verify: `min(max(False, -3, -4), 2, 7)` (your exam Q3). Explain *why*.
-- Show with `id()` that a `list` is mutable and a `tuple`/`str` is not.
-- Make an f-string that prints `"3 squared is 9"` using a variable.
+**✅ Checkpoint 0A** (do in a Python REPL, no notes) — one item per topic:
+- **(T1)** Create & activate a venv, `pip install numpy`, run a script that prints `numpy.__version__`.
+- **(T2)** Name three concrete ways Python differs from Java (e.g. dynamic typing, indentation blocks, no `;`).
+- **(T3)** Slice `"machine"[2:5]`; then build an f-string that prints `"3 squared is 9"` from a variable.
+- **(T4)** Use `id()` to show a `list` is mutable but a `tuple`/`str` is not; explain why this matters when passing them to a function.
+- **(T5)** Predict then verify `min(max(False, -3, -4), 2, 7)` (exam Q3) and explain the truthiness of `False`/`0`.
 
 ---
 
@@ -40,10 +42,13 @@ already know; spend your time on the **Pythonic** rows and OOP differences.
 | 10 | `*args` / `**kwargs`, default args | Corey Schafer — "Python Tutorial: *args and **kwargs" | 15m |
 | 11 | Generators & `yield` | Corey Schafer — "Python Tutorial: Generators" | 15m |
 
-**✅ Checkpoint 0B:**
-- Rewrite a Java-style `for (int i...)` loop that squares 1..10 as a **list comprehension**.
-- Given `names=['a','b']` and `scores=[90,80]`, build `{'a':90,'b':80}` with `zip` in one line.
-- Write a generator that yields the Fibonacci sequence; take the first 10 with `itertools.islice`.
+**✅ Checkpoint 0B** — one item per topic:
+- **(T6)** Make a `list`, a `tuple`, and a `set` from `[1,1,2,3]`; show the set de-duplicates and explain when you'd use each.
+- **(T7)** Build a `dict` mapping word→length for `["cat","mouse"]`; iterate it with `.items()`.
+- **(T8)** Rewrite a Java-style `for (int i...)` loop that squares 1..10 as a **list comprehension**; then a dict comprehension `{n: n*n}`.
+- **(T9)** Given `names=['a','b']` and `scores=[90,80]`, build `{'a':90,'b':80}` with `zip`; then loop with `enumerate` to print "0: a".
+- **(T10)** Write a function `total(*args, **kwargs)` that sums positional args and returns kwargs unchanged.
+- **(T11)** Write a generator yielding Fibonacci; take the first 10 with `itertools.islice`. Why is a generator memory-cheaper than a list?
 
 ---
 
@@ -60,11 +65,15 @@ already know; spend your time on the **Pythonic** rows and OOP differences.
 | 18 | `dataclasses` (concise model classes) | Real Python — "Data Classes in Python 3.7+ (Guide)" | 25m |
 | 19 | Duck typing & EAFP vs LBYL | Real Python — "Duck Typing in Python" | 15m |
 
-**✅ Checkpoint 0C:**
-- Write a `Transaction` `@dataclass` with `amount`, `category`, `date`; add `__repr__` (or let the
-  dataclass make it) and an `__eq__`.
-- Add a `@property` `is_expense` that returns `amount < 0`.
-- Explain in one sentence: why does Python not need interfaces the way Java does?
+**✅ Checkpoint 0C** — one item per topic:
+- **(T12)** Write a plain `Account` class with `__init__(self, owner, balance)` and a `deposit` method; create two instances.
+- **(T13)** Add a **class variable** `bank_name` shared by all instances; show it's shared via the class, not per-instance.
+- **(T14)** Add a `@classmethod` `from_dict(cls, d)` and a `@staticmethod` `is_valid_amount(x)`; explain when each is appropriate.
+- **(T15)** Subclass `Account` into `SavingsAccount` that adds interest; call the parent `__init__` via `super()`.
+- **(T16)** Add `__repr__` and `__eq__` to a `Transaction`; show `==` compares by value.
+- **(T17)** Add a `@property` `is_expense` returning `amount < 0` (no parentheses to call it).
+- **(T18)** Rewrite `Transaction` as a `@dataclass`; note what boilerplate it removed.
+- **(T19)** Explain in one sentence why Python doesn't need Java-style interfaces (duck typing).
 
 ---
 
@@ -79,11 +88,13 @@ already know; spend your time on the **Pythonic** rows and OOP differences.
 | 24 | `pytest` basics (you'll need it for the challenges) | Real Python — "Effective Python Testing With Pytest" (first half) | 30m |
 | 25 | DSA in Python (map your Java knowledge) | NeetCode roadmap — https://neetcode.io ; do 5 Easy problems in Python | 2–3h |
 
-**✅ Checkpoint 0D:**
-- Read a CSV with the `csv` module using a `with` block; handle a missing-file error gracefully.
-- Write one `pytest` test file with 3 `assert`-style tests and run `pytest -v`.
-- Solve "Two Sum" and "Valid Parentheses" on NeetCode **in Python** (you know the algorithms — focus
-  on dict/list/set idioms).
+**✅ Checkpoint 0D** — one item per topic:
+- **(T20)** Split your `finlytics` code into two modules and `import` one from the other; what does `if __name__ == "__main__":` do?
+- **(T21)** Wrap risky code in `try/except/finally`; raise a custom `class InvalidRowError(Exception)` and catch it.
+- **(T22)** Read a CSV with a `with open(...)` block; explain why the context manager is better than manual `close()`.
+- **(T23)** Use `collections.Counter` to tally categories and `pathlib.Path` to build a file path; iterate two lists with `itertools`/`zip`.
+- **(T24)** Write a `pytest` file with 3 `assert` tests (one expected-failure with `pytest.raises`) and run `pytest -v`.
+- **(T25)** Solve "Two Sum" and "Valid Parentheses" on NeetCode **in Python** — focus on dict/list/set idioms, not the algorithm.
 
 ---
 
