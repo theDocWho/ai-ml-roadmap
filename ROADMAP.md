@@ -151,8 +151,10 @@ explainable and auditable.
 The phases below are the **overview**. For each phase there's a companion guide in
 [`phases/`](phases/README.md) that breaks the phase into **specific topics**, maps **each topic to
 the exact video/chapter/article** that covers it (so a course's own flow can't derail you), and adds
-**✅ checkpoint exercises** to verify understanding before moving on. Built so far: Phase 0, 1, 2
-(more being added). Use the overview here to see the arc; use the phase guides to actually study.
+**✅ checkpoint exercises** to verify understanding before moving on. **All guides are complete:**
+Phases 0–8 (incl. 6B), the optional RL/Diffusion/GNN modules, and a research-skills guide — **279
+topics, each with a checkpoint exercise**. Use the overview here to see the arc; use the phase guides
+([`phases/`](phases/README.md)) to actually study.
 
 ---
 
