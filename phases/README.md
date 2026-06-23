@@ -58,8 +58,8 @@ jupyter notebook        # or use VS Code's notebook support
 | 0 | [Python for a Java dev](phase-0-python.md) | ✅ |
 | 1 | [Scientific Python stack + plotting](phase-1-scientific-stack.md) | ✅ |
 | 2 | [Math foundations (visual-first)](phase-2-math.md) | ✅ |
-| 3 | Classic Machine Learning | ⏳ to be added |
-| 4 | Deep Learning foundations | ⏳ to be added |
+| 3 | [Classic Machine Learning](phase-3-classic-ml.md) | ✅ |
+| 4 | [Deep Learning foundations](phase-4-deep-learning.md) | ✅ |
 | 5 | NLP + Transformers | ⏳ to be added |
 | 6 | LLMs, RAG & Agents | ⏳ to be added |
 | 6B | LLM in-depth | ⏳ to be added |
