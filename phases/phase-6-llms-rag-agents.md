@@ -10,6 +10,10 @@ GPU work and free API tiers. This Claude Code env also exposes the **Claude API*
 docs and current models**; treat any specific model name below as an *example*, not a fixed choice.
 The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change monthly.
 
+> 🎨 **Visualize this phase (interactive, offline):** [RAG pipeline](../illustrated/rag-pipeline.html) ·
+> [ReAct agent loop](../illustrated/react-agent.html) · [Vector search: brute-force vs ANN](../illustrated/vector-search.html) ·
+> [Embeddings & cosine similarity](../illustrated/embeddings.html) — see [all explainers](../illustrated/index.html).
+
 **Primary resources** (open the link, then the **bold** item):
 - [Hugging Face — *LLM Course*](https://huggingface.co/learn/llm-course) · [*Agents Course*](https://huggingface.co/learn/agents-course) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (RAG/agents)
 - [DeepLearning.AI — Short Courses (free)](https://www.deeplearning.ai/short-courses/) · [LangChain Academy (free)](https://academy.langchain.com) · [Activeloop — free RAG course](https://learn.activeloop.ai/courses/rag)

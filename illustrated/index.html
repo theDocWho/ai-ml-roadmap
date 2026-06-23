@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Illustrated AI/ML — Interactive Explainers</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <span class="brand">🎨 Illustrated AI/ML</span>
+  <span class="spacer"></span>
+  <a href="../ROADMAP.md">Roadmap</a>
+  <a href="../phases/README.md">Phase guides</a>
+  <a href="../challenges/README.md">Challenges</a>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Illustrated AI/ML — interactive explainers</h1>
+    <p class="lede">Visual, hands-on intuition for the roadmap's concepts. We <b>build interactive
+    explainers for the gaps</b> and <b>link the world's best existing ones</b> for everything else.</p>
+  </div>
+
+  <div class="legend">
+    <span><b class="ours">🎨 Ours</b> — interactive explainer built for this roadmap</span>
+    <span><b class="curated">🔗 Curated</b> — a world-class existing interactive resource</span>
+    <span>⏳ Coming soon</span>
+  </div>
+
+  <input id="search" class="searchbar" type="text" placeholder="Search concepts (e.g. attention, RAG, k-means, drift)…" autocomplete="off">
+  <div id="catalog"></div>
+
+  <div class="footer">
+    Part of the <a href="../README.md">AI/ML roadmap</a>. Built with vanilla HTML/CSS/JS — no
+    frameworks, no external dependencies, works offline. <a href="README.md">How to view / publish →</a>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+// Catalog data. kind: 'ours' (internal href), 'curated' (external), 'soon'
+const ITEMS = [
+  // ---- Phase 2: Math ----
+  { phase:"Phase 2 · Math", title:"Eigenvalues & eigenvectors", kind:"curated", desc:"Watch a matrix stretch space; eigenvectors are the directions that don't rotate.", href:"https://setosa.io/ev/eigenvectors-and-eigenvalues/" },
+  { phase:"Phase 2 · Math", title:"PCA", kind:"curated", desc:"Interactive principal component analysis on 2-D/3-D data.", href:"https://setosa.io/ev/principal-component-analysis/" },
+  { phase:"Phase 2 · Math", title:"Ordinary least squares", kind:"curated", desc:"Drag points, watch the regression line and residuals update.", href:"https://setosa.io/ev/ordinary-least-squares-regression/" },
+  { phase:"Phase 2 · Math", title:"Conditional probability & Bayes", kind:"curated", desc:"Visual conditional probability; foundation for Bayes.", href:"https://setosa.io/conditional/" },
+  { phase:"Phase 2 · Math", title:"Probability & statistics", kind:"curated", desc:"Seeing Theory — distributions, CLT, Bayesian inference, regression, all animated.", href:"https://seeing-theory.brown.edu/" },
+  { phase:"Phase 2 · Math", title:"Gradient descent + momentum", kind:"curated", desc:"Distill — “Why Momentum Really Works”, fully interactive.", href:"https://distill.pub/2017/momentum/" },
+  { phase:"Phase 2 · Math", title:"Optimizer comparison (SGD/Adagrad/RMSprop/Adam)", kind:"soon", desc:"Race optimizers across a loss surface.", href:"#" },
+
+  // ---- Phase 3: Classic ML ----
+  { phase:"Phase 3 · Classic ML", title:"A visual intro to ML (decision trees)", kind:"curated", desc:"R2D3 — the gold-standard scrollytelling intro to ML & trees.", href:"https://r2d3.us/visual-intro-to-machine-learning-part-1/" },
+  { phase:"Phase 3 · Classic ML", title:"Bias–variance tradeoff", kind:"curated", desc:"MLU-Explain — interactive over/underfitting.", href:"https://mlu-explain.github.io/bias-variance/" },
+  { phase:"Phase 3 · Classic ML", title:"Cross-validation", kind:"curated", desc:"MLU-Explain — k-fold, visually.", href:"https://mlu-explain.github.io/cross-validation/" },
+  { phase:"Phase 3 · Classic ML", title:"ROC & AUC", kind:"curated", desc:"MLU-Explain — move the threshold, watch the ROC curve.", href:"https://mlu-explain.github.io/roc-auc/" },
+  { phase:"Phase 3 · Classic ML", title:"Random forest", kind:"curated", desc:"MLU-Explain — bagging trees, interactively.", href:"https://mlu-explain.github.io/random-forest/" },
+  { phase:"Phase 3 · Classic ML", title:"Linear & logistic regression", kind:"curated", desc:"MLU-Explain — fit lines/boundaries by hand.", href:"https://mlu-explain.github.io/linear-regression/" },
+  { phase:"Phase 3 · Classic ML", title:"k-means clustering (steps)", kind:"soon", desc:"Click through assign → update until convergence.", href:"#" },
+
+  // ---- Phase 4: Deep Learning ----
+  { phase:"Phase 4 · Deep Learning", title:"Neural net playground", kind:"curated", desc:"TensorFlow Playground — build & train a net in the browser.", href:"https://playground.tensorflow.org/" },
+  { phase:"Phase 4 · Deep Learning", title:"CNN Explainer", kind:"curated", desc:"poloclub — watch a real CNN classify, layer by layer.", href:"https://poloclub.github.io/cnn-explainer/" },
+  { phase:"Phase 4 · Deep Learning", title:"Image kernels (convolution)", kind:"curated", desc:"Setosa — slide a kernel over an image.", href:"https://setosa.io/ev/image-kernels/" },
+  { phase:"Phase 4 · Deep Learning", title:"GAN Lab", kind:"curated", desc:"poloclub — train a GAN and watch the distributions.", href:"https://poloclub.github.io/ganlab/" },
+  { phase:"Phase 4 · Deep Learning", title:"Backpropagation (interactive)", kind:"soon", desc:"Forward + backward pass on a tiny net.", href:"#" },
+  { phase:"Phase 4 · Deep Learning", title:"LSTM / GRU gates", kind:"soon", desc:"See the gates open and close over a sequence.", href:"#" },
+
+  // ---- Phase 5: NLP & Transformers ----
+  { phase:"Phase 5 · NLP & Transformers", title:"The Illustrated Transformer", kind:"curated", desc:"Jay Alammar — the canonical illustrated guide.", href:"https://jalammar.github.io/illustrated-transformer/" },
+  { phase:"Phase 5 · NLP & Transformers", title:"Transformer Explainer (live)", kind:"curated", desc:"poloclub — a running GPT-2 you can poke.", href:"https://poloclub.github.io/transformer-explainer/" },
+  { phase:"Phase 5 · NLP & Transformers", title:"The Illustrated Word2vec", kind:"curated", desc:"Jay Alammar — embeddings, illustrated.", href:"https://jalammar.github.io/illustrated-word2vec/" },
+  { phase:"Phase 5 · NLP & Transformers", title:"Self-attention (Q·Kᵀ→softmax→·V)", kind:"soon", desc:"Step through attention on a tiny sentence.", href:"#" },
+
+  // ---- Phase 6: LLMs, RAG & Agents (our focus) ----
+  { phase:"Phase 6 · LLMs, RAG & Agents", title:"RAG pipeline", kind:"ours", desc:"Animate chunk → embed → retrieve → generate, with citations. Ties to BYO-9.", href:"rag-pipeline.html" },
+  { phase:"Phase 6 · LLMs, RAG & Agents", title:"ReAct agent loop", kind:"ours", desc:"Drive a Thought → Action → Observation loop with tools. Ties to BYO-10.", href:"react-agent.html" },
+  { phase:"Phase 6 · LLMs, RAG & Agents", title:"Vector search: brute-force vs ANN", kind:"ours", desc:"Query a 2-D cloud; compare exact vs IVF buckets. Ties to BYO-11.", href:"vector-search.html" },
+  { phase:"Phase 6 · LLMs, RAG & Agents", title:"Embeddings & cosine similarity", kind:"ours", desc:"Move vectors, watch cosine similarity & semantic search.", href:"embeddings.html" },
+  { phase:"Phase 6 · LLMs, RAG & Agents", title:"LLM internals (3-D walkthrough)", kind:"curated", desc:"bbycroft — every matmul in a small GPT.", href:"https://bbycroft.net/llm" },
+
+  // ---- Phase 6B: LLM in-depth ----
+  { phase:"Phase 6B · LLM in-depth", title:"BPE tokenization", kind:"soon", desc:"Type text, watch byte-pair merges build tokens. Ties to BYO-7.", href:"#" },
+  { phase:"Phase 6B · LLM in-depth", title:"LLM decoding (temp / top-k / top-p)", kind:"soon", desc:"Sliders over a token distribution.", href:"#" },
+  { phase:"Phase 6B · LLM in-depth", title:"LoRA & quantization", kind:"soon", desc:"Low-rank adapters + bit-width tradeoffs, visual.", href:"#" },
+  { phase:"Phase 6B · LLM in-depth", title:"Diffusion Explainer", kind:"curated", desc:"poloclub — text-to-image diffusion, interactive.", href:"https://poloclub.github.io/diffusion-explainer/" },
+  { phase:"Phase 6B · LLM in-depth", title:"Prompt injection (OWASP LLM01)", kind:"soon", desc:"Attack & defend a mock assistant. Ties to BYO-16.", href:"#" },
+
+  // ---- Phase 7: MLOps ----
+  { phase:"Phase 7 · MLOps", title:"MLOps lifecycle & drift", kind:"soon", desc:"Interactive data → train → track → serve → monitor.", href:"#" },
+
+  // ---- Modules ----
+  { phase:"Modules", title:"Graph Neural Networks", kind:"curated", desc:"Distill — “A Gentle Introduction to GNNs”, interactive.", href:"https://distill.pub/2021/gnn-intro/" },
+];
+
+(function render() {
+  const root = Ill.$("#catalog");
+  const search = Ill.$("#search");
+  function draw(q) {
+    root.innerHTML = "";
+    const ql = (q || "").trim().toLowerCase();
+    const groups = {};
+    ITEMS.forEach((it) => {
+      if (ql && !(it.title + " " + it.desc + " " + it.phase).toLowerCase().includes(ql)) return;
+      (groups[it.phase] = groups[it.phase] || []).push(it);
+    });
+    const order = ["Phase 2 · Math","Phase 3 · Classic ML","Phase 4 · Deep Learning","Phase 5 · NLP & Transformers","Phase 6 · LLMs, RAG & Agents","Phase 6B · LLM in-depth","Phase 7 · MLOps","Modules"];
+    let any = false;
+    order.forEach((ph) => {
+      const list = groups[ph];
+      if (!list) return;
+      any = true;
+      const hdr = Ill.el("div", { class: "phasehdr" }, [Ill.el("h2", { text: ph })]);
+      root.appendChild(hdr);
+      const grid = Ill.el("div", { class: "grid" });
+      list.forEach((it) => {
+        const kindLabel = it.kind === "ours" ? "🎨 Ours" : it.kind === "curated" ? "🔗 Curated" : "⏳ Coming soon";
+        const cls = "card " + (it.kind === "ours" ? "ours" : it.kind === "curated" ? "curated" : "");
+        const card = Ill.el("a", {
+          class: cls,
+          href: it.kind === "soon" ? "javascript:void 0" : it.href,
+          target: it.kind === "curated" ? "_blank" : "_self",
+          rel: it.kind === "curated" ? "noopener" : null,
+        }, [
+          Ill.el("div", { class: "kind", text: kindLabel }),
+          Ill.el("h4", { text: it.title }),
+          Ill.el("p", { text: it.desc }),
+        ]);
+        if (it.kind === "soon") card.style.opacity = ".6";
+        grid.appendChild(card);
+      });
+      root.appendChild(grid);
+    });
+    if (!any) root.appendChild(Ill.el("p", { class: "muted", text: "No concepts match “" + q + "”." }));
+  }
+  draw("");
+  search.addEventListener("input", (e) => draw(e.target.value));
+})();
+</script>
+</body>
+</html>

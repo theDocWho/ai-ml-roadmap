@@ -12,6 +12,8 @@ systems, and pass tough interviews.** Built around a 50-question AIML exam sylla
 | [`ROADMAP.md`](ROADMAP.md) | Same roadmap in Markdown (8 phases, resources, projects, certs, milestones). |
 | [`challenges/`](challenges/README.md) | The **Build-Your-Own AI** series (13 staged, test-driven builds). |
 | [`challenges/byo-01-autograd/`](challenges/byo-01-autograd/README.md) | First challenge, fully scaffolded with `pytest` tests. |
+| [`phases/`](phases/README.md) | Detailed topic-by-topic study guides (links + checkpoints) for every phase. |
+| [`illustrated/`](illustrated/index.html) | 🎨 Interactive, offline **illustrated explainers** + curated links to the best existing ones. |
 | [`templates/decision-lens-template.md`](templates/decision-lens-template.md) | The problem-framing one-pager to fill for every project. |
 | `build_roadmap_pdf.py` | Regenerates the PDF from `ROADMAP.md`. |
 

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Illustrated ReAct Agent</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 6 · ties to BYO-10</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>The Illustrated ReAct Agent</h1>
+    <p class="lede">An agent isn't magic — it's a <b>loop</b>: <em>Reason → Act (call a tool) → Observe</em>,
+      repeat until it can answer. Step through a real trace below; the tools actually run.</p>
+    <div class="tagrow">
+      <span class="tag">agents</span><span class="tag">tool use</span>
+      <span class="tag">reasoning loop</span><span class="tag byo">BYO-10 ReAct agent</span>
+    </div>
+  </div>
+
+  <p>The model never does arithmetic or lookups itself — it <b>decides which tool to call</b>, the tool
+  returns an <b>Observation</b>, and that gets fed back so the model can decide the next step. The
+  <code>max_steps</code> cap stops runaway loops.</p>
+
+  <div class="panel">
+    <h4>The loop</h4>
+    <svg id="loop" viewBox="0 0 760 200" role="img" aria-label="ReAct reasoning loop"></svg>
+  </div>
+
+  <div class="panel">
+    <h4>Pick a task &nbsp;·&nbsp; tools available: <span class="chip">calculator</span> <span class="chip">search</span></h4>
+    <div class="btnrow" id="tasks"></div>
+    <div class="btnrow">
+      <button id="step">Step ▸</button>
+      <button class="ghost" id="auto">▶ Auto-run</button>
+      <button class="ghost" id="reset">↺ Reset</button>
+      <span class="muted small" id="status"></span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h4>Scratchpad (what gets fed back to the model each step)</h4>
+    <div id="pad" style="font-family:var(--mono); font-size:13.5px; white-space:pre-wrap; line-height:1.7; min-height:80px;"></div>
+  </div>
+
+  <div class="note green"><b>Why it matters:</b> grounding an LLM in <em>tools</em> (a calculator, a search
+  index, your <a href="rag-pipeline.html">RAG retriever</a>) beats a bare model for real tasks. Build the
+  loop yourself in <a href="../challenges/byo-10-react-agent/README.md">BYO-10</a>, then scale it with
+  LangGraph (Phase 8).</div>
+
+  <div class="footer">
+    Next: <a href="rag-pipeline.html">RAG pipeline →</a> · <a href="vector-search.html">Vector search →</a> ·
+    <a href="index.html">All explainers</a>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const { el, $, $$ } = Ill;
+
+// ---- real tools ----
+function tokenizeMath(s){ return s.match(/\d+\.?\d*|[()+\-*/]/g) || []; }
+function calc(expr){ // safe arithmetic: shunting-yard -> RPN -> eval
+  const out=[], ops=[], prec={ "+":1,"-":1,"*":2,"/":2 };
+  tokenizeMath(expr).forEach(t=>{
+    if(/^\d/.test(t)) out.push(parseFloat(t));
+    else if(t in prec){ while(ops.length && prec[ops.at(-1)]>=prec[t]) out.push(ops.pop()); ops.push(t); }
+    else if(t==="(") ops.push(t);
+    else if(t===")"){ while(ops.length && ops.at(-1)!=="(") out.push(ops.pop()); ops.pop(); }
+  });
+  while(ops.length) out.push(ops.pop());
+  const st=[];
+  out.forEach(t=>{ if(typeof t==="number") st.push(t);
+    else { const b=st.pop(),a=st.pop(); st.push(t==="+"?a+b:t==="-"?a-b:t==="*"?a*b:a/b); } });
+  return String(st[0]);
+}
+const KB = {
+  "prompt injection":"Prompt injection is an attack where malicious input overrides an LLM's system instructions (OWASP LLM01).",
+  "rag":"Retrieval-augmented generation retrieves relevant passages and adds them to the prompt as grounding context.",
+  "vector database":"A vector database stores embeddings and returns nearest neighbors for a query vector.",
+};
+function search(q){ q=q.toLowerCase(); for(const k in KB){ if(q.includes(k)) return KB[k]; } return "No result found."; }
+const TOOLS = { calculator: calc, search };
+
+// ---- scripted "LLM" policies (the model decides; tools really run) ----
+const TASKS = {
+  "What is 23 × 19?": [
+    { thought:"This is arithmetic — I should use the calculator.", tool:"calculator", input:"23 * 19" },
+    { thought:"I have the product.", final: s => `23 × 19 = ${s.obs[0]}.` },
+  ],
+  "What is 5! ÷ 4? (two steps)": [
+    { thought:"First compute 5! = 5*4*3*2*1.", tool:"calculator", input:"5 * 4 * 3 * 2 * 1" },
+    { thought:"Now divide that by 4.", tool:"calculator", input:"$0 / 4" },
+    { thought:"Done.", final: s => `5! ÷ 4 = ${s.obs[1]}.` },
+  ],
+  "What is prompt injection?": [
+    { thought:"I should look this up with the search tool.", tool:"search", input:"prompt injection" },
+    { thought:"I can answer from the observation.", final: s => s.obs[0] },
+  ],
+};
+
+// ---- loop diagram ----
+const loop = $("#loop");
+const NODES = [
+  { id:"thought", x:120, y:40, w:170, label:"💭 Thought" },
+  { id:"action",  x:430, y:40, w:200, label:"🛠️ Action (tool call)" },
+  { id:"obs",     x:430, y:140, w:200, label:"👁️ Observation" },
+  { id:"final",   x:120, y:140, w:170, label:"✅ Final Answer" },
+];
+function drawLoop(active){
+  loop.innerHTML="";
+  // edges
+  const E=[["thought","action"],["action","obs"],["obs","thought"],["thought","final"]];
+  const c = id => NODES.find(n=>n.id===id);
+  E.forEach(([a,b])=>{
+    const A=c(a),B=c(b), ax=A.x+A.w/2, ay=A.y+24, bx=B.x+B.w/2, by=B.y+24;
+    let d;
+    if(a==="obs"&&b==="thought") d=`M${A.x} ${A.y+24} C 40 90, 40 64, ${B.x} ${B.y+24}`;
+    else if(ax===bx) d=`M${ax} ${A.y+48} L ${bx} ${B.y}`;
+    else d=`M${A.x+A.w} ${ay} L ${B.x} ${by}`;
+    loop.appendChild(el("path",{d, fill:"none", stroke:"#9fb2cf","stroke-width":2, "stroke-dasharray": a==="obs"?"5 4":"0"}));
+  });
+  NODES.forEach(n=>{
+    const on = n.id===active;
+    loop.appendChild(el("rect",{x:n.x, y:n.y, width:n.w, height:48, rx:11,
+      fill:on?"#1456b0":"#f3f6fb", stroke:on?"#1456b0":"#cfd8e6", "stroke-width":on?0:1}));
+    loop.appendChild(el("text",{x:n.x+n.w/2, y:n.y+30, "text-anchor":"middle","font-size":15,
+      "font-family":"var(--sans)","font-weight":on?700:600, fill:on?"#fff":"#1a2b4a", text:n.label}));
+  });
+  loop.appendChild(el("text",{x:30,y:100,"font-size":11,fill:"#9fb2cf","text-anchor":"middle",text:"loop"}));
+}
+drawLoop(null);
+
+// ---- runtime ----
+let state=null, plan=null, idx=0, autoT=null;
+function reset(){
+  clearInterval(autoT); autoT=null;
+  state={ obs:[] }; idx=0; $("#pad").innerHTML=""; drawLoop(null);
+  $("#status").textContent = plan ? "Ready — press Step or Auto-run." : "Pick a task above.";
+}
+function line(cls,label,text){
+  const wrap=el("div",{style:{margin:"2px 0"}});
+  wrap.appendChild(el("span",{style:{fontWeight:700,color:cls},text:label+": "}));
+  wrap.appendChild(document.createTextNode(text));
+  $("#pad").appendChild(wrap); return wrap;
+}
+function step(){
+  if(!plan){ $("#status").textContent="Pick a task first."; return; }
+  if(idx>=plan.length){ $("#status").textContent="Finished."; return; }
+  const s = plan[idx];
+  if(s.final){
+    drawLoop("final");
+    line("#0a7d2c","Final Answer", s.final(state));
+    $("#status").textContent="✅ Done in "+idx+" tool call(s)."; idx=plan.length; clearInterval(autoT);
+    return;
+  }
+  // Thought
+  drawLoop("thought"); line("#1456b0","Thought", s.thought);
+  // Action
+  setTimeout(()=>{
+    drawLoop("action");
+    let input = s.input.replace(/\$(\d+)/g, (_,i)=>state.obs[+i]); // substitute earlier observation
+    line("#b9770e","Action", `${s.tool}("${input}")`);
+    // Observation (tool really runs)
+    setTimeout(()=>{
+      drawLoop("obs");
+      const o = TOOLS[s.tool](input); state.obs.push(o);
+      line("#1f2937","Observation", o);
+      idx++; $("#status").textContent=`Step ${idx} done — fed back to the model.`;
+    }, 380);
+  }, 380);
+}
+function auto(){ if(autoT) return; step(); autoT=setInterval(()=>{ if(idx>=plan.length){clearInterval(autoT);autoT=null;return;} step(); }, 1300); }
+
+// task buttons
+const tbox=$("#tasks");
+Object.keys(TASKS).forEach((name,i)=>{
+  const b=el("button",{class:i?"ghost":"", text:name});
+  b.addEventListener("click",()=>{ $$("#tasks button").forEach(x=>x.className="ghost"); b.className="";
+    plan=TASKS[name]; reset(); line("#1a2b4a","Question", name); });
+  tbox.appendChild(b);
+});
+$("#step").addEventListener("click", step);
+$("#auto").addEventListener("click", auto);
+$("#reset").addEventListener("click", ()=>{ if(plan) reset(); });
+// preselect first task
+tbox.firstChild.click();
+</script>
+</body>
+</html>

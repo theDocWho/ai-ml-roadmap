@@ -52,6 +52,12 @@ jupyter notebook        # or use VS Code's notebook support
 > Tip: keep your code in the **git repo** (this folder) even when you train on Colab/Kaggle — develop
 > locally, push, then `!git clone` your repo into the Colab/Kaggle session for the GPU run.
 
+## 🎨 Illustrated, interactive explainers
+For visual intuition, see [`../illustrated/`](../illustrated/index.html) — **interactive** explainers we
+built (RAG, ReAct agents, vector search, embeddings…) **plus curated links** to the best existing ones
+(Illustrated Transformer, CNN Explainer, MLU-Explain, R2D3, Setosa, Seeing Theory…). Fully offline, no
+dependencies. Topic rows link to these with a 🎨 marker where available.
+
 ## Guides
 | Phase | Guide | Status |
 |-------|-------|--------|

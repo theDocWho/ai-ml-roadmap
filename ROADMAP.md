@@ -151,6 +151,10 @@ explainable and auditable.
 The phases below are the **overview**. For each phase there's a companion guide in
 [`phases/`](phases/README.md) that breaks the phase into **specific topics**, maps **each topic to
 the exact video/chapter/article** that covers it (so a course's own flow can't derail you), and adds
+**🎨 Visual learners:** there's also an [`illustrated/`](illustrated/index.html) section — interactive,
+offline explainers (RAG, agents, vector search, embeddings…) plus curated links to the best existing
+ones (Illustrated Transformer, CNN Explainer, MLU-Explain, R2D3, Setosa…).
+
 **✅ checkpoint exercises** to verify understanding before moving on. **All guides are complete:**
 Phases 0–8 (incl. 6B), the optional RL/Diffusion/GNN modules, and a research-skills guide — **279
 topics, each with a checkpoint exercise**. Use the overview here to see the arc; use the phase guides
