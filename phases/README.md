@@ -66,3 +66,10 @@ jupyter notebook        # or use VS Code's notebook support
 | 7 | [MLOps & Productionization](phase-7-mlops.md) | ✅ |
 | 8 | [Agentic systems + Interview readiness](phase-8-agentic-interview.md) | ✅ |
 | — | [**Research skills: reading, verifying & writing papers**](research-skills.md) | ✅ |
+
+### Optional specialization modules (pick by interest / target role)
+| Module | Guide | Pairs with capstone | Status |
+|--------|-------|---------------------|--------|
+| A | [Reinforcement Learning](module-a-reinforcement-learning.md) | [DQN trading](../capstones/dqn-trading/README.md) | ✅ |
+| B | [Diffusion & Generative Vision](module-b-diffusion.md) | image generator (build) | ✅ |
+| C | [Graph Neural Networks](module-c-gnn.md) | [GNN fraud](../capstones/gnn-fraud/README.md) | ✅ |
