@@ -58,11 +58,13 @@ const ITEMS = [
   { phase:"Phase 0 · Python", title:"with & context managers", kind:"ours", desc:"See __enter__ then __exit__ run — even when the body raises. Guaranteed cleanup vs try/finally.", href:"python-context-managers.html" },
 
   // ---- Phase 1: Scientific stack ----
+  { phase:"Phase 1 · Scientific stack", title:"Vectorization & ufuncs", kind:"ours", desc:"Apply an op to a whole array (no Python loop); see why vectorized C is 10–100× faster.", href:"numpy-vectorization.html" },
   { phase:"Phase 1 · Scientific stack", title:"NumPy broadcasting", kind:"ours", desc:"Check shape compatibility & watch the stretch happen. The rule behind every bias-add.", href:"numpy-broadcasting.html" },
   { phase:"Phase 1 · Scientific stack", title:"Aggregations & axis", kind:"ours", desc:"axis=0 vs axis=1 made obvious: the named axis collapses. Exam Q4.", href:"numpy-axis.html" },
   { phase:"Phase 1 · Scientific stack", title:"Indexing: slices, masks & fancy", kind:"ours", desc:"Slice (view) vs boolean mask (copy) vs fancy indexing (copy), interactively.", href:"numpy-indexing.html" },
   { phase:"Phase 1 · Scientific stack", title:"Series, DataFrames & loc/iloc", kind:"ours", desc:"label vs position selection; one row/col → Series, several → DataFrame. Exam Q2.", href:"pandas-dataframe.html" },
   { phase:"Phase 1 · Scientific stack", title:"GroupBy: split–apply–combine", kind:"ours", desc:"Watch rows split by key, a function apply per group, and results combine.", href:"pandas-groupby.html" },
+  { phase:"Phase 1 · Scientific stack", title:"merge & join", kind:"ours", desc:"inner/left/right/outer on a shared key — see which rows survive and where NaNs appear.", href:"pandas-merge.html" },
 
   // ---- Phase 2: Math ----
   { phase:"Phase 2 · Math", title:"Eigenvalues & eigenvectors", kind:"curated", desc:"Watch a matrix stretch space; eigenvectors are the directions that don't rotate.", href:"https://setosa.io/ev/eigenvectors-and-eigenvalues/" },

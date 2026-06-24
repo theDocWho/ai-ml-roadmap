@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vectorization & ufuncs — why NumPy has no loops</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 1 · Scientific stack</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Vectorization &amp; ufuncs</h1>
+    <p class="lede">The first habit to unlearn from Java: <b>don't write the loop</b>. NumPy applies a function
+      to a whole array at once with a <em>universal function</em> (ufunc) that runs in compiled C — element by
+      element, but with no Python loop in sight. It's both shorter to read and often 10–100× faster, which is
+      why every ML library is built on it.</p>
+    <div class="tagrow">
+      <span class="tag">ufunc</span><span class="tag">element-wise</span>
+      <span class="tag">no Python loop</span><span class="tag">SIMD / C speed</span>
+      <span class="tag">readability</span>
+    </div>
+  </div>
+
+  <h2>One operation, applied to every element</h2>
+  <p>A ufunc like <code>np.sqrt</code>, <code>np.exp</code>, or even plain <code>arr * 2</code> takes an array
+  and returns a new array of the same shape, having applied the operation to <b>each element independently</b>.
+  Conceptually it's "map this function over the array," but the looping happens down in C, not in your Python
+  code. Pick an operation and watch it sweep across the array:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>operation</label>
+        <select id="op">
+          <option value="sqrt">np.sqrt(arr)</option>
+          <option value="square">arr ** 2</option>
+          <option value="double">arr * 2</option>
+          <option value="exp">np.exp(arr)</option>
+          <option value="addscalar">arr + 10</option>
+        </select></div>
+      <div class="ctrl" style="justify-content:flex-end;"><button id="run">apply →</button></div>
+    </div>
+    <div id="grid" style="display:flex; flex-direction:column; gap:10px;"></div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>The same result, two ways — one is much faster</h2>
+  <p>You <em>could</em> get the same answer with a Python loop or comprehension. It works, but every iteration
+  pays Python's per-element overhead (type checks, object boxing). The vectorized call hands the whole array to
+  optimised C that processes it in a tight loop — frequently with CPU SIMD instructions doing several elements
+  at once:</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+    <div>
+      <p class="small muted" style="margin:0 0 4px;">slow — Python loops over each element:</p>
+      <div style="font-family:var(--mono); font-size:12.5px; background:#fdecea; border:1px solid #f1b0a8; border-radius:10px; padding:10px 12px; line-height:1.7;">
+out = []<br>for x in arr:<br>&nbsp;&nbsp;&nbsp;&nbsp;out.append(x ** 2)
+      </div>
+    </div>
+    <div>
+      <p class="small muted" style="margin:0 0 4px;">fast — one vectorized call:</p>
+      <div style="font-family:var(--mono); font-size:12.5px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:10px 12px; color:#1d5b30; line-height:1.7;">
+out = arr ** 2<br><br><span style="color:#5b6678"># no loop — C does the work</span>
+      </div>
+    </div>
+  </div>
+  <p>Drag the array size and compare rough run-times (vectorized stays flat-fast as the array grows):</p>
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;"><label>array length N <span class="val" id="vn"></span></label>
+      <input id="n" type="range" min="100" max="10000000" value="100000" step="100"></div>
+    <div class="barrow"><span class="lbl">Python loop</span><div><div class="bar" id="barloop" style="background:var(--red)"></div></div><span class="num" id="numloop"></span></div>
+    <div class="barrow"><span class="lbl">NumPy ufunc</span><div><div class="bar" id="barvec" style="background:var(--green)"></div></div><span class="num" id="numvec"></span></div>
+    <p class="small muted" id="speednote" style="margin:8px 0 0;"></p>
+  </div>
+
+  <h2>Why this matters for the whole roadmap</h2>
+  <p>Every model you'll train multiplies, exponentiates, and sums over millions of numbers. Done with Python
+  loops it would be unusably slow; done with vectorized ufuncs it's fast and the code reads like the math.
+  When you combine ufuncs with <a href="numpy-broadcasting.html">broadcasting</a> (operate across mismatched
+  shapes) and <a href="numpy-axis.html">axis aggregations</a> (sum/mean along a dimension), you can express an
+  entire forward pass of a neural net in a handful of loop-free lines. That trio — <b>vectorize, broadcast,
+  aggregate</b> — is the core NumPy skill.</p>
+
+  <div class="note green"><b>Takeaways:</b> a <b>ufunc</b> applies an operation to every element of an array at
+  once, looping in compiled C instead of Python — shorter <em>and</em> ~10–100× faster. Reach for
+  <code>arr ** 2</code> / <code>np.exp(arr)</code>, never a Python <code>for</code> over the elements. Pair
+  with broadcasting and axis reductions to write whole ML computations loop-free.</div>
+
+  <p class="small muted">A great visual companion:
+  <a href="https://jalammar.github.io/visual-numpy/" target="_blank" rel="noopener">Jay Alammar — A Visual
+  Intro to NumPy</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 1 · Scientific stack.
+    Practise in <a href="../phases/phase-1-scientific-stack.md">the Phase 1 guide</a> (Module 1A, topics 1 &amp; 3).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const ARR = [1, 4, 9, 16, 25];
+  const OPS = {
+    sqrt:      { f: (x) => Math.sqrt(x), s: '√x', call: 'np.sqrt(arr)' },
+    square:    { f: (x) => x * x, s: 'x²', call: 'arr ** 2' },
+    double:    { f: (x) => x * 2, s: 'x·2', call: 'arr * 2' },
+    exp:       { f: (x) => Math.exp(x), s: 'eˣ', call: 'np.exp(arr)', fmt: (v) => v.toExponential(1) },
+    addscalar: { f: (x) => x + 10, s: 'x+10', call: 'arr + 10' },
+  };
+  let revealed = false;
+
+  function render() {
+    const op = OPS[$('#op').value];
+    const grid = $('#grid'); grid.innerHTML = '';
+    // input row
+    const mkRow = (vals, accent, fmt) => {
+      const row = el('div', { class: 'chips' });
+      vals.forEach((v) => row.appendChild(el('span', { class: 'chip ' + accent, text: fmt ? fmt(v) : String(v), style: { minWidth: '46px', textAlign: 'center' } })));
+      return row;
+    };
+    grid.appendChild(el('div', { class: 'small muted', text: 'arr =' }));
+    grid.appendChild(mkRow(ARR, 'sel'));
+    const arrow = el('div', { style: { textAlign: 'center', color: 'var(--blue)', fontFamily: 'var(--mono)' }, text: '↓ apply ' + op.s + ' to every element ↓' });
+    grid.appendChild(arrow);
+    grid.appendChild(el('div', { class: 'small muted', text: op.call + ' =' }));
+    grid.appendChild(mkRow(ARR.map(op.f), revealed ? 'on' : '', op.fmt));
+    if (!revealed) {
+      arrow.style.opacity = '0.4';
+      grid.lastChild.querySelectorAll('.chip').forEach((c) => { c.textContent = '?'; c.style.color = 'var(--muted)'; });
+    }
+    $('#msg').innerHTML = revealed
+      ? 'Each output element depends only on the matching input element — they\'re computed independently (and in C). That independence is what lets the CPU do several at once.'
+      : 'Press <b>apply →</b> to run the ufunc over all ' + ARR.length + ' elements at once.';
+  }
+  $('#op').addEventListener('change', () => { revealed = false; render(); });
+  $('#run').addEventListener('click', () => { revealed = true; render(); });
+  render();
+
+  // ---- speed bars (illustrative model: loop ~ c1*N python-ops, vec ~ c2*N C-ops, ~60x) ----
+  function fmt(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(n >= 1e4 ? 0 : 1) + 'k';
+    return String(Math.round(n));
+  }
+  function fmtTime(ms) {
+    if (ms >= 1000) return (ms / 1000).toFixed(2) + ' s';
+    if (ms >= 1) return ms.toFixed(1) + ' ms';
+    return (ms * 1000).toFixed(0) + ' µs';
+  }
+  function renderSpeed(N) {
+    $('#vn').textContent = fmt(N);
+    const loopMs = N * 60e-6;     // ~60 ns / element in a Python loop
+    const vecMs = N * 1e-6 + 0.05; // ~1 ns / element in C + tiny fixed cost
+    const maxLog = Math.log10(10000000 * 60e-6);
+    $('#barloop').style.width = (100 * Math.log10(loopMs + 1e-3) / maxLog).toFixed(1) + '%';
+    $('#barvec').style.width = Math.max(2, 100 * Math.log10(vecMs + 1e-3) / maxLog).toFixed(1) + '%';
+    $('#numloop').textContent = fmtTime(loopMs);
+    $('#numvec').textContent = fmtTime(vecMs);
+    $('#speednote').innerHTML = 'About <b>' + Math.round(loopMs / vecMs) + '×</b> faster for N=' + fmt(N) + ' — and the gap widens as N grows. (Illustrative; exact factors vary by machine and operation.)';
+  }
+  Ill.slider($('#n'), null, renderSpeed);
+})();
+</script>
+</body>
+</html>

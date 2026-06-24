@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>merge & join — combining DataFrames on a key</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 1 · Scientific stack</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>merge &amp; join</h1>
+    <p class="lede">Real datasets live in pieces — customers in one table, their orders in another. Combining
+      them on a shared <b>key</b> is exactly a SQL join, and the <em>type</em> of join decides what happens to
+      rows that don't have a match on the other side. Pick the wrong one and you silently drop (or duplicate)
+      data, so this is worth seeing rather than memorising.</p>
+    <div class="tagrow">
+      <span class="tag">inner</span><span class="tag">left</span>
+      <span class="tag">right</span><span class="tag">outer</span>
+      <span class="tag">key matching</span><span class="tag">NaN</span>
+    </div>
+  </div>
+
+  <h2>The same key, four policies for non-matches</h2>
+  <p>Two tables share an <code>id</code> column. <code>pd.merge(left, right, on="id")</code> lines up rows
+  whose <code>id</code> matches and glues their columns together. The only real question is what to do with a
+  row whose key has <em>no</em> partner on the other side — and that's what <code>how=</code> controls:</p>
+  <ul>
+    <li><b>inner</b> (the default) — keep only keys present in <em>both</em>. Safe, but quietly discards
+      unmatched rows.</li>
+    <li><b>left</b> — keep <em>every</em> left row; fill missing right-hand columns with <code>NaN</code>.</li>
+    <li><b>right</b> — keep every right row; <code>NaN</code> on the left.</li>
+    <li><b>outer</b> — keep <em>everything</em> from both; <code>NaN</code> wherever a side is missing.</li>
+  </ul>
+  <p>Switch <code>how</code> and watch which rows survive and where <code>NaN</code>s appear:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>how =</label>
+        <select id="how">
+          <option value="inner">inner</option>
+          <option value="left">left</option>
+          <option value="right">right</option>
+          <option value="outer">outer</option>
+        </select></div>
+      <div class="ctrl" style="justify-content:flex-end;"><span class="small muted" id="rowcount"></span></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div>
+        <p class="small muted" style="margin:0 0 4px;"><b>left</b> — customers</p>
+        <div id="tleft"></div>
+      </div>
+      <div>
+        <p class="small muted" style="margin:0 0 4px;"><b>right</b> — orders</p>
+        <div id="tright"></div>
+      </div>
+    </div>
+
+    <p class="small muted" style="margin:16px 0 4px;">result of <code id="callstr"></code>:</p>
+    <div id="tresult"></div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>Watch the key: the one-to-many gotcha</h2>
+  <p>A merge matches <em>every</em> left row against <em>every</em> right row with the same key. If a key is
+  unique on one side but repeats on the other (one customer, many orders) you get one result row per match —
+  that's usually what you want. But if a key accidentally repeats on <em>both</em> sides, the merge multiplies
+  them together and your row count explodes. After any merge, sanity-check the shape: did you get roughly the
+  rows you expected? A surprise jump means a duplicated key.</p>
+  <p><code>concat</code> is the other combiner, and it's different: <code>merge</code> joins <em>side by
+  side</em> on a key (more columns), while <code>pd.concat</code> stacks frames <em>on top of each other</em>
+  (more rows) — use it to append this month's data to last month's.</p>
+
+  <div class="note green"><b>Takeaways:</b> <code>merge(..., on="key", how=...)</code> aligns rows by a shared
+  key. <b>inner</b> keeps only matched keys (can drop data); <b>left/right</b> keep one side fully with
+  <code>NaN</code> fills; <b>outer</b> keeps all. Mind one-to-many keys — duplicates on both sides multiply
+  rows. <code>concat</code> stacks rows; <code>merge</code> joins columns.</div>
+
+  <p class="small muted">Builds on <a href="pandas-dataframe.html">Series, DataFrames &amp; loc/iloc</a>. The
+  free <a href="https://www.kaggle.com/learn/pandas" target="_blank" rel="noopener">Kaggle Pandas</a> course
+  has hands-on merge exercises.</p>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 1 · Scientific stack.
+    Practise in <a href="../phases/phase-1-scientific-stack.md">the Phase 1 guide</a> (Module 1B, topic 13).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const LEFT = [{ id: 1, name: 'Ada' }, { id: 2, name: 'Lin' }, { id: 3, name: 'Sam' }];
+  const RIGHT = [{ id: 2, item: 'Book' }, { id: 3, item: 'Pen' }, { id: 4, item: 'Hat' }];
+
+  function table(rows, cols, opts) {
+    opts = opts || {};
+    const t = el('table', { style: { borderCollapse: 'collapse', width: '100%', fontFamily: 'var(--mono)', fontSize: '13px' } });
+    const hr = el('tr');
+    cols.forEach((c) => hr.appendChild(el('th', { text: c, style: { textAlign: 'left', padding: '5px 8px', borderBottom: '2px solid var(--border)', color: 'var(--muted)' } })));
+    t.appendChild(hr);
+    rows.forEach((r) => {
+      const tr = el('tr');
+      cols.forEach((c) => {
+        const v = r[c];
+        const isNaN = v === undefined || v === null || v === 'NaN';
+        const hot = opts.matchKey && c === 'id' && opts.matched && opts.matched.has(r[c]);
+        tr.appendChild(el('td', {
+          text: isNaN ? 'NaN' : String(v),
+          style: {
+            padding: '5px 8px', borderBottom: '1px solid var(--border)',
+            color: isNaN ? '#c0392b' : (hot ? 'var(--green)' : 'var(--ink)'),
+            fontWeight: hot ? '700' : '400',
+            background: r.__drop ? '#fdecea' : (r.__new ? '#eafaef' : 'transparent'),
+            opacity: r.__drop ? '0.55' : '1',
+          },
+        }));
+      });
+      t.appendChild(tr);
+    });
+    return t;
+  }
+
+  function compute(how) {
+    const lk = new Set(LEFT.map((r) => r.id)), rk = new Set(RIGHT.map((r) => r.id));
+    const both = new Set([...lk].filter((k) => rk.has(k)));
+    let keys;
+    if (how === 'inner') keys = [...both];
+    else if (how === 'left') keys = LEFT.map((r) => r.id);
+    else if (how === 'right') keys = RIGHT.map((r) => r.id);
+    else keys = [...new Set([...lk, ...rk])];
+    keys.sort((a, b) => a - b);
+    const rows = keys.map((k) => {
+      const l = LEFT.find((r) => r.id === k), r = RIGHT.find((x) => x.id === k);
+      return {
+        id: k,
+        name: l ? l.name : 'NaN',
+        item: r ? r.item : 'NaN',
+        __new: !(l && r),    // a NaN-filled (non-inner) row
+      };
+    });
+    return { rows, both };
+  }
+
+  function render() {
+    const how = $('#how').value;
+    const { rows, both } = compute(how);
+    const keptKeys = new Set(rows.map((r) => r.id));
+
+    // mark left/right rows dropped if their key isn't in the result
+    const left = LEFT.map((r) => Object.assign({}, r, { __drop: !keptKeys.has(r.id) }));
+    const right = RIGHT.map((r) => Object.assign({}, r, { __drop: !keptKeys.has(r.id) }));
+
+    $('#tleft').innerHTML = ''; $('#tleft').appendChild(table(left, ['id', 'name'], { matchKey: true, matched: both }));
+    $('#tright').innerHTML = ''; $('#tright').appendChild(table(right, ['id', 'item'], { matchKey: true, matched: both }));
+    $('#tresult').innerHTML = ''; $('#tresult').appendChild(table(rows, ['id', 'name', 'item'], {}));
+    $('#callstr').textContent = "pd.merge(left, right, on='id', how='" + how + "')";
+    $('#rowcount').textContent = rows.length + ' result row' + (rows.length === 1 ? '' : 's');
+
+    const dropped = LEFT.length + RIGHT.length - (both.size * 2) - (rows.length - both.size) * 0; // illustrative
+    let msg;
+    if (how === 'inner') msg = 'Only ids in <b>both</b> tables ({2, 3}) survive. id 1 (left-only) and id 4 (right-only) are <b>dropped</b> — easy to lose data without noticing.';
+    else if (how === 'left') msg = 'All <b>left</b> rows kept. id 1 has no order → its <code>item</code> is <b>NaN</b>. id 4 (right-only) is dropped.';
+    else if (how === 'right') msg = 'All <b>right</b> rows kept. id 4 has no customer → its <code>name</code> is <b>NaN</b>. id 1 (left-only) is dropped.';
+    else msg = 'Everything from both tables. id 1 and id 4 each appear with a <b>NaN</b> on their missing side — nothing is lost.';
+    $('#msg').innerHTML = msg;
+  }
+  $('#how').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

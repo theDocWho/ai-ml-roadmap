@@ -20,7 +20,8 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🎨 **with & context managers** — [python-context-managers.html](python-context-managers.html) · 🔗 [Python Tutor](https://pythontutor.com/)
 
 ## Phase 1 · Scientific stack
-- 🎨 **NumPy broadcasting** — [numpy-broadcasting.html](numpy-broadcasting.html)
+- 🎨 **Vectorization & ufuncs** — [numpy-vectorization.html](numpy-vectorization.html) · 🔗 [Visual NumPy](https://jalammar.github.io/visual-numpy/)
+- 🎨 **NumPy broadcasting** — [numpy-broadcasting.html](numpy-broadcasting.html) · 🔗 [Visual NumPy](https://jalammar.github.io/visual-numpy/)
 - 🎨 **Aggregations & axis** — [numpy-axis.html](numpy-axis.html) · exam Q4
 - 🎨 **Indexing: slices, masks & fancy** — [numpy-indexing.html](numpy-indexing.html)
 - 🎨 **Series, DataFrames & loc/iloc** — [pandas-dataframe.html](pandas-dataframe.html) · exam Q2
