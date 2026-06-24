@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SVM — max margin & the kernel trick</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 3 · Classic ML</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Support Vector Machines</h1>
+    <p class="lede">Of all the lines that separate two classes, which is best? The SVM's answer is elegant: the
+      one with the <b>widest margin</b> — the biggest buffer to the nearest points. And when no straight line
+      works, the <b>kernel trick</b> bends the rules by lifting the data into a higher dimension where a line
+      <em>does</em>.</p>
+    <div class="tagrow">
+      <span class="tag">max margin</span><span class="tag">support vectors</span>
+      <span class="tag">decision boundary</span><span class="tag">kernel trick</span>
+      <span class="tag">non-linear</span>
+    </div>
+  </div>
+
+  <h2>Widest is best — and only a few points decide it</h2>
+  <p>Many lines separate these two classes, but they're not equally good: a line that skims right past a point
+  will misclassify the next similar example. The SVM picks the boundary that sits as far as possible from
+  <em>both</em> classes — it maximises the <b>margin</b>, the distance to the closest points on each side. Those
+  closest points are the <b>support vectors</b>; remarkably, they alone determine the boundary — move any other
+  point and nothing changes. Rotate and shift the candidate line and watch the margin (the shaded band) shrink
+  or grow; then snap to the optimum:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>angle θ <span class="val" id="vth"></span></label><input id="th" type="range" min="-90" max="90" step="1" value="20"></div>
+      <div class="ctrl"><label>offset <span class="val" id="vb"></span></label><input id="b" type="range" min="-3" max="3" step="0.05" value="0"></div>
+      <div class="ctrl" style="justify-content:flex-end;"><button id="snap">snap to max margin</button></div>
+    </div>
+    <svg id="plane" viewBox="0 0 360 300" style="border:1px solid var(--border); border-radius:10px;" role="img" aria-label="two classes with a separating line and margin"></svg>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>The kernel trick: make it separable</h2>
+  <p>Real data is rarely so tidy. Consider points on a line where one class sits in the <em>middle</em> and the
+  other on the <em>outside</em> — no single threshold can split them. The trick: add a new feature derived from
+  the old ones (here, <code>x²</code>) and the points lift into a higher dimension where they pull apart, and a
+  straight line separates them again. Project that line back down and it becomes a <em>curved</em> boundary in
+  the original space. The "kernel" is a shortcut that computes distances in that higher space without ever
+  building the coordinates. Press lift:</p>
+
+  <div class="panel">
+    <div class="btnrow"><button id="lift">lift: x → (x, x²)</button><button class="ghost" id="drop">reset to 1-D</button></div>
+    <svg id="kernel" viewBox="0 0 360 240" style="border:1px solid var(--border); border-radius:10px;" role="img" aria-label="1-D points lifted to 2-D become separable"></svg>
+    <p class="note" id="kmsg" style="margin-top:12px;"></p>
+  </div>
+
+  <div class="note green"><b>Takeaways:</b> an SVM chooses the separating boundary with the <b>widest margin</b>;
+  only the closest points — the <b>support vectors</b> — define it. For non-linearly-separable data, the
+  <b>kernel trick</b> maps inputs into a higher-dimensional space where a linear boundary works, giving a
+  curved boundary back in the original space (RBF kernel = "infinite" dimensions). Robust, but slower to train
+  on very large datasets.</div>
+
+  <p class="small muted">Curated companion: <a href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">StatQuest — Support Vector Machines</a> · <a href="https://scikit-learn.org/stable/modules/svm.html" target="_blank" rel="noopener">scikit-learn — SVM</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 3 · Classic ML.
+    Practise in <a href="../phases/phase-3-classic-ml.md">the Phase 3 guide</a> (Module 3B, topic 14).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  // ---------- max-margin panel ----------
+  const W = 360, H = 300;
+  // separable dataset (data coords ~ [-3,3])
+  const A = [[-2.2, 1.2], [-1.8, 2.1], [-2.6, -0.3], [-1.2, 0.6], [-2.0, -1.1], [-1.5, 1.6]];
+  const B = [[1.6, -0.4], [2.3, 0.8], [1.2, -1.6], [2.6, -0.9], [1.9, 0.3], [1.3, 1.0]];
+  const sx = (x) => W / 2 + x * 52, sy = (y) => H / 2 - y * 52;
+
+  function renderMargin() {
+    const th = +$('#th').value * Math.PI / 180, b = +$('#b').value;
+    $('#vth').textContent = $('#th').value + '°'; $('#vb').textContent = (+$('#b').value).toFixed(2);
+    const w = [Math.cos(th), Math.sin(th)];           // unit normal
+    const f = (p) => w[0] * p[0] + w[1] * p[1] - b;    // signed distance (|w|=1)
+    const sepA = A.every((p) => f(p) < 0), sepB = B.every((p) => f(p) > 0);
+    const separates = sepA && sepB;
+    const margin = Math.min(...A.concat(B).map((p) => Math.abs(f(p))));
+
+    const svg = $('#plane'); svg.innerHTML = '';
+    // boundary line: points where f=0 → param along direction perpendicular to w
+    const dir = [-w[1], w[0]];
+    const c = [w[0] * b, w[1] * b]; // closest point on line to origin
+    const p1 = [c[0] - dir[0] * 6, c[1] - dir[1] * 6], p2 = [c[0] + dir[0] * 6, c[1] + dir[1] * 6];
+    // margin band
+    [margin, -margin].forEach((m) => {
+      const o = [w[0] * m, w[1] * m];
+      svg.appendChild(el('line', { x1: sx(p1[0] + o[0]), y1: sy(p1[1] + o[1]), x2: sx(p2[0] + o[0]), y2: sy(p2[1] + o[1]), stroke: separates ? '#0a7d2c' : '#c0392b', 'stroke-width': 1, 'stroke-dasharray': '4 3', opacity: 0.6 }));
+    });
+    svg.appendChild(el('line', { x1: sx(p1[0]), y1: sy(p1[1]), x2: sx(p2[0]), y2: sy(p2[1]), stroke: separates ? 'var(--navy)' : '#c0392b', 'stroke-width': 2.5 }));
+
+    // support vectors = points at distance ~margin
+    const isSV = (p) => Math.abs(Math.abs(f(p)) - margin) < 0.06;
+    A.forEach((p) => svg.appendChild(el('circle', { cx: sx(p[0]), cy: sy(p[1]), r: isSV(p) && separates ? 8 : 6, fill: '#1456b0', stroke: isSV(p) && separates ? '#b9770e' : '#fff', 'stroke-width': isSV(p) && separates ? 3 : 1 })));
+    B.forEach((p) => svg.appendChild(el('circle', { cx: sx(p[0]), cy: sy(p[1]), r: isSV(p) && separates ? 8 : 6, fill: '#0a7d2c', stroke: isSV(p) && separates ? '#b9770e' : '#fff', 'stroke-width': isSV(p) && separates ? 3 : 1 })));
+
+    $('#msg').innerHTML = !separates
+      ? '<b style="color:#c0392b">This line misclassifies some points</b> — it doesn\'t separate the classes. Adjust θ and offset until both sides are clean.'
+      : 'Separates ✓. Margin = <b>' + margin.toFixed(2) + '</b>. The orange-ringed points are the <b>support vectors</b> touching the band — widen the margin to push the band as far from both classes as possible.';
+  }
+  $('#th').addEventListener('input', renderMargin);
+  $('#b').addEventListener('input', renderMargin);
+  $('#snap').addEventListener('click', () => { $('#th').value = 20; $('#b').value = -0.15; renderMargin(); });
+  renderMargin();
+
+  // ---------- kernel panel ----------
+  const KW = 360, KH = 240;
+  const inside = [-1.0, -0.6, -0.2, 0.3, 0.7, 1.0];   // class 0 (middle)
+  const outside = [-2.8, -2.3, -1.9, 1.8, 2.4, 2.9];  // class 1 (outside)
+  let lifted = false;
+  function renderKernel() {
+    const svg = $('#kernel'); svg.innerHTML = '';
+    const kx = (x) => KW / 2 + x * 52;
+    if (!lifted) {
+      const y0 = KH - 50;
+      svg.appendChild(el('line', { x1: 20, y1: y0, x2: KW - 20, y2: y0, stroke: 'var(--border)' }));
+      inside.forEach((x) => svg.appendChild(el('circle', { cx: kx(x), cy: y0, r: 7, fill: '#1456b0', stroke: '#fff' })));
+      outside.forEach((x) => svg.appendChild(el('circle', { cx: kx(x), cy: y0, r: 7, fill: '#0a7d2c', stroke: '#fff' })));
+      svg.appendChild(el('text', { x: KW / 2, y: 40, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 12, text: 'On the 1-D line, blue (middle) and green (outside) interleave — no threshold splits them.' }));
+      $('#kmsg').innerHTML = 'Not separable in 1-D: any cut leaves blue on both sides. Press <b>lift</b>.';
+    } else {
+      const ky = (yv) => KH - 30 - yv * 22;
+      // axes
+      svg.appendChild(el('line', { x1: 30, y1: ky(0), x2: KW - 20, y2: ky(0), stroke: 'var(--border)' }));
+      svg.appendChild(el('line', { x1: KW / 2, y1: 20, x2: KW / 2, y2: ky(0), stroke: '#eef2f8' }));
+      const sepY = 1.44;
+      svg.appendChild(el('line', { x1: 30, y1: ky(sepY), x2: KW - 20, y2: ky(sepY), stroke: 'var(--navy)', 'stroke-width': 2, 'stroke-dasharray': '5 3' }));
+      svg.appendChild(el('text', { x: KW - 24, y: ky(sepY) - 5, 'text-anchor': 'end', fill: 'var(--navy)', 'font-size': 11, text: 'a line now separates!' }));
+      inside.forEach((x) => svg.appendChild(el('circle', { cx: kx(x), cy: ky(x * x), r: 7, fill: '#1456b0', stroke: '#fff' })));
+      outside.forEach((x) => svg.appendChild(el('circle', { cx: kx(x), cy: ky(x * x), r: 7, fill: '#0a7d2c', stroke: '#fff' })));
+      svg.appendChild(el('text', { x: 6, y: 30, fill: 'var(--muted)', 'font-size': 11, text: 'x²' }));
+      $('#kmsg').innerHTML = 'Lifted to <code>(x, x²)</code>, the middle class drops low and the outside class rises — now a straight line splits them. Back in 1-D that line is two cut-points (a curved boundary).';
+    }
+  }
+  $('#lift').addEventListener('click', () => { lifted = true; renderKernel(); });
+  $('#drop').addEventListener('click', () => { lifted = false; renderKernel(); });
+  renderKernel();
+})();
+</script>
+</body>
+</html>

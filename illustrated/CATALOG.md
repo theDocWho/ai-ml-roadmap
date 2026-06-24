@@ -47,6 +47,10 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🔗 ROC & AUC (MLU-Explain) — https://mlu-explain.github.io/roc-auc/
 - 🔗 Random forest (MLU-Explain) — https://mlu-explain.github.io/random-forest/
 - 🔗 Linear/logistic regression (MLU-Explain) — https://mlu-explain.github.io/linear-regression/
+- 🎨 **Confusion matrix & metrics** — [confusion-matrix.html](confusion-matrix.html) · exam Q23
+- 🎨 **Regularization (Ridge vs Lasso)** — [regularization.html](regularization.html)
+- 🎨 **k-Nearest Neighbors** — [knn.html](knn.html)
+- 🎨 **SVM & the kernel trick** — [svm-margin.html](svm-margin.html)
 - 🎨 **k-means clustering (steps)** — [kmeans-steps.html](kmeans-steps.html) · ties to BYO-4
 
 ## Phase 4 · Deep Learning

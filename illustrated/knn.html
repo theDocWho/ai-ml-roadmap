@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>k-Nearest Neighbors — the boundary that k controls</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 3 · Classic ML</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>k-Nearest Neighbors</h1>
+    <p class="lede">The simplest classifier there is: to label a new point, look at the <b>k</b> closest
+      training points and take a vote. There's no "training" — the data <em>is</em> the model. Its one knob,
+      k, is a perfect, visible illustration of the bias–variance trade-off.</p>
+    <div class="tagrow">
+      <span class="tag">distance</span><span class="tag">majority vote</span>
+      <span class="tag">k = bias/variance knob</span><span class="tag">non-parametric</span>
+      <span class="tag">decision boundary</span>
+    </div>
+  </div>
+
+  <h2>Classify by neighbourhood</h2>
+  <p>kNN makes a prediction with one rule: measure the distance from the new point to every training point,
+  keep the <b>k</b> nearest, and let them vote — the majority class wins. There's no equation to fit; you just
+  store the data and search it at prediction time (which is why it's called a <em>lazy</em>, non-parametric
+  method). <b>Click anywhere</b> to drop a query point and watch its k neighbours get picked and vote:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>k (neighbours) <span class="val" id="vk"></span></label>
+        <input id="k" type="range" min="1" max="15" step="2" value="1"></div>
+      <div class="ctrl" style="justify-content:flex-end;"><span class="small muted">click the canvas to move the query ●</span></div>
+    </div>
+    <svg id="plane" viewBox="0 0 400 300" style="border:1px solid var(--border); border-radius:10px; cursor:crosshair;" role="img" aria-label="2-D scatter with kNN decision regions"></svg>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>k <em>is</em> the bias–variance dial</h2>
+  <p>Look at the coloured background — that's the decision boundary, the region where each class would win:</p>
+  <ul>
+    <li><b>k = 1</b> → every point gets its own little territory. The boundary is jagged and wraps around every
+      noisy outlier. That's <b>low bias, high variance</b> — it fits the training data perfectly and
+      <em>overfits</em>.</li>
+    <li><b>Large k</b> → each prediction averages over a big neighbourhood, so the boundary smooths out and
+      stops chasing noise. That's <b>higher bias, lower variance</b>. Push k too far and it ignores real
+      structure (toward just predicting the overall majority).</li>
+  </ul>
+  <p>Slide k from 1 upward and watch the boundary go from jagged to smooth — the same over-fit → under-fit
+  journey you see in every model, made visible. The sweet spot is found with
+  <a href="https://mlu-explain.github.io/cross-validation/" target="_blank" rel="noopener">cross-validation</a>.</p>
+
+  <h2>Two practical catches</h2>
+  <p>kNN relies entirely on distance, so it has two well-known weaknesses. First, <b>features must be
+  scaled</b> — if one axis is "salary" (0–100,000) and another is "age" (0–100), salary dominates the distance
+  and age is ignored; standardise first. Second, it suffers in high dimensions (the "curse of dimensionality":
+  everything becomes roughly equidistant) and is slow at prediction time on big datasets, since every query
+  scans the whole training set.</p>
+
+  <div class="note green"><b>Takeaways:</b> kNN labels a point by a <b>majority vote</b> of its k nearest
+  neighbours — no training, the data is the model. <b>k</b> is the bias–variance knob: small k = jagged,
+  overfit (low bias/high variance); large k = smooth, underfit. <b>Scale features</b> first (distance-based),
+  and mind the cost in high dimensions.</div>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 3 · Classic ML.
+    Practise in <a href="../phases/phase-3-classic-ml.md">the Phase 3 guide</a> (Module 3B, topic 12).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const W = 400, H = 300;
+  // generate two classes deterministically
+  const r = Ill.rng(7);
+  const PTS = [];
+  for (let i = 0; i < 16; i++) PTS.push({ x: 0.34 + Ill.randn(r) * 0.13, y: 0.58 + Ill.randn(r) * 0.15, c: 0 });
+  for (let i = 0; i < 16; i++) PTS.push({ x: 0.66 + Ill.randn(r) * 0.13, y: 0.42 + Ill.randn(r) * 0.15, c: 1 });
+  PTS.forEach((p) => { p.x = Ill.clamp(p.x, 0.04, 0.96); p.y = Ill.clamp(p.y, 0.04, 0.96); });
+  let query = { x: 0.5, y: 0.5 };
+  const COL = ['#1456b0', '#0a7d2c'];
+  const BG = ['rgba(20,86,176,0.10)', 'rgba(10,125,44,0.10)'];
+
+  const px = (x) => x * W, py = (y) => (1 - y) * H;
+
+  function classify(qx, qy, k) {
+    const ds = PTS.map((p) => ({ d: (p.x - qx) ** 2 + (p.y - qy) ** 2, c: p.c }));
+    ds.sort((a, b) => a.d - b.d);
+    const top = ds.slice(0, k);
+    const votes = top.reduce((s, t) => s + t.c, 0);
+    return { cls: votes * 2 > k ? 1 : 0, top, votes };
+  }
+
+  function render() {
+    const k = +$('#k').value;
+    $('#vk').textContent = k;
+    const svg = $('#plane'); svg.innerHTML = '';
+
+    // decision regions on a coarse grid
+    const step = 16;
+    for (let gx = 0; gx < W; gx += step) {
+      for (let gy = 0; gy < H; gy += step) {
+        const cx = (gx + step / 2) / W, cy = 1 - (gy + step / 2) / H;
+        const cls = classify(cx, cy, k).cls;
+        svg.appendChild(el('rect', { x: gx, y: gy, width: step, height: step, fill: BG[cls] }));
+      }
+    }
+    // query neighbours
+    const res = classify(query.x, query.y, k);
+    // draw lines to neighbours
+    const ds = PTS.map((p, i) => ({ i, d: (p.x - query.x) ** 2 + (p.y - query.y) ** 2 })).sort((a, b) => a.d - b.d).slice(0, k);
+    ds.forEach((o) => {
+      const p = PTS[o.i];
+      svg.appendChild(el('line', { x1: px(query.x), y1: py(query.y), x2: px(p.x), y2: py(p.y), stroke: '#b9770e', 'stroke-width': 1.2, opacity: 0.7 }));
+    });
+    // training points
+    const nset = new Set(ds.map((o) => o.i));
+    PTS.forEach((p, i) => {
+      svg.appendChild(el('circle', { cx: px(p.x), cy: py(p.y), r: nset.has(i) ? 7 : 5, fill: COL[p.c], stroke: nset.has(i) ? '#b9770e' : '#fff', 'stroke-width': nset.has(i) ? 2.5 : 1 }));
+    });
+    // query
+    svg.appendChild(el('circle', { cx: px(query.x), cy: py(query.y), r: 9, fill: BG[res.cls].replace('0.10', '0.9'), stroke: COL[res.cls], 'stroke-width': 3 }));
+
+    const nPos = res.votes, nNeg = k - res.votes;
+    $('#msg').innerHTML = 'The query\'s ' + k + ' nearest neighbours (orange links) vote <b style="color:#0a7d2c">' + nPos + '</b> green vs <b style="color:#1456b0">' + nNeg + '</b> blue → predicted <b style="color:' + COL[res.cls] + '">' + (res.cls ? 'green' : 'blue') + '</b>. ' +
+      (k === 1 ? 'With k=1 the boundary hugs every point — maximum variance.' : 'Larger k smooths the coloured boundary.');
+  }
+
+  $('#plane').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    query = { x: Ill.clamp((e.clientX - rect.left) / rect.width, 0, 1), y: Ill.clamp(1 - (e.clientY - rect.top) / rect.height, 0, 1) };
+    render();
+  });
+  $('#k').addEventListener('input', render);
+  render();
+})();
+</script>
+</body>
+</html>
