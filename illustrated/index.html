@@ -60,7 +60,7 @@ const ITEMS = [
   { phase:"Phase 2 · Math", title:"Conditional probability & Bayes", kind:"curated", desc:"Visual conditional probability; foundation for Bayes.", href:"https://setosa.io/conditional/" },
   { phase:"Phase 2 · Math", title:"Probability & statistics", kind:"curated", desc:"Seeing Theory — distributions, CLT, Bayesian inference, regression, all animated.", href:"https://seeing-theory.brown.edu/" },
   { phase:"Phase 2 · Math", title:"Gradient descent + momentum", kind:"curated", desc:"Distill — “Why Momentum Really Works”, fully interactive.", href:"https://distill.pub/2017/momentum/" },
-  { phase:"Phase 2 · Math", title:"Optimizer comparison (SGD/Adagrad/RMSprop/Adam)", kind:"soon", desc:"Race optimizers across a loss surface.", href:"#" },
+  { phase:"Phase 2 · Math", title:"Optimizer comparison (SGD/Momentum/RMSprop/Adam)", kind:"ours", desc:"Race four optimizers across a ravine loss surface; tune the learning rate.", href:"optimizer-comparison.html" },
 
   // ---- Phase 3: Classic ML ----
   { phase:"Phase 3 · Classic ML", title:"A visual intro to ML (decision trees)", kind:"curated", desc:"R2D3 — the gold-standard scrollytelling intro to ML & trees.", href:"https://r2d3.us/visual-intro-to-machine-learning-part-1/" },
@@ -69,15 +69,15 @@ const ITEMS = [
   { phase:"Phase 3 · Classic ML", title:"ROC & AUC", kind:"curated", desc:"MLU-Explain — move the threshold, watch the ROC curve.", href:"https://mlu-explain.github.io/roc-auc/" },
   { phase:"Phase 3 · Classic ML", title:"Random forest", kind:"curated", desc:"MLU-Explain — bagging trees, interactively.", href:"https://mlu-explain.github.io/random-forest/" },
   { phase:"Phase 3 · Classic ML", title:"Linear & logistic regression", kind:"curated", desc:"MLU-Explain — fit lines/boundaries by hand.", href:"https://mlu-explain.github.io/linear-regression/" },
-  { phase:"Phase 3 · Classic ML", title:"k-means clustering (steps)", kind:"soon", desc:"Click through assign → update until convergence.", href:"#" },
+  { phase:"Phase 3 · Classic ML", title:"k-means clustering (steps)", kind:"ours", desc:"Step assign → update to convergence; watch inertia drop. Ties to BYO-4.", href:"kmeans-steps.html" },
 
   // ---- Phase 4: Deep Learning ----
   { phase:"Phase 4 · Deep Learning", title:"Neural net playground", kind:"curated", desc:"TensorFlow Playground — build & train a net in the browser.", href:"https://playground.tensorflow.org/" },
   { phase:"Phase 4 · Deep Learning", title:"CNN Explainer", kind:"curated", desc:"poloclub — watch a real CNN classify, layer by layer.", href:"https://poloclub.github.io/cnn-explainer/" },
   { phase:"Phase 4 · Deep Learning", title:"Image kernels (convolution)", kind:"curated", desc:"Setosa — slide a kernel over an image.", href:"https://setosa.io/ev/image-kernels/" },
   { phase:"Phase 4 · Deep Learning", title:"GAN Lab", kind:"curated", desc:"poloclub — train a GAN and watch the distributions.", href:"https://poloclub.github.io/ganlab/" },
-  { phase:"Phase 4 · Deep Learning", title:"Backpropagation (interactive)", kind:"soon", desc:"Forward + backward pass on a tiny net.", href:"#" },
-  { phase:"Phase 4 · Deep Learning", title:"LSTM / GRU gates", kind:"soon", desc:"See the gates open and close over a sequence.", href:"#" },
+  { phase:"Phase 4 · Deep Learning", title:"Backpropagation (interactive)", kind:"ours", desc:"Forward then chain-rule backward on one neuron. Ties to BYO-1 / BYO-5.", href:"backprop.html" },
+  { phase:"Phase 4 · Deep Learning", title:"LSTM / GRU gates", kind:"ours", desc:"Drive forget/input/output gates and watch a memory persist or vanish.", href:"lstm-gru.html" },
 
   // ---- Phase 5: NLP & Transformers ----
   { phase:"Phase 5 · NLP & Transformers", title:"The Illustrated Transformer", kind:"curated", desc:"Jay Alammar — the canonical illustrated guide.", href:"https://jalammar.github.io/illustrated-transformer/" },

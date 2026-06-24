@@ -22,7 +22,7 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🔗 Conditional probability & Bayes — https://setosa.io/conditional/
 - 🔗 Probability & statistics (Seeing Theory) — https://seeing-theory.brown.edu/
 - 🔗 Gradient descent + momentum (Distill) — https://distill.pub/2017/momentum/
-- ⏳ Optimizer comparison (SGD/Adagrad/RMSprop/Adam)
+- 🎨 **Optimizer comparison (SGD/Momentum/RMSprop/Adam)** — [optimizer-comparison.html](optimizer-comparison.html)
 
 ## Phase 3 · Classic ML
 - 🔗 Visual intro to ML / decision trees (R2D3) — https://r2d3.us/visual-intro-to-machine-learning-part-1/
@@ -31,14 +31,15 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🔗 ROC & AUC (MLU-Explain) — https://mlu-explain.github.io/roc-auc/
 - 🔗 Random forest (MLU-Explain) — https://mlu-explain.github.io/random-forest/
 - 🔗 Linear/logistic regression (MLU-Explain) — https://mlu-explain.github.io/linear-regression/
-- ⏳ k-means clustering (steps)
+- 🎨 **k-means clustering (steps)** — [kmeans-steps.html](kmeans-steps.html) · ties to BYO-4
 
 ## Phase 4 · Deep Learning
 - 🔗 Neural net playground (TensorFlow) — https://playground.tensorflow.org/
 - 🔗 CNN Explainer (poloclub) — https://poloclub.github.io/cnn-explainer/
 - 🔗 Image kernels / convolution (Setosa) — https://setosa.io/ev/image-kernels/
 - 🔗 GAN Lab (poloclub) — https://poloclub.github.io/ganlab/
-- ⏳ Backpropagation (interactive) · ⏳ LSTM/GRU gates
+- 🎨 **Backpropagation (interactive)** — [backprop.html](backprop.html) · ties to BYO-1 / BYO-5
+- 🎨 **LSTM / GRU gates** — [lstm-gru.html](lstm-gru.html)
 
 ## Phase 5 · NLP & Transformers
 - 🔗 The Illustrated Transformer (Alammar) — https://jalammar.github.io/illustrated-transformer/

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LSTM & GRU Gates — how recurrent nets remember</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 4 · Sequences</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>LSTM &amp; GRU Gates</h1>
+    <p class="lede">Plain RNNs forget. LSTMs add a protected <b>memory cell</b> — a conveyor belt of state —
+      with <b>gates</b> that decide what to forget, what to store, and what to reveal. Drive the gates by
+      hand and watch a memory persist or vanish.</p>
+    <div class="tagrow">
+      <span class="tag">cell state</span><span class="tag">forget / input / output gates</span>
+      <span class="tag">long-range memory</span><span class="tag">GRU</span>
+    </div>
+  </div>
+
+  <h2>The problem: vanilla RNNs can't hold on</h2>
+  <p>A recurrent network reads a sequence one step at a time, carrying a hidden state forward. In a plain RNN
+  that state is rewritten <em>every</em> step by a squashing function, so information from far back gets
+  multiplied away to nothing — the <b>vanishing gradient</b> problem. The network literally can't connect
+  "the <b>keys</b>… (20 words) … <b>are</b> on the table" because the subject faded long before the verb.</p>
+  <p>The <b>LSTM</b> (Long Short-Term Memory) fixes this with a separate <b>cell state</b> <code>c</code>
+  that runs straight down the sequence like a <b>conveyor belt</b>, touched only by simple, mostly-linear
+  operations. Because information can ride the belt almost unchanged, gradients survive across many steps.
+  What goes on and off the belt is controlled by three <b>gates</b> — each a value in <code>[0,1]</code>
+  (from a sigmoid) acting as a dial for "how much to let through."</p>
+
+  <h2>The three gates</h2>
+  <p>At each step the cell updates as <code>c_t = f · c_{t−1} + i · g̃</code> and outputs
+  <code>h_t = o · tanh(c_t)</code>, where:</p>
+  <ul>
+    <li><b>Forget gate <code>f</code></b> — how much of the <em>old</em> memory to keep (1 = keep all,
+      0 = erase).</li>
+    <li><b>Input gate <code>i</code></b> — how much of the <em>new candidate</em> <code>g̃</code> to write
+      onto the belt.</li>
+    <li><b>Output gate <code>o</code></b> — how much of the (squashed) cell state to expose as this step's
+      output <code>h_t</code>.</li>
+  </ul>
+  <p>Set the gates and the incoming candidate, then <b>step</b> through time and watch the cell state
+  (the belt) and the output evolve:</p>
+
+  <div class="panel">
+    <svg id="cell" viewBox="0 0 660 130" role="img" aria-label="LSTM cell update"></svg>
+    <div class="controls" style="margin-top:8px;">
+      <div class="ctrl"><label>forget gate f <span class="val" id="fv">1.0</span></label><input id="f" type="range" min="0" max="1" step="0.05" value="1"></div>
+      <div class="ctrl"><label>input gate i <span class="val" id="iv">0.0</span></label><input id="i" type="range" min="0" max="1" step="0.05" value="0"></div>
+      <div class="ctrl"><label>output gate o <span class="val" id="ov">1.0</span></label><input id="o" type="range" min="0" max="1" step="0.05" value="1"></div>
+      <div class="ctrl"><label>candidate g̃ <span class="val" id="gv">0.8</span></label><input id="g" type="range" min="-1" max="1" step="0.05" value="0.8"></div>
+    </div>
+    <div class="btnrow">
+      <span class="small muted" style="margin-right:4px;">presets:</span>
+      <button class="ghost preset" data-p="remember">Remember</button>
+      <button class="ghost preset" data-p="overwrite">Overwrite</button>
+      <button class="ghost preset" data-p="accumulate">Accumulate</button>
+      <button class="ghost preset" data-p="forget">Forget</button>
+    </div>
+    <svg id="hist" viewBox="0 0 660 180" role="img" aria-label="cell state and output over time"></svg>
+    <div class="btnrow">
+      <button id="stepb">Step (t → t+1)</button>
+      <button class="ghost" id="resetl">↻ Reset memory</button>
+      <span class="small muted" id="lstat"></span>
+    </div>
+    <div class="note" id="lnote" style="margin-top:10px;"></div>
+  </div>
+
+  <h2>The intuition the presets show</h2>
+  <ul>
+    <li><b>Remember</b> (<code>f=1, i=0</code>): the belt carries the old value untouched — this is the whole
+      point. With the forget gate open and the input gate shut, memory (and gradient) flows across arbitrarily
+      many steps without decaying.</li>
+    <li><b>Overwrite</b> (<code>f=0, i=1</code>): wipe the old memory and write the new candidate — useful at
+      a sentence boundary or a "reset" token.</li>
+    <li><b>Accumulate</b> (<code>f=1, i=1</code>): keep the old <em>and</em> add the new — the cell acts like
+      a running sum / counter.</li>
+    <li><b>Forget</b> (<code>f=0, i=0</code>): clear the belt back toward zero.</li>
+  </ul>
+  <p>In a real LSTM you don't set these by hand — each gate is a tiny learned layer
+  (<code>σ(W·[h_{t−1}, x_t] + b)</code>) that <em>computes</em> its dial from the current input and previous
+  output. Training teaches the gates <em>when</em> to remember and forget; here you're playing the role of
+  those learned layers.</p>
+
+  <h2>GRU — the streamlined cousin</h2>
+  <p>The <b>GRU</b> (Gated Recurrent Unit) keeps the gating idea but with fewer parts: it merges the cell and
+  hidden state into one, and uses just two gates — an <b>update</b> gate (how much to replace the state,
+  combining LSTM's forget+input into one dial) and a <b>reset</b> gate (how much past state to use when
+  proposing the new candidate). Fewer parameters means it's a bit faster and often matches the LSTM on
+  smaller datasets; the LSTM's extra flexibility can edge ahead on larger ones. Both have largely been
+  superseded by <a href="self-attention.html">attention/transformers</a> for long sequences, but the gating
+  principle — <em>multiplicative dials protecting a memory path</em> — is a foundational idea worth owning.</p>
+
+  <div class="note green"><b>Takeaways:</b> LSTMs add a protected <b>cell-state conveyor belt</b> so memory
+  and gradients survive long sequences. Three sigmoid <b>gates</b> dial it: <b>forget</b> (keep old),
+  <b>input</b> (write new), <b>output</b> (reveal). <code>c_t = f·c_{t−1} + i·g̃</code>;
+  <code>h_t = o·tanh(c_t)</code>. The <b>GRU</b> does the same job with two gates and one state. Gates are
+  learned, not hand-set.</div>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 4 · Deep Learning.
+    See <a href="../phases/phase-4-deep-learning.md">the Phase 4 guide</a>; then
+    <a href="self-attention.html">self-attention →</a> for what replaced them.
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+  const fEl = Ill.$('#f'), iEl = Ill.$('#i'), oEl = Ill.$('#o'), gEl = Ill.$('#g');
+  let c = 0, h = 0, hist = [{ t: 0, c: 0, h: 0 }];
+
+  function syncLabels() {
+    Ill.$('#fv').textContent = (+fEl.value).toFixed(2);
+    Ill.$('#iv').textContent = (+iEl.value).toFixed(2);
+    Ill.$('#ov').textContent = (+oEl.value).toFixed(2);
+    Ill.$('#gv').textContent = (+gEl.value).toFixed(2);
+  }
+
+  function drawCell() {
+    const f = +fEl.value, i = +iEl.value, o = +oEl.value, g = +gEl.value;
+    const cNext = f * c + i * g, hNext = o * Math.tanh(cNext);
+    const fm = (n) => (Math.round(n * 100) / 100).toFixed(2);
+    // flow: c_{t-1} --×f--> (+) <--×i-- g  ; (+)=c_t --tanh--> ×o --> h_t
+    const y = 56;
+    let s = '<defs><marker id="ahl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9aa9c2"/></marker></defs>';
+    const box = (x, w, fill, stroke, t1, t2) =>
+      '<rect x="' + x + '" y="' + (y - 20) + '" width="' + w + '" height="40" rx="8" fill="' + fill + '" stroke="' + stroke + '"/>' +
+      '<text x="' + (x + w / 2) + '" y="' + (y - 4) + '" text-anchor="middle" font-size="10.5" fill="#1f2937" font-family="var(--mono)">' + t1 + '</text>' +
+      '<text x="' + (x + w / 2) + '" y="' + (y + 12) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#1456b0" font-family="var(--mono)">' + t2 + '</text>';
+    s += box(8, 86, '#eef2f8', '#9aa9c2', 'c(t−1)', fm(c));
+    s += '<text x="120" y="' + (y - 24) + '" text-anchor="middle" font-size="10" fill="#c0392b">× f=' + fm(f) + '</text>';
+    s += '<line x1="94" y1="' + y + '" x2="168" y2="' + y + '" stroke="#9aa9c2" stroke-width="2" marker-end="url(#ahl)"/>';
+    // plus node
+    s += '<circle cx="186" cy="' + y + '" r="15" fill="#fff" stroke="#1a2b4a"/><text x="186" y="' + (y + 5) + '" text-anchor="middle" font-size="16" fill="#1a2b4a">+</text>';
+    // candidate input from below
+    s += box(140, 92, '#eafaef', '#b6e3c4', 'i·g̃ in', fm(i) + '·' + fm(g));
+    s += '<text x="186" y="' + (y - 30) + '" text-anchor="middle" font-size="9.5" fill="#0a7d2c">× i=' + fm(i) + '</text>';
+    // c_t
+    s += '<line x1="201" y1="' + y + '" x2="250" y2="' + y + '" stroke="#9aa9c2" stroke-width="2" marker-end="url(#ahl)"/>';
+    s += box(252, 92, '#fff8e6', '#e6cf8a', 'c(t)', fm(cNext));
+    // tanh
+    s += '<line x1="344" y1="' + y + '" x2="392" y2="' + y + '" stroke="#9aa9c2" stroke-width="2" marker-end="url(#ahl)"/>';
+    s += box(394, 80, '#eef2f8', '#9aa9c2', 'tanh', fm(Math.tanh(cNext)));
+    // × o
+    s += '<text x="500" y="' + (y - 24) + '" text-anchor="middle" font-size="10" fill="#b9770e">× o=' + fm(o) + '</text>';
+    s += '<line x1="474" y1="' + y + '" x2="548" y2="' + y + '" stroke="#9aa9c2" stroke-width="2" marker-end="url(#ahl)"/>';
+    s += box(550, 100, '#e7efff', '#a9c6f5', 'h(t) out', fm(hNext));
+    Ill.$('#cell').innerHTML = s;
+    return { cNext, hNext };
+  }
+
+  function drawHist() {
+    const W = 660, H = 180, padL = 30, padR = 10, padT = 14, padB = 24;
+    const maxT = Math.max(8, hist.length - 1);
+    const lo = -2, hi = 2;
+    const xOf = (t) => padL + (t / maxT) * (W - padL - padR);
+    const yOf = (v) => padT + (1 - (v - lo) / (hi - lo)) * (H - padT - padB);
+    let s = '';
+    [-2, -1, 0, 1, 2].forEach((v) => {
+      s += '<line x1="' + padL + '" y1="' + yOf(v) + '" x2="' + (W - padR) + '" y2="' + yOf(v) + '" stroke="' + (v === 0 ? '#cfd8e6' : '#eef2f8') + '"/>';
+      s += '<text x="' + (padL - 5) + '" y="' + (yOf(v) + 3) + '" text-anchor="end" font-size="9" fill="#8a93a6">' + v + '</text>';
+    });
+    const lineFor = (key, color) => {
+      const pts = hist.map((p) => xOf(p.t) + ',' + yOf(p[key])).join(' ');
+      let seg = '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2.5"/>';
+      hist.forEach((p) => { seg += '<circle cx="' + xOf(p.t) + '" cy="' + yOf(p[key]) + '" r="2.6" fill="' + color + '"/>'; });
+      return seg;
+    };
+    s += lineFor('c', '#b9770e');
+    s += lineFor('h', '#1456b0');
+    s += '<text x="' + (W - padR) + '" y="14" text-anchor="end" font-size="10" fill="#b9770e">● cell state c</text>';
+    s += '<text x="' + (W - padR - 100) + '" y="14" text-anchor="end" font-size="10" fill="#1456b0">● output h</text>';
+    s += '<text x="' + (W / 2) + '" y="' + (H - 3) + '" text-anchor="middle" font-size="9.5" fill="#8a93a6">timestep →</text>';
+    Ill.$('#hist').innerHTML = s;
+  }
+
+  function refresh() { syncLabels(); drawCell(); drawHist(); updateNote(); }
+
+  function step() {
+    const { cNext, hNext } = drawCell();
+    c = cNext; h = hNext;
+    hist.push({ t: hist.length, c: c, h: h });
+    if (hist.length > 16) hist.shift(), hist.forEach((p, k) => p.t = k);
+    drawHist(); updateNote();
+    Ill.$('#lstat').innerHTML = 't=' + (hist.length - 1) + ' · c=' + c.toFixed(2) + ' · h=' + h.toFixed(2);
+  }
+
+  function updateNote() {
+    const f = +fEl.value, i = +iEl.value;
+    let m;
+    if (f > 0.8 && i < 0.2) m = '<b>Remember mode:</b> forget≈1, input≈0 → the belt carries the old memory almost unchanged. Step repeatedly and watch <span style="color:#b9770e">c</span> hold flat — this is how LSTMs span long gaps.';
+    else if (f < 0.2 && i > 0.8) m = '<b>Overwrite mode:</b> forget≈0, input≈1 → old memory is wiped and replaced by the candidate each step.';
+    else if (f > 0.8 && i > 0.8) m = '<b>Accumulate mode:</b> forget≈1 and input≈1 → the cell keeps the old value <em>and</em> adds the new one, acting like a running sum.';
+    else if (f < 0.2 && i < 0.2) m = '<b>Forget mode:</b> both gates near 0 → memory decays toward zero.';
+    else m = 'Mixed gates: the cell keeps <b>' + (f * 100).toFixed(0) + '%</b> of its old memory and writes <b>' + (i * 100).toFixed(0) + '%</b> of the new candidate each step.';
+    Ill.$('#lnote').innerHTML = m;
+  }
+
+  const PRESETS = {
+    remember: [1, 0, 1, 0.8], overwrite: [0, 1, 1, 0.8], accumulate: [1, 1, 1, 0.4], forget: [0, 0, 1, 0.8],
+  };
+  Ill.$$('.preset').forEach((b) => b.addEventListener('click', () => {
+    const [f, i, o, g] = PRESETS[b.dataset.p];
+    fEl.value = f; iEl.value = i; oEl.value = o; gEl.value = g; refresh();
+  }));
+  [fEl, iEl, oEl, gEl].forEach((s) => s.addEventListener('input', refresh));
+  Ill.$('#stepb').addEventListener('click', step);
+  Ill.$('#resetl').addEventListener('click', () => { c = 0; h = 0; hist = [{ t: 0, c: 0, h: 0 }]; refresh(); Ill.$('#lstat').textContent = ''; });
+  refresh();
+})();
+</script>
+</body>
+</html>
