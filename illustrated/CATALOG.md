@@ -54,7 +54,9 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🔗 LLM internals, 3-D walkthrough (bbycroft) — https://bbycroft.net/llm
 
 ## Phase 6B · LLM in-depth
-- ⏳ BPE tokenization (ties to BYO-7) · ⏳ LLM decoding (temp/top-k/p) · ⏳ LoRA & quantization
+- 🎨 **BPE tokenization** — [tokenization-bpe.html](tokenization-bpe.html) · ties to BYO-7
+- 🎨 **LLM decoding (temp / top-k / top-p)** — [llm-decoding.html](llm-decoding.html)
+- 🎨 **LoRA & quantization** — [lora-quantization.html](lora-quantization.html)
 - 🔗 Diffusion Explainer (poloclub) — https://poloclub.github.io/diffusion-explainer/
 - ⏳ Prompt injection / OWASP LLM01 (ties to BYO-16)
 

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Decoding — temperature, top-k & top-p</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 6B · LLM</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>How an LLM Picks the Next Token</h1>
+    <p class="lede">A language model doesn't "choose a word" — it outputs a <b>probability over every token</b>
+      and then you <em>sample</em> from it. <code>temperature</code>, <code>top-k</code>, and
+      <code>top-p</code> are the three knobs that reshape that distribution before the dice are rolled.</p>
+    <div class="tagrow">
+      <span class="tag">softmax over logits</span><span class="tag">temperature</span>
+      <span class="tag">top-k</span><span class="tag">top-p / nucleus</span><span class="tag">greedy vs sampling</span>
+    </div>
+  </div>
+
+  <h2>The model gives you a distribution, not an answer</h2>
+  <p>At each step the model produces one raw score (a <b>logit</b>) for <em>every</em> token in its
+  vocabulary. A <a href="embeddings.html">softmax</a> turns those scores into probabilities that sum to 1 —
+  a full distribution over "what could come next." <b>Decoding</b> is the policy for turning that
+  distribution into an actual token.</p>
+  <p>The simplest policy is <b>greedy</b>: always take the single highest-probability token (argmax). It's
+  deterministic and fine for short factual answers, but it's also bland and prone to loops ("the the the").
+  The alternative is to <b>sample</b> — roll a weighted die — which brings variety and creativity, at the
+  cost of occasionally picking something odd. The three knobs below all exist to control <em>how much</em>
+  of the tail you let into that die roll. Take the prompt <em>"The cat sat on the ___"</em>:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>temperature <span class="val" id="tv">1.00</span></label><input id="temp" type="range" min="0.05" max="2" step="0.05" value="1"></div>
+      <div class="ctrl"><label>top-k <span class="val" id="kv">0</span></label><input id="topk" type="range" min="0" max="10" step="1" value="0"></div>
+      <div class="ctrl"><label>top-p <span class="val" id="pv">1.00</span></label><input id="topp" type="range" min="0.1" max="1" step="0.05" value="1"></div>
+    </div>
+    <div id="bars"></div>
+    <div class="btnrow" style="margin-top:12px;">
+      <button id="sample">🎲 Sample a token</button>
+      <button class="ghost" id="sample20">Sample ×20</button>
+      <button class="ghost" id="clear">Clear tally</button>
+      <span class="small muted" id="lastpick"></span>
+    </div>
+    <div class="note" id="decnote" style="margin-top:12px;"></div>
+  </div>
+
+  <p class="small muted"><b>How to read it:</b> each bar is a candidate next token; its length is the
+  <em>final</em> probability the model would sample from after your settings. <span style="color:var(--green)">Solid
+  green</span> bars are <b>in play</b>; <span style="color:#b8c2d4">faded</span> bars were <b>cut</b> by
+  top-k / top-p and have zero chance. The dashed line marks the top-p <b>nucleus</b> boundary. The small
+  count on the right is how often each token actually came up when you sampled.</p>
+
+  <h2>Knob 1 — temperature: sharpen or flatten</h2>
+  <p>Temperature divides the logits <em>before</em> the softmax. Low temperature (<code>&lt;1</code>)
+  <b>sharpens</b> the distribution — the leader's probability balloons toward 1, so it behaves almost like
+  greedy. High temperature (<code>&gt;1</code>) <b>flattens</b> it — long-shot tokens get a real chance, so
+  output gets more surprising (and eventually incoherent). As <code>T → 0</code> you recover pure greedy; at
+  <code>T = 1</code> you sample from the model's honest distribution. Slide it and watch every bar grow or
+  shrink together.</p>
+
+  <h2>Knob 2 — top-k: keep only the k best</h2>
+  <p>Top-k <b>truncates</b> the distribution to the <code>k</code> highest-probability tokens, throws away
+  the rest, and renormalizes. It's a hard cap on how weird the next token can be — with <code>k = 1</code>
+  you're back to greedy; with <code>k = 5</code> the model can only ever pick from its top five guesses. The
+  weakness: a fixed <code>k</code> is sometimes too generous (when the model is very confident, even the 2nd
+  choice is junk) and sometimes too strict (when many tokens are genuinely plausible). <em>(Set the slider
+  to 0 to turn top-k off.)</em></p>
+
+  <h2>Knob 3 — top-p (nucleus): keep just enough probability mass</h2>
+  <p>Top-p fixes top-k's rigidity by being <b>adaptive</b>. Instead of a fixed count, you keep the
+  <em>smallest set of tokens whose probabilities add up to at least <code>p</code></em> (say 0.9), then
+  sample from that "nucleus." When the model is confident, one or two tokens already cover 90% of the mass,
+  so the nucleus is tiny and the output stays safe. When the model is genuinely unsure, the mass is spread
+  out, so the nucleus grows and allows more variety. That's why <b>top-p ≈ 0.9 with temperature ≈ 0.7–1.0</b>
+  is the most popular default — it adapts to the model's own confidence.</p>
+
+  <h2>Which to reach for</h2>
+  <ul>
+    <li><b>Factual / code / extraction:</b> low temperature (<code>0–0.3</code>) or greedy — you want the
+      most likely, reproducible answer, not creativity.</li>
+    <li><b>Chat / general writing:</b> the common default <code>temperature ≈ 0.7</code>, <code>top-p ≈ 0.9</code>
+      — coherent but not robotic.</li>
+    <li><b>Brainstorming / poetry:</b> higher temperature (<code>1.0–1.3</code>) and/or larger top-p for more
+      surprising results — accept the occasional misfire.</li>
+    <li><b>Reproducibility:</b> set temperature to 0 (greedy) — and remember even then, infrastructure can
+      introduce tiny nondeterminism.</li>
+  </ul>
+  <p>You rarely tune all three at once: pick <b>temperature</b> for how adventurous, and <b>one</b> of
+  top-k / top-p (usually top-p) as a safety net against the genuinely bad tail.</p>
+
+  <div class="note green"><b>Takeaways:</b> the model emits a probability distribution; decoding samples from
+  it. <b>Temperature</b> sharpens (&lt;1, toward greedy) or flattens (&gt;1, more random) the whole
+  distribution. <b>Top-k</b> keeps a fixed number of top tokens; <b>top-p</b> keeps the smallest set
+  covering probability <code>p</code> and adapts to the model's confidence. Greedy = temperature 0.</div>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 6B · LLM in-depth.
+    See <a href="../phases/phase-6b-llm-indepth.md">the Phase 6B guide</a>; pairs with
+    <a href="tokenization-bpe.html">BPE tokenization →</a>.
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+  const TOKENS = [
+    { t: 'mat', l: 3.2 }, { t: 'rug', l: 2.4 }, { t: 'floor', l: 2.1 }, { t: 'sofa', l: 1.6 },
+    { t: 'couch', l: 1.5 }, { t: 'chair', l: 1.0 }, { t: 'table', l: 0.6 }, { t: 'roof', l: 0.2 },
+    { t: 'moon', l: -0.8 }, { t: 'idea', l: -1.6 },
+  ];
+  const tally = TOKENS.map(() => 0);
+  let totalSamples = 0;
+  const rnd = Ill.rng(12345);
+
+  const tempEl = Ill.$('#temp'), kEl = Ill.$('#topk'), pEl = Ill.$('#topp');
+
+  function compute() {
+    const T = parseFloat(tempEl.value), k = parseInt(kEl.value, 10), p = parseFloat(pEl.value);
+    const logits = TOKENS.map((x) => x.l);
+    let probs = Ill.softmax(logits, T);
+    // indices sorted by prob desc
+    const order = probs.map((pr, i) => [pr, i]).sort((a, b) => b[0] - a[0]).map((x) => x[1]);
+
+    const kept = new Array(TOKENS.length).fill(true);
+    // top-k cut
+    if (k > 0) order.forEach((idx, rank) => { if (rank >= k) kept[idx] = false; });
+    // top-p cut over remaining, in prob order
+    if (p < 1) {
+      let cum = 0, reached = false, nucleusEnd = -1;
+      for (let rank = 0; rank < order.length; rank++) {
+        const idx = order[rank];
+        if (!kept[idx]) continue;
+        if (reached) { kept[idx] = false; continue; }
+        cum += probs[idx];
+        nucleusEnd = rank;
+        if (cum >= p) reached = true;
+      }
+    }
+    // renormalize kept
+    let z = 0; probs.forEach((pr, i) => { if (kept[i]) z += pr; });
+    const finalP = probs.map((pr, i) => (kept[i] ? pr / z : 0));
+    // nucleus boundary rank = last kept rank
+    let nucleusRank = -1;
+    order.forEach((idx, rank) => { if (kept[idx]) nucleusRank = rank; });
+    return { T, k, p, finalP, order, kept, nucleusRank };
+  }
+
+  function render() {
+    const { T, k, p, finalP, order, kept, nucleusRank } = compute();
+    Ill.$('#tv').textContent = T.toFixed(2);
+    Ill.$('#kv').textContent = k === 0 ? 'off' : k;
+    Ill.$('#pv').textContent = p >= 1 ? 'off' : p.toFixed(2);
+
+    const max = Math.max(...finalP, 0.01);
+    const bars = Ill.$('#bars');
+    // render in descending base-prob order for clarity
+    bars.innerHTML = order.map((idx, rank) => {
+      const tk = TOKENS[idx], pr = finalP[idx], on = kept[idx];
+      const pct = (pr * 100).toFixed(1);
+      const w = (pr / max) * 100;
+      const count = tally[idx];
+      const isNucleusEdge = (p < 1) && rank === nucleusRank;
+      return '<div class="barrow" style="grid-template-columns:74px 1fr 96px;">' +
+        '<span class="lbl" style="' + (on ? '' : 'opacity:.5') + '">' + tk.t + '</span>' +
+        '<span style="position:relative; display:block;">' +
+          '<span class="bar" style="width:' + w + '%; background:' + (on ? 'var(--green)' : '#b8c2d4') + ';"></span>' +
+          (isNucleusEdge ? '<span style="position:absolute; right:-2px; top:-3px; bottom:-3px; border-right:2px dashed var(--navy);"></span>' : '') +
+        '</span>' +
+        '<span class="num" style="' + (on ? '' : 'opacity:.5') + '">' + (on ? pct + '%' : '—') +
+          (count ? ' <span style="color:var(--muted)">·' + count + '</span>' : '') + '</span>' +
+        '</div>';
+    }).join('');
+
+    const nKept = kept.filter(Boolean).length;
+    const note = Ill.$('#decnote');
+    let parts = [];
+    if (T < 0.3) parts.push('Temperature <code>' + T.toFixed(2) + '</code> is near-<b>greedy</b>: the top token dominates.');
+    else if (T > 1.2) parts.push('Temperature <code>' + T.toFixed(2) + '</code> <b>flattens</b> the distribution — long-shots get real probability.');
+    else parts.push('Temperature <code>' + T.toFixed(2) + '</code> samples close to the model\'s native distribution.');
+    if (k > 0) parts.push('top-k keeps the <b>' + k + '</b> best.');
+    if (p < 1) parts.push('top-p keeps the nucleus that covers ≥ <b>' + p.toFixed(2) + '</b> of the mass.');
+    parts.push('<b>' + nKept + '</b> of ' + TOKENS.length + ' tokens are in play.');
+    note.innerHTML = parts.join(' ');
+  }
+
+  function sampleOnce() {
+    const { finalP } = compute();
+    let r = rnd(), acc = 0, picked = 0;
+    for (let i = 0; i < finalP.length; i++) { acc += finalP[i]; if (r <= acc) { picked = i; break; } }
+    tally[picked]++; totalSamples++;
+    Ill.$('#lastpick').innerHTML = 'sampled: <b>“' + TOKENS[picked].t + '”</b> &nbsp;(' + totalSamples + ' total)';
+    render();
+  }
+
+  [tempEl, kEl, pEl].forEach((s) => s.addEventListener('input', render));
+  Ill.$('#sample').addEventListener('click', sampleOnce);
+  Ill.$('#sample20').addEventListener('click', () => { for (let i = 0; i < 20; i++) sampleOnce(); });
+  Ill.$('#clear').addEventListener('click', () => { for (let i = 0; i < tally.length; i++) tally[i] = 0; totalSamples = 0; Ill.$('#lastpick').textContent = ''; render(); });
+  render();
+})();
+</script>
+</body>
+</html>
