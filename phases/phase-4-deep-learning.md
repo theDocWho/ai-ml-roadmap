@@ -21,14 +21,14 @@ locally, push to git, then `!git clone` into the GPU session.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 1 | Perceptron → **MLP**, hidden layers (exam Q26, Q27) | [3B1B NN](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) — **Ch.1 "But what is a neural network?"** | 19m |
-| 2 | Forward pass; weights, biases | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"The Essential Main Ideas of Neural Networks"** | 19m |
-| 3 | **Activation functions** (sigmoid/tanh/ReLU/softmax) (exam Q32, Q37, Q38, Q39) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"ReLU In Action"** + StatQuest **"Softmax"** / **"Sigmoid"** | 30m |
-| 4 | Loss functions (MSE, cross-entropy) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Cross Entropy / Neural Networks Part 6"** | 15m |
-| 5 | **Backpropagation** (exam Q34) | [3B1B NN](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) — **Ch.3 "What is backpropagation really doing?"** + **Ch.4 "Backpropagation calculus"** | 30m |
-| 6 | Build it from scratch (the deep version) | [Karpathy Z2H](https://karpathy.ai/zero-to-hero.html) — **"The spelled-out intro to neural networks and backpropagation: building micrograd"** | 2.5h |
+| 1 | Perceptron → **MLP**, hidden layers (exam Q26, Q27) | [3B1B NN](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) — **Ch.1 "But what is a neural network?"** · 📖 [Nielsen: Neural Networks (Ch.1)](http://neuralnetworksanddeeplearning.com/chap1.html) | 19m |
+| 2 | Forward pass; weights, biases | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"The Essential Main Ideas of Neural Networks"** · 📖 [d2l.ai: Multilayer Perceptrons](https://d2l.ai/chapter_multilayer-perceptrons/mlp.html) | 19m |
+| 3 | **Activation functions** (sigmoid/tanh/ReLU/softmax) (exam Q32, Q37, Q38, Q39) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"ReLU In Action"** + StatQuest **"Softmax"** / **"Sigmoid"** · 📖 [CS231n: Neural Nets (activations)](https://cs231n.github.io/neural-networks-1/) | 30m |
+| 4 | Loss functions (MSE, cross-entropy) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Cross Entropy / Neural Networks Part 6"** · 📖 [d2l.ai: Softmax Regression & Cross-Entropy](https://d2l.ai/chapter_linear-classification/softmax-regression.html) | 15m |
+| 5 | **Backpropagation** (exam Q34) | [3B1B NN](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) — **Ch.3 "What is backpropagation really doing?"** + **Ch.4 "Backpropagation calculus"** · 📖 [Nielsen: Backpropagation (Ch.2)](http://neuralnetworksanddeeplearning.com/chap2.html) | 30m |
+| 6 | Build it from scratch (the deep version) | [Karpathy Z2H](https://karpathy.ai/zero-to-hero.html) — **"The spelled-out intro to neural networks and backpropagation: building micrograd"** · 📖 [CS231n: Backprop notes](https://cs231n.github.io/optimization-2/) | 2.5h |
 | 7 | Epochs, batches, iterations (exam Q29) | [Google ML Crash Course](https://developers.google.com/machine-learning/crash-course) — **"Training → epochs/batch size"** | 15m |
-| 8 | Why hidden layers: the **XOR** problem (exam Q33) | [Vizuara](https://www.youtube.com/@vizuara) — search **"XOR neural network"** | 15m |
+| 8 | Why hidden layers: the **XOR** problem (exam Q33) | [Vizuara](https://www.youtube.com/@vizuara) — search **"XOR neural network"** · 📖 [Nielsen: Universal approximation (Ch.4)](http://neuralnetworksanddeeplearning.com/chap4.html) | 15m |
 
 **✅ Checkpoint 4A** — 🖥️ Local (CPU is fine here) — one per topic:
 - **(T1)** Draw an MLP with one hidden layer; how many hidden layers does an MLP have *at least* (exam Q27)?
@@ -67,7 +67,7 @@ locally, push to git, then `!git clone` into the GPU session.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 15 | **Convolution** (linear op) (exam Q36, Q44) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Image Classification with Convolutional Neural Networks (CNNs)"** | 16m |
+| 15 | **Convolution** (linear op) (exam Q36, Q44) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Image Classification with Convolutional Neural Networks (CNNs)"** · 📖 [CS231n: Convolutional Networks](https://cs231n.github.io/convolutional-networks/) | 16m |
 | 16 | **Pooling** (downsampling) (exam Q45) | [CS231n](https://cs231n.github.io/convolutional-networks/) — **"Pooling Layer"** section | 15m |
 | 17 | CNN architectures (LeNet→ResNet) *(beyond)* | [d2l.ai](https://d2l.ai/chapter_convolutional-modern/resnet.html) — **"Residual Networks (ResNet)"** | 40m |
 | 18 | **Transfer learning** *(beyond)* | [PyTorch Tutorials](https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html) — **"Transfer Learning for Computer Vision"** | 40m |
@@ -86,10 +86,10 @@ locally, push to git, then `!git clone` into the GPU session.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 20 | **RNNs** (exam Q43) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Recurrent Neural Networks (RNNs), Clearly Explained!!!"** | 16m |
-| 21 | **LSTM / GRU** (exam Q42) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Long Short-Term Memory (LSTM), Clearly Explained"** | 21m |
-| 22 | seq2seq & attention (bridge to Phase 5) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Sequence-to-Sequence (seq2seq) / Attention"** | 17m |
-| 23 | **Autoencoders** (exam Q41, Q50) | [Vizuara](https://www.youtube.com/@vizuara) — search **"Autoencoders from scratch"** + [d2l.ai autoencoder refs] | 30m |
+| 20 | **RNNs** (exam Q43) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Recurrent Neural Networks (RNNs), Clearly Explained!!!"** · 📖 [Karpathy: Unreasonable Effectiveness of RNNs](https://karpathy.github.io/2015/05/21/rnn-effectiveness/) | 16m |
+| 21 | **LSTM / GRU** (exam Q42) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Long Short-Term Memory (LSTM), Clearly Explained"** · 📖 [Chris Olah: Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) | 21m |
+| 22 | seq2seq & attention (bridge to Phase 5) | [StatQuest NN](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) — **"Sequence-to-Sequence (seq2seq) / Attention"** · 📖 [Jay Alammar: Seq2seq + Attention](https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/) | 17m |
+| 23 | **Autoencoders** (exam Q41, Q50) | [Vizuara](https://www.youtube.com/@vizuara) — search **"Autoencoders from scratch"** · 📖 [Lilian Weng: From Autoencoder to Beta-VAE](https://lilianweng.github.io/posts/2018-08-12-vae/) | 30m |
 | 24 | Self-supervised & contrastive learning *(beyond)* | [Lilian Weng — "Self-Supervised Representation Learning"](https://lilianweng.github.io/posts/2019-11-10-self-supervised/) | 45m |
 
 **✅ Checkpoint 4D** — ☁️ Colab/📊 Kaggle — one per topic:

@@ -23,13 +23,13 @@ timeless — StatQuest and ISLP stay valid regardless of age.
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 1 | Supervised vs unsupervised (exam Q17, Q19, Q25) | [Google ML Crash Course](https://developers.google.com/machine-learning/crash-course) — **"ML Concepts → Framing"** | 30m |
-| 2 | Regression vs classification (exam Q16, Q20) | [StatQuest ML](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Machine Learning Fundamentals: Bias and Variance"** (intro framing) | 15m |
+| 2 | Regression vs classification (exam Q16, Q20) | [StatQuest ML](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Machine Learning Fundamentals: Bias and Variance"** (intro framing) · 📖 [ISLP Ch.2 (Statistical Learning)](https://www.statlearning.com) | 15m |
 | 3 | Train/validation/test split & data leakage | [Kaggle Learn — Intro to ML](https://www.kaggle.com/learn/intro-to-machine-learning) — **"Model Validation"** | 25m |
-| 4 | **Bias–variance, over/underfitting** | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Machine Learning Fundamentals: Bias and Variance"** | 7m |
-| 5 | **Cross-validation** (exam Q22) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Machine Learning Fundamentals: Cross Validation"** | 6m |
+| 4 | **Bias–variance, over/underfitting** | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Machine Learning Fundamentals: Bias and Variance"** · 📖 [MLU-Explain: Bias–Variance](https://mlu-explain.github.io/bias-variance/) | 7m |
+| 5 | **Cross-validation** (exam Q22) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Machine Learning Fundamentals: Cross Validation"** · 📖 [scikit-learn: Cross-validation](https://scikit-learn.org/stable/modules/cross_validation.html) | 6m |
 | 6 | Regression metrics: MAE/RSS/RMSE/R² (exam Q9, Q14) | [ISLP](https://www.statlearning.com) — **Ch.3 "Linear Regression"** (assessing fit) | 30m |
-| 7 | **Classification metrics**: confusion matrix, precision/recall/**F1** (exam Q23) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"The Confusion Matrix"** + **"Sensitivity and Specificity"** | 20m |
-| 8 | **ROC & AUC** | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"ROC and AUC, Clearly Explained!"** | 16m |
+| 7 | **Classification metrics**: confusion matrix, precision/recall/**F1** (exam Q23) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"The Confusion Matrix"** + **"Sensitivity and Specificity"** · 📖 [scikit-learn: Classification metrics](https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics) | 20m |
+| 8 | **ROC & AUC** | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"ROC and AUC, Clearly Explained!"** · 📖 [MLU-Explain: ROC & AUC](https://mlu-explain.github.io/roc-auc/) | 16m |
 
 **✅ Checkpoint 3A** — 🖥️/📊 — one per topic:
 - **(T1)** Classify each as supervised/unsupervised: object detection, k-means, density estimation (exam Q19); what do both *require*? (exam Q17)
@@ -48,15 +48,15 @@ timeless — StatQuest and ISLP stay valid regardless of age.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 9 | Linear regression | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Linear Regression, Clearly Explained!!!"** | 27m |
-| 10 | Logistic regression (classification) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Logistic Regression"** series intro | 20m |
-| 11 | **Regularization** (Ridge/L2, Lasso/L1, elastic net) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Regularization Part 1: Ridge"** + **"Part 2: Lasso"** | 35m |
-| 12 | KNN | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"K-nearest neighbors, Clearly Explained"** | 6m |
-| 13 | **Naive Bayes** (exam Q12, Q13, Q20) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Naive Bayes, Clearly Explained!!!"** | 15m |
-| 14 | **SVM + the kernel trick** *(beyond exam)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Support Vector Machines Part 1"** (+ Parts 2–3) | 40m |
-| 15 | **Decision trees** (exam Q11) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Decision Trees"** (classification) | 17m |
-| 16 | Bagging & **Random Forests** | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Random Forests Part 1: Building, Using and Evaluating"** | 10m |
-| 17 | **Boosting** (AdaBoost, Gradient Boost, XGBoost) (exam Q21, Q30) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"AdaBoost"** + **"Gradient Boost Part 1"** + **"XGBoost Part 1"** | 50m |
+| 9 | Linear regression | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Linear Regression, Clearly Explained!!!"** · 📖 [ISLP Ch.3 (Linear Regression)](https://www.statlearning.com) | 27m |
+| 10 | Logistic regression (classification) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Logistic Regression"** series intro · 📖 [ISLP Ch.4 (Classification)](https://www.statlearning.com) | 20m |
+| 11 | **Regularization** (Ridge/L2, Lasso/L1, elastic net) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Regularization Part 1: Ridge"** + **"Part 2: Lasso"** · 📖 [ISLP Ch.6 (Shrinkage Methods)](https://www.statlearning.com) | 35m |
+| 12 | KNN | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"K-nearest neighbors, Clearly Explained"** · 📖 [scikit-learn: Nearest Neighbors](https://scikit-learn.org/stable/modules/neighbors.html) | 6m |
+| 13 | **Naive Bayes** (exam Q12, Q13, Q20) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Naive Bayes, Clearly Explained!!!"** · 📖 [scikit-learn: Naive Bayes](https://scikit-learn.org/stable/modules/naive_bayes.html) | 15m |
+| 14 | **SVM + the kernel trick** *(beyond exam)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Support Vector Machines Part 1"** (+ Parts 2–3) · 📖 [scikit-learn: Support Vector Machines](https://scikit-learn.org/stable/modules/svm.html) | 40m |
+| 15 | **Decision trees** (exam Q11) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Decision Trees"** (classification) · 📖 [scikit-learn: Decision Trees](https://scikit-learn.org/stable/modules/tree.html) | 17m |
+| 16 | Bagging & **Random Forests** | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Random Forests Part 1: Building, Using and Evaluating"** · 📖 [scikit-learn: Random Forests](https://scikit-learn.org/stable/modules/ensemble.html#forests-of-randomized-trees) | 10m |
+| 17 | **Boosting** (AdaBoost, Gradient Boost, XGBoost) (exam Q21, Q30) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"AdaBoost"** + **"Gradient Boost Part 1"** + **"XGBoost Part 1"** · 📖 [scikit-learn: Gradient Boosting](https://scikit-learn.org/stable/modules/ensemble.html#gradient-boosting) | 50m |
 | 18 | Stacking & voting ensembles | [scikit-learn UG](https://scikit-learn.org/stable/modules/ensemble.html) — **"Ensembles → Stacking"** | 20m |
 
 **✅ Checkpoint 3B** — 🖥️/📊 — one per topic:
@@ -77,12 +77,12 @@ timeless — StatQuest and ISLP stay valid regardless of age.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 19 | **K-means** (exam Q31) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"K-means clustering"** | 8m |
-| 20 | Hierarchical clustering *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Hierarchical Clustering"** | 11m |
-| 21 | DBSCAN *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Clustering with DBSCAN"** | 9m |
-| 22 | GMM / EM *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Gaussian Mixture Models"** | 13m |
-| 23 | **PCA** (exam Q18) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"PCA, Step-by-Step"** | 22m |
-| 24 | t-SNE & UMAP *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"t-SNE, Clearly Explained"** | 12m |
+| 19 | **K-means** (exam Q31) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"K-means clustering"** · 📖 [scikit-learn: K-means](https://scikit-learn.org/stable/modules/clustering.html#k-means) | 8m |
+| 20 | Hierarchical clustering *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Hierarchical Clustering"** · 📖 [scikit-learn: Hierarchical clustering](https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering) | 11m |
+| 21 | DBSCAN *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Clustering with DBSCAN"** · 📖 [scikit-learn: DBSCAN](https://scikit-learn.org/stable/modules/clustering.html#dbscan) | 9m |
+| 22 | GMM / EM *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"Gaussian Mixture Models"** · 📖 [scikit-learn: Gaussian Mixtures](https://scikit-learn.org/stable/modules/mixture.html) | 13m |
+| 23 | **PCA** (exam Q18) | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"PCA, Step-by-Step"** · 📖 [scikit-learn: PCA](https://scikit-learn.org/stable/modules/decomposition.html#pca) | 22m |
+| 24 | t-SNE & UMAP *(beyond)* | [StatQuest](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) — **"t-SNE, Clearly Explained"** · 📖 [Distill: How to Use t-SNE Effectively](https://distill.pub/2016/misread-tsne/) | 12m |
 | 25 | Anomaly detection | [scikit-learn UG](https://scikit-learn.org/stable/modules/outlier_detection.html) — **"Novelty and Outlier Detection"** | 25m |
 
 **✅ Checkpoint 3C** — 🖥️/📊 — one per topic:

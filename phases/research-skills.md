@@ -32,7 +32,7 @@ Goal: learn to **find**, **read**, **verify/reproduce**, and eventually **write*
 | # | Topic | Use exactly this |
 |---|-------|------------------|
 | 8 | The **three-pass method** | [**Keshav, "How to Read a Paper" (PDF)**](http://ccr.sigcomm.org/online/files/p83-keshavA.pdf) |
-| 9 | A practitioner's reading workflow | [**Andrew Ng — "Reading Research Papers" (Stanford CS230)**](https://www.youtube.com/@stanfordonline/search?query=reading%20research%20papers) (advice on reading + career) |
+| 9 | A practitioner's reading workflow | [**Andrew Ng — "Reading Research Papers" (Stanford CS230)**](https://www.youtube.com/@stanfordonline/search?query=reading%20research%20papers) (advice on reading + career) · 📖 [Jason Eisner: How to Read a Paper](https://www.cs.jhu.edu/~jason/advice/how-to-read-a-paper.html) |
 | 10 | What to extract every time | template below (problem → method → results → limitations → "what I'd test") |
 | 11 | Filling math/notation gaps | [**The Math for ML book**](https://mml-book.github.io) + search the specific notation; don't skip equations |
 
@@ -97,7 +97,7 @@ a reproduction or a small novel result (often from your capstones).
 
 | # | Topic | Use exactly this |
 |---|-------|------------------|
-| 20 | Paper structure & craft | [**Simon Peyton Jones — "How to Write a Great Research Paper" (talk)**](https://www.youtube.com/results?search_query=Simon+Peyton+Jones+how+to+write+a+great+research+paper) |
+| 20 | Paper structure & craft | [**Simon Peyton Jones — "How to Write a Great Research Paper" (talk)**](https://www.youtube.com/results?search_query=Simon+Peyton+Jones+how+to+write+a+great+research+paper) · 📖 [Ten Simple Rules for Structuring Papers (PLOS)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005619) |
 | 21 | Writing tool (LaTeX, no install) | [**Overleaf**](https://www.overleaf.com) + an official conference template (NeurIPS/ICLR style files) |
 | 22 | What to claim & how to evaluate | strong baselines, ablations, error bars, honest limitations; follow the [**NeurIPS Paper Checklist**](https://neurips.cc/public/guides/PaperChecklist) |
 | 23 | Where to submit (start small) | **arXiv** preprint ([submission help](https://arxiv.org/help/submit), needs an endorsement) → a **workshop** at NeurIPS/ICML/ICLR (lower bar, great feedback) → main conference |

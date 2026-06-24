@@ -22,8 +22,8 @@ model/tool names below are examples. The *fundamentals* (attention, LoRA math, q
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 1 | Transformer internals, KV cache | [LLM Visualization](https://bbycroft.net/llm) (walk the whole pipeline) + [3B1B — "But what is a GPT?"](https://www.youtube.com/@3blue1brown) | 45m |
-| 2 | Tokenization deep (BPE) | [Karpathy — "Let's build the GPT Tokenizer"](https://www.youtube.com/@AndrejKarpathy) | 2h |
+| 1 | Transformer internals, KV cache | [LLM Visualization](https://bbycroft.net/llm) (walk the whole pipeline) + [3B1B — "But what is a GPT?"](https://www.youtube.com/@3blue1brown) · 📖 [The Annotated Transformer (Harvard)](http://nlp.seas.harvard.edu/annotated-transformer/) | 45m |
+| 2 | Tokenization deep (BPE) | [Karpathy — "Let's build the GPT Tokenizer"](https://www.youtube.com/@AndrejKarpathy) · 📖 [HF LLM Course: Tokenizers](https://huggingface.co/learn/llm-course/chapter6/1) | 2h |
 | 3 | Decoding/sampling (greedy, top-k/p, temperature) | [HF LLM Course](https://huggingface.co/learn/llm-course) — **"Generation strategies"** | 30m |
 | 4 | Scaling laws & emergent abilities | [Maxime Labonne — LLM Course](https://github.com/mlabonne/llm-course) — **"Fundamentals → scaling"** refs | 30m |
 | 5 | Mixture of Experts (MoE) | [Hugging Face blog — "Mixture of Experts Explained"](https://huggingface.co/blog/moe) | 40m |

@@ -22,6 +22,10 @@ topic they verify (e.g. "(T8)" = topic 8 in that module).
 ## How links & freshness work
 - A resource link points to the **playlist / site / doc root**; the **bold title** is the exact video,
   chapter, or article to open inside it. (Titles stay stable even when individual video URLs change.)
+- 📖 **Read companion:** every topic gives you at least one *written* resource (official docs, a free
+  book, or a high-quality article) — look for the **📖** marker next to a row. Where the primary link is
+  a video, the 📖 read covers the **same topic** in text, so you can learn by reading instead of (or as
+  well as) watching. 🎨 marks an interactive [illustrated explainer](../illustrated/index.html).
 - **Freshness rule:** for fast-moving tools (Python, NumPy/Pandas, PyTorch, LLM libraries) always use
   the **latest stable docs/version** — links go to "current" docs (e.g. Python **3.12+**). For
   **timeless** material (math, core stats, classic algorithms) an older-but-excellent reference is

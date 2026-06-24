@@ -42,14 +42,14 @@ are one click away). Each checkpoint is tagged.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 7 | **Series & DataFrame** (exam Q2), loading CSVs | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 1** + **Part 2** · 🎨 [Visualize](../illustrated/pandas-dataframe.html) | 60m |
-| 8 | `loc` vs `iloc`, indexes | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 2** + **Part 3 (Indexes)** | 45m |
-| 9 | Filtering with conditionals | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 4 (Filtering)** | 25m |
-| 10 | Add/update/remove columns | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 5 & 6** | 40m |
-| 11 | **GroupBy + aggregation** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 8 (Grouping & Aggregating)** · 🎨 [Visualize](../illustrated/pandas-groupby.html) | 35m |
-| 12 | Cleaning: dtypes & **missing values** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 9 (Cleaning Data)** | 30m |
+| 7 | **Series & DataFrame** (exam Q2), loading CSVs | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 1** + **Part 2** · 🎨 [Visualize](../illustrated/pandas-dataframe.html) · 📖 [PDS Handbook: Pandas Objects](https://jakevdp.github.io/PythonDataScienceHandbook/03.01-introducing-pandas-objects.html) | 60m |
+| 8 | `loc` vs `iloc`, indexes | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 2** + **Part 3 (Indexes)** · 📖 [PDS Handbook: Data Indexing & Selection](https://jakevdp.github.io/PythonDataScienceHandbook/03.02-data-indexing-and-selection.html) | 45m |
+| 9 | Filtering with conditionals | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 4 (Filtering)** · 📖 [pandas docs: Boolean indexing](https://pandas.pydata.org/docs/user_guide/indexing.html#boolean-indexing) | 25m |
+| 10 | Add/update/remove columns | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 5 & 6** · 📖 [PDS Handbook: Operations in Pandas](https://jakevdp.github.io/PythonDataScienceHandbook/03.03-operations-in-pandas.html) | 40m |
+| 11 | **GroupBy + aggregation** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 8 (Grouping & Aggregating)** · 🎨 [Visualize](../illustrated/pandas-groupby.html) · 📖 [PDS Handbook: Aggregation & Grouping](https://jakevdp.github.io/PythonDataScienceHandbook/03.08-aggregation-and-grouping.html) | 35m |
+| 12 | Cleaning: dtypes & **missing values** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 9 (Cleaning Data)** · 📖 [PDS Handbook: Handling Missing Data](https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html) | 30m |
 | 13 | Merge / join / concat | [Kaggle Learn — Pandas](https://www.kaggle.com/learn/pandas) — **"Combining"** lesson | 40m |
-| 14 | Dates & time series (for finance) | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 10 (Dates & Time Series)** | 30m |
+| 14 | Dates & time series (for finance) | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 10 (Dates & Time Series)** · 📖 [pandas docs: Time series](https://pandas.pydata.org/docs/user_guide/timeseries.html) | 30m |
 
 **✅ Checkpoint 1B** — 🖥️ Local or 📊 Kaggle — finishes the free [Kaggle Pandas](https://www.kaggle.com/learn/pandas) cert — one per topic:
 - **(T7)** Load a CSV; show `.head()`, `.info()`, `.describe()`; explain Series vs DataFrame (exam Q2).
@@ -67,11 +67,11 @@ are one click away). Each checkpoint is tagged.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 15 | Matplotlib anatomy: figure/axes, line plots | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 1 (Creating & Customizing Plots)** | 35m |
-| 16 | Bar charts from CSV data | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 2 (Bar Charts)** | 25m |
-| 17 | Histograms (distributions) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 6 (Histograms)** | 20m |
-| 18 | Scatter plots (relationships) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 7 (Scatter Plots)** | 20m |
-| 19 | Subplots (multi-panel) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 10 (Subplots)** | 25m |
+| 15 | Matplotlib anatomy: figure/axes, line plots | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 1 (Creating & Customizing Plots)** · 📖 [PDS Handbook: Simple Line Plots](https://jakevdp.github.io/PythonDataScienceHandbook/04.01-simple-line-plots.html) | 35m |
+| 16 | Bar charts from CSV data | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 2 (Bar Charts)** · 📖 [Matplotlib: Pyplot tutorial](https://matplotlib.org/stable/tutorials/pyplot.html) | 25m |
+| 17 | Histograms (distributions) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 6 (Histograms)** · 📖 [PDS Handbook: Histograms & Binnings](https://jakevdp.github.io/PythonDataScienceHandbook/04.05-histograms-and-binnings.html) | 20m |
+| 18 | Scatter plots (relationships) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 7 (Scatter Plots)** · 📖 [PDS Handbook: Simple Scatter Plots](https://jakevdp.github.io/PythonDataScienceHandbook/04.02-simple-scatter-plots.html) | 20m |
+| 19 | Subplots (multi-panel) | [Corey Schafer Matplotlib](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — **Part 10 (Subplots)** · 📖 [PDS Handbook: Multiple Subplots](https://jakevdp.github.io/PythonDataScienceHandbook/04.08-multiple-subplots.html) | 25m |
 | 20 | Seaborn: distributions, `heatmap`, `pairplot` | [Kaggle Learn — Data Visualization](https://www.kaggle.com/learn/data-visualization) (full, free) | 2h |
 
 **✅ Checkpoint 1C** — 🖥️ Local — one per topic:
@@ -88,7 +88,7 @@ are one click away). Each checkpoint is tagged.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 21 | Jupyter notebooks (cells, markdown) | [Corey Schafer — "Jupyter Notebook Tutorial: Introduction, Setup, and Walkthrough"](https://www.youtube.com/@coreyms/search?query=jupyter%20notebook) | 30m |
+| 21 | Jupyter notebooks (cells, markdown) | [Corey Schafer — "Jupyter Notebook Tutorial: Introduction, Setup, and Walkthrough"](https://www.youtube.com/@coreyms/search?query=jupyter%20notebook) · 📖 [Real Python: Jupyter Notebook Intro](https://realpython.com/jupyter-notebook-introduction/) | 30m |
 | 22 | Google Colab (free GPU later) | [colab.research.google.com](https://colab.research.google.com) — open "Welcome" notebook; *Runtime ▸ change to GPU* | 15m |
 | 23 | Kaggle Notebooks + datasets | [kaggle.com/code](https://www.kaggle.com/code) — New Notebook ▸ Add Data | 15m |
 

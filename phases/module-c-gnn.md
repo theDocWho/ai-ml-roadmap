@@ -21,7 +21,7 @@ GCN/GAT) are stable.
 | 1 | Graphs as data; node/edge/graph tasks | [Distill — Gentle Intro to GNNs](https://distill.pub/2021/gnn-intro/) (first half) | 1h |
 | 2 | Representation: adjacency, node features, normalization | [PyG docs](https://pytorch-geometric.readthedocs.io/en/latest/get_started/introduction.html) — **"Introduction by Example → Data"** | 45m |
 | 3 | **Message passing / neighborhood aggregation** | [Distill — Gentle Intro to GNNs](https://distill.pub/2021/gnn-intro/) (second half) + [CS224W](https://www.youtube.com/playlist?list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn) — **"GNN intuition"** lecture | 1.5h |
-| 4 | **GCN** (graph convolution) | [CS224W](https://www.youtube.com/playlist?list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn) — **"Graph Convolutional Networks"** lecture | 1.5h |
+| 4 | **GCN** (graph convolution) | [CS224W](https://www.youtube.com/playlist?list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn) — **"Graph Convolutional Networks"** lecture · 📖 [Thomas Kipf: Graph Convolutional Networks](https://tkipf.github.io/graph-convolutional-networks/) | 1.5h |
 
 **✅ Checkpoint C1** — 🖥️ Local/☁️ Colab — one per topic:
 - **(T1)** Give a node-, an edge-, and a graph-level task example (e.g. fraud node, link prediction, molecule property).
@@ -35,7 +35,7 @@ GCN/GAT) are stable.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 5 | **GraphSAGE** (sampling aggregation, scalable) | [CS224W](https://www.youtube.com/playlist?list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn) — **"GraphSAGE"** lecture | 1h |
+| 5 | **GraphSAGE** (sampling aggregation, scalable) | [CS224W](https://www.youtube.com/playlist?list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn) — **"GraphSAGE"** lecture · 📖 [Stanford SNAP: GraphSAGE](https://snap.stanford.edu/graphsage/) | 1h |
 | 6 | **GAT** (graph attention) | [PyG docs](https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.nn.conv.GATConv.html) — **"GATConv"** + paper | 1h |
 | 7 | Node classification (transductive) | [PyG docs](https://pytorch-geometric.readthedocs.io/en/latest/get_started/introduction.html) — **"Node classification on Cora"** | 1h |
 | 8 | Link prediction & graph-level (pooling) | [PyG examples](https://pytorch-geometric.readthedocs.io/en/latest/tutorial/index.html) — **"Link Prediction" / "Graph pooling"** | 1.5h |

@@ -22,15 +22,15 @@ needed in this phase.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 1 | Vectors, span, basis | [3B1B Essence of LA](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.1 "Vectors"** + **Ch.2 "Linear combinations, span, basis"** | 30m |
-| 2 | Linear transformations = matrices | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.3 "Linear transformations and matrices"** | 12m |
-| 3 | Matrix multiply as composition | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.4 "Matrix multiplication as composition"** | 12m |
-| 4 | Determinant | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.6 "The determinant"** | 10m |
-| 5 | Inverse, rank, column space, null space | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.7 "Inverse matrices, column space, null space"** | 13m |
+| 1 | Vectors, span, basis | [3B1B Essence of LA](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.1 "Vectors"** + **Ch.2 "Linear combinations, span, basis"** · 📖 [MML book Ch.2 (Linear Algebra)](https://mml-book.github.io) | 30m |
+| 2 | Linear transformations = matrices | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.3 "Linear transformations and matrices"** · 📖 [MML book §2.7 (Linear Mappings)](https://mml-book.github.io) | 12m |
+| 3 | Matrix multiply as composition | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.4 "Matrix multiplication as composition"** · 📖 [MML book §2.2 (Matrices)](https://mml-book.github.io) | 12m |
+| 4 | Determinant | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.6 "The determinant"** · 📖 [MML book §4.1 (Determinant & Trace)](https://mml-book.github.io) | 10m |
+| 5 | Inverse, rank, column space, null space | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.7 "Inverse matrices, column space, null space"** · 📖 [MML book §2.3–2.6](https://mml-book.github.io) | 13m |
 | 6 | **Dot/inner products & orthogonality** (exam Q1) | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.9 "Dot products and duality"** + [MML book](https://mml-book.github.io) **Ch.3 "Analytic Geometry" §3.1–3.3** | 45m |
-| 7 | Change of basis | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.13 "Change of basis"** | 13m |
-| 8 | **Eigenvalues & eigenvectors** (exam Q10) | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.14 "Eigenvectors and eigenvalues"** + **Ch.15 "Quick trick"** | 25m |
-| 9 | SVD (used in PCA) | [Steve Brunton (YouTube)](https://www.youtube.com/@Eigensteve) — **"Singular Value Decomposition (SVD): Overview"** | 15m |
+| 7 | Change of basis | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.13 "Change of basis"** · 📖 [MML book §2.7.2 (Basis Change)](https://mml-book.github.io) | 13m |
+| 8 | **Eigenvalues & eigenvectors** (exam Q10) | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) — **Ch.14 "Eigenvectors and eigenvalues"** + **Ch.15 "Quick trick"** · 📖 [MML book §4.2 (Eigenvalues & Eigenvectors)](https://mml-book.github.io) | 25m |
+| 9 | SVD (used in PCA) | [Steve Brunton (YouTube)](https://www.youtube.com/@Eigensteve) — **"Singular Value Decomposition (SVD): Overview"** · 📖 [MML book §4.5 (SVD)](https://mml-book.github.io) | 15m |
 | 10 | Do it in NumPy | [NumPy linalg docs (stable)](https://numpy.org/doc/stable/reference/routines.linalg.html) — `eig`, `svd`, `@`, `dot` | 30m |
 
 **✅ Checkpoint 2A** — 🖥️ Local — one per topic:
@@ -51,14 +51,14 @@ needed in this phase.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 11 | What a derivative is | [3B1B Essence of Calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.1–2** | 35m |
-| 12 | Derivative rules via geometry | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.3 "Derivative formulas through geometry"** | 15m |
-| 13 | **Chain & product rule** (backbone of backprop) | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.4 "Visualizing the chain rule and product rule"** | 15m |
-| 14 | `e` and exponentials | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.5 "What's so special about Euler's number e?"** | 14m |
-| 15 | Higher-order derivatives (concavity) | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.10 "Higher order derivatives"** | 5m |
+| 11 | What a derivative is | [3B1B Essence of Calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.1–2** · 📖 [Khan: Differential Calculus](https://www.khanacademy.org/math/differential-calculus) | 35m |
+| 12 | Derivative rules via geometry | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.3 "Derivative formulas through geometry"** · 📖 [Khan: Derivative rules](https://www.khanacademy.org/math/differential-calculus/dc-diff-intro) | 15m |
+| 13 | **Chain & product rule** (backbone of backprop) | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.4 "Visualizing the chain rule and product rule"** · 📖 [Khan: Chain rule](https://www.khanacademy.org/math/differential-calculus/dc-chain) | 15m |
+| 14 | `e` and exponentials | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.5 "What's so special about Euler's number e?"** · 📖 [MML book §5 (Vector Calculus)](https://mml-book.github.io) | 14m |
+| 15 | Higher-order derivatives (concavity) | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.10 "Higher order derivatives"** · 📖 [Khan: Differential Calculus](https://www.khanacademy.org/math/differential-calculus) | 5m |
 | 16 | **Maxima/minima & critical points** (exam Q6, Q15) | [Khan — Differential Calculus](https://www.khanacademy.org/math/differential-calculus) — **"Analyzing functions → critical points / 2nd-derivative test"** | 40m |
 | 17 | **Partial derivatives & the gradient** | [Khan — Multivariable Calculus](https://www.khanacademy.org/math/multivariable-calculus) — **"Derivatives of multivariable functions → gradient"** | 60m |
-| 18 | Taylor series | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.11 "Taylor series"** | 22m |
+| 18 | Taylor series | [3B1B](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) — **Ch.11 "Taylor series"** · 📖 [Khan: Taylor & Maclaurin series](https://www.khanacademy.org/math/ap-calculus-bc) | 22m |
 
 **✅ Checkpoint 2B** — 🖥️ Local — one per topic:
 - **(T11)** Define the derivative as a limit in one sentence; what does `f'(x)` measure?
@@ -76,14 +76,14 @@ needed in this phase.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 19 | Mean, variance, std, distributions | [StatQuest](https://www.youtube.com/@statquest) — **"Mean, Variance and Standard Deviation"** + **"The Normal Distribution, Clearly Explained!!!"** | 35m |
-| 20 | Expected value | [StatQuest](https://www.youtube.com/@statquest) — **"Expected Values, Clearly Explained!!!"** | 12m |
-| 21 | Probability vs likelihood | [StatQuest](https://www.youtube.com/@statquest) — **"Probability is not Likelihood. Find out why!!!"** | 5m |
-| 22 | **Maximum likelihood** | [StatQuest](https://www.youtube.com/@statquest) — **"Maximum Likelihood, clearly explained!!!"** | 10m |
+| 19 | Mean, variance, std, distributions | [StatQuest](https://www.youtube.com/@statquest) — **"Mean, Variance and Standard Deviation"** + **"The Normal Distribution, Clearly Explained!!!"** · 📖 [Khan: Statistics & Probability](https://www.khanacademy.org/math/statistics-probability) | 35m |
+| 20 | Expected value | [StatQuest](https://www.youtube.com/@statquest) — **"Expected Values, Clearly Explained!!!"** · 📖 [Khan: Random variables & expected value](https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library) | 12m |
+| 21 | Probability vs likelihood | [StatQuest](https://www.youtube.com/@statquest) — **"Probability is not Likelihood. Find out why!!!"** · 📖 [MML book §6.1–6.2 (Probability)](https://mml-book.github.io) | 5m |
+| 22 | **Maximum likelihood** | [StatQuest](https://www.youtube.com/@statquest) — **"Maximum Likelihood, clearly explained!!!"** · 📖 [MML book §8.3 (MLE)](https://mml-book.github.io) | 10m |
 | 23 | **Bayes' theorem** (exam Q12, Q13) | [StatQuest](https://www.youtube.com/@statquest) — **"Bayes' Theorem, Clearly Explained!!!!"** + [MML book](https://mml-book.github.io) **Ch.6 §6.3** | 30m |
-| 24 | Covariance & correlation | [StatQuest](https://www.youtube.com/@statquest) — **"Covariance, Clearly Explained!!!"** + **"Pearson's Correlation"** | 30m |
-| 25 | *(beyond exam)* Entropy, cross-entropy, KL | [StatQuest](https://www.youtube.com/@statquest) — **"Entropy (for data science)"** + [Vizuara](https://www.youtube.com/@vizuara) — search **"Cross-Entropy / KL divergence"** | 35m |
-| 26 | *(beyond exam)* Hypothesis testing, p-values, A/B testing | [StatQuest](https://www.youtube.com/@statquest) — **"Hypothesis Testing and the Null Hypothesis"** + **"p-values, clearly explained"** | 40m |
+| 24 | Covariance & correlation | [StatQuest](https://www.youtube.com/@statquest) — **"Covariance, Clearly Explained!!!"** + **"Pearson's Correlation"** · 📖 [Khan: Exploring bivariate data](https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data) | 30m |
+| 25 | *(beyond exam)* Entropy, cross-entropy, KL | [StatQuest](https://www.youtube.com/@statquest) — **"Entropy (for data science)"** + [Vizuara](https://www.youtube.com/@vizuara) — search **"Cross-Entropy / KL divergence"** · 📖 [Chris Olah: Visual Information Theory](https://colah.github.io/posts/2015-09-Visual-Information/) | 35m |
+| 26 | *(beyond exam)* Hypothesis testing, p-values, A/B testing | [StatQuest](https://www.youtube.com/@statquest) — **"Hypothesis Testing and the Null Hypothesis"** + **"p-values, clearly explained"** · 📖 [Seeing Theory: Frequentist Inference](https://seeing-theory.brown.edu/frequentist-inference/index.html) | 40m |
 
 **✅ Checkpoint 2C** — 🖥️ Local — one per topic:
 - **(T19)** Mean/variance/std of `[2,4,4,4,5,5,7,9]` by hand; what do a Normal's μ and σ control?
@@ -101,9 +101,9 @@ needed in this phase.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 27 | **Gradient descent, step by step** (exam Q35) | [StatQuest](https://www.youtube.com/@statquest) — **"Gradient Descent, Step-by-Step"** | 24m |
-| 28 | Stochastic gradient descent | [StatQuest](https://www.youtube.com/@statquest) — **"Stochastic Gradient Descent, Clearly Explained!!!"** | 10m |
-| 29 | Learning rate; convex vs local minima | [3B1B Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) — **Ch.2 "Gradient descent, how neural networks learn"** (first ~10 min) | 12m |
+| 27 | **Gradient descent, step by step** (exam Q35) | [StatQuest](https://www.youtube.com/@statquest) — **"Gradient Descent, Step-by-Step"** · 📖 [d2l.ai: Gradient Descent](https://d2l.ai/chapter_optimization/gd.html) | 24m |
+| 28 | Stochastic gradient descent | [StatQuest](https://www.youtube.com/@statquest) — **"Stochastic Gradient Descent, Clearly Explained!!!"** · 📖 [d2l.ai: Stochastic Gradient Descent](https://d2l.ai/chapter_optimization/sgd.html) | 10m |
+| 29 | Learning rate; convex vs local minima | [3B1B Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) — **Ch.2 "Gradient descent, how neural networks learn"** (first ~10 min) · 📖 [d2l.ai: Optimization & Deep Learning](https://d2l.ai/chapter_optimization/optimization-intro.html) | 12m |
 | 30 | **Adagrad / RMSprop / Adam** (exam Q7, Q8) | [Sebastian Ruder — "An overview of gradient descent optimization algorithms"](https://www.ruder.io/optimizing-gradient-descent/) (Adagrad/RMSprop/Adam sections) | 40m |
 
 **✅ Checkpoint 2D** — 🖥️ Local — one per topic:

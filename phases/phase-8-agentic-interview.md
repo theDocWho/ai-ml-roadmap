@@ -21,8 +21,8 @@ workflow/agent taxonomy) and **interview fundamentals** are stable.
 |---|-------|-------------------|-------|
 | 1 | **Workflow vs agent** + when NOT to use an agent | [Anthropic — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) | 1h |
 | 2 | Patterns: chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer | [Anthropic cookbook — agent patterns](https://github.com/anthropics/anthropic-cookbook/tree/main/patterns/agents) | 2h |
-| 3 | **Multi-agent orchestration** (CrewAI) | [DeepLearning.AI — "Multi AI Agent Systems with crewAI" (free)](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) | 1.5h |
-| 4 | Stateful multi-agent with LangGraph | [LangChain Academy](https://academy.langchain.com) — **"LangGraph"** modules | 2h |
+| 3 | **Multi-agent orchestration** (CrewAI) | [DeepLearning.AI — "Multi AI Agent Systems with crewAI" (free)](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) · 📖 [CrewAI docs](https://docs.crewai.com) | 1.5h |
+| 4 | Stateful multi-agent with LangGraph | [LangChain Academy](https://academy.langchain.com) — **"LangGraph"** modules · 📖 [LangGraph docs](https://langchain-ai.github.io/langgraph/) | 2h |
 | 5 | Agent **evaluation & guardrails** | [HF Agents Course](https://huggingface.co/learn/agents-course) — **"Evaluation"** unit | 1h |
 
 **✅ Checkpoint 8A** — 🖥️ Local — one per topic:
@@ -40,7 +40,7 @@ workflow/agent taxonomy) and **interview fundamentals** are stable.
 |---|-------|-------------------|-------|
 | 6 | Cost / latency / observability | [Anthropic — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) (engineering tradeoffs) | 45m |
 | 7 | Agent security (OWASP, prompt injection) | [OWASP — Top 10 for Agentic / LLM Apps](https://genai.owasp.org/llm-top-10/) | 1h |
-| 8 | Memory & tools at scale | [DeepLearning.AI — "Long-Term Agentic Memory with LangGraph"](https://www.deeplearning.ai/short-courses/long-term-agentic-memory-with-langgraph/) | 1h |
+| 8 | Memory & tools at scale | [DeepLearning.AI — "Long-Term Agentic Memory with LangGraph"](https://www.deeplearning.ai/short-courses/long-term-agentic-memory-with-langgraph/) · 📖 [LangGraph: Memory concepts](https://langchain-ai.github.io/langgraph/concepts/memory/) | 1h |
 
 **✅ Checkpoint 8B** — 🖥️ Local — one per topic:
 - **(T6)** Add token/latency logging to an agent; identify the most expensive step and optimize it.

@@ -41,7 +41,7 @@ fine **🖥️ Local**.
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 6 | Encoder–decoder / seq2seq | [Jay Alammar — "Visualizing A Neural Machine Translation Model (seq2seq + Attention)"](https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/) | 40m |
-| 7 | **Attention** mechanism | [StatQuest](https://www.youtube.com/@statquest) — **"Attention for Neural Networks, Clearly Explained!!!"** | 16m |
+| 7 | **Attention** mechanism | [StatQuest](https://www.youtube.com/@statquest) — **"Attention for Neural Networks, Clearly Explained!!!"** · 📖 [Lilian Weng: Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/) | 16m |
 | 8 | Beam search / decoding strategies | [HF NLP Course](https://huggingface.co/learn/nlp-course/chapter1/6) — **"Text generation strategies"** | 25m |
 
 **✅ Checkpoint 5B** — 🖥️ Local/☁️ Colab — one per topic:
@@ -56,10 +56,10 @@ fine **🖥️ Local**.
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 9 | The architecture (overview) | [Jay Alammar — *The Illustrated Transformer*](https://jalammar.github.io/illustrated-transformer/) | 1h |
-| 10 | **Self-attention & multi-head attention** | [StatQuest](https://www.youtube.com/@statquest) — **"Transformer Neural Networks, Clearly Explained!!!"** | 36m |
+| 10 | **Self-attention & multi-head attention** | [StatQuest](https://www.youtube.com/@statquest) — **"Transformer Neural Networks, Clearly Explained!!!"** · 📖 [Jay Alammar: The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) | 36m |
 | 11 | **Positional encoding** (exam Q46) | [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — **"Positional Encoding"** section | 20m |
 | 12 | **Residual connections + LayerNorm** (exam Q47) | [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — **"The Residuals"** section | 15m |
-| 13 | Build it from scratch | [Karpathy — *Let's build GPT*](https://karpathy.ai/zero-to-hero.html) (full) | 2h |
+| 13 | Build it from scratch | [Karpathy — *Let's build GPT*](https://karpathy.ai/zero-to-hero.html) (full) · 📖 [The Annotated Transformer (Harvard)](http://nlp.seas.harvard.edu/annotated-transformer/) | 2h |
 | 14 | Encoder vs decoder: BERT vs GPT | [HF NLP Course](https://huggingface.co/learn/nlp-course/chapter1/4) — **"How do Transformers work?"** | 30m |
 
 **✅ Checkpoint 5C** — ☁️ Colab — one per topic:

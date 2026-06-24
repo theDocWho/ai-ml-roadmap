@@ -25,10 +25,10 @@ The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change mo
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 1 | What an LLM is (the big picture) | [Karpathy — "Intro to Large Language Models" (1hr talk)](https://www.youtube.com/@AndrejKarpathy) | 60m |
+| 1 | What an LLM is (the big picture) | [Karpathy — "Intro to Large Language Models" (1hr talk)](https://www.youtube.com/@AndrejKarpathy) · 📖 [Jay Alammar: How GPT-3 Works](https://jalammar.github.io/how-gpt3-works-visualizations-animations/) | 60m |
 | 2 | Tokens, context window, temperature/sampling | [HF LLM Course](https://huggingface.co/learn/llm-course) — **"How LLMs work / generation params"** | 40m |
-| 3 | **Prompt engineering** | [DeepLearning.AI — "ChatGPT Prompt Engineering for Developers" (free)](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) | 1.5h |
-| 4 | **Function calling / structured output** | [DeepLearning.AI — "Functions, Tools and Agents with LangChain"](https://www.deeplearning.ai/short-courses/functions-tools-agents-langchain/) (functions part) | 1h |
+| 3 | **Prompt engineering** | [DeepLearning.AI — "ChatGPT Prompt Engineering for Developers" (free)](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) · 📖 [Prompt Engineering Guide](https://www.promptingguide.ai/) | 1.5h |
+| 4 | **Function calling / structured output** | [DeepLearning.AI — "Functions, Tools and Agents with LangChain"](https://www.deeplearning.ai/short-courses/functions-tools-agents-langchain/) (functions part) · 📖 [Anthropic: Tool use (function calling)](https://docs.anthropic.com/en/docs/build-with-claude/tool-use) | 1h |
 | 5 | Run models locally (free, private) | [Ollama docs](https://ollama.com) — install, `ollama run llama3`, the REST API | 30m |
 
 **✅ Checkpoint 6A** — 🖥️ Local (Ollama) / free API — one per topic:
@@ -59,11 +59,11 @@ The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change mo
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 9 | The RAG pipeline (chunk→embed→retrieve→generate) | [DeepLearning.AI — "LangChain: Chat with Your Data" (free)](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) | 1.5h |
-| 10 | RAG from scratch (deep understanding) | [freeCodeCamp — "RAG From Scratch"](https://www.youtube.com/@freecodecamp) (LangChain engineer) | 2h |
+| 9 | The RAG pipeline (chunk→embed→retrieve→generate) | [DeepLearning.AI — "LangChain: Chat with Your Data" (free)](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) · 📖 [Pinecone: Retrieval-Augmented Generation](https://www.pinecone.io/learn/retrieval-augmented-generation/) | 1.5h |
+| 10 | RAG from scratch (deep understanding) | [freeCodeCamp — "RAG From Scratch"](https://www.youtube.com/@freecodecamp) (LangChain engineer) · 📖 [LangChain: RAG tutorial](https://python.langchain.com/docs/tutorials/rag/) | 2h |
 | 11 | Chunking strategies & citations | [LangChain docs](https://python.langchain.com/docs/concepts/text_splitters/) — **"Text splitters"** | 30m |
 | 12 | **Evaluating RAG** (faithfulness, relevance) | [RAGAS docs](https://docs.ragas.io) — **"Getting Started / Metrics"** | 45m |
-| 13 | Advanced RAG (re-ranking, query transforms) | [DeepLearning.AI — "Building and Evaluating Advanced RAG"](https://www.deeplearning.ai/short-courses/building-evaluating-advanced-rag/) | 1.5h |
+| 13 | Advanced RAG (re-ranking, query transforms) | [DeepLearning.AI — "Building and Evaluating Advanced RAG"](https://www.deeplearning.ai/short-courses/building-evaluating-advanced-rag/) · 📖 [Anthropic: Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval) | 1.5h |
 
 **✅ Checkpoint 6C** — 🖥️ Local / ☁️ Colab — one per topic:
 - **(T9)** Build a "chat with your PDF" RAG over a document you care about (security runbook / 10-K).
@@ -80,8 +80,8 @@ The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change mo
 |---|-------|-------------------|-------|
 | 14 | What an agent is; **when NOT to use one** | [Anthropic — "Building Effective AI Agents"](https://www.anthropic.com/research/building-effective-agents) | 45m |
 | 15 | **ReAct** (reason + act + tools) | [HF Agents Course](https://huggingface.co/learn/agents-course) — **Unit 1 "Introduction to Agents"** | 2h |
-| 16 | LangGraph (stateful agents) | [DeepLearning.AI — "AI Agents in LangGraph" (free)](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/) | 1.5h |
-| 17 | Agent memory (short/long-term) | [DeepLearning.AI — "Long-Term Agentic Memory with LangGraph"](https://www.deeplearning.ai/short-courses/long-term-agentic-memory-with-langgraph/) | 1h |
+| 16 | LangGraph (stateful agents) | [DeepLearning.AI — "AI Agents in LangGraph" (free)](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/) · 📖 [LangGraph docs](https://langchain-ai.github.io/langgraph/) | 1.5h |
+| 17 | Agent memory (short/long-term) | [DeepLearning.AI — "Long-Term Agentic Memory with LangGraph"](https://www.deeplearning.ai/short-courses/long-term-agentic-memory-with-langgraph/) · 📖 [LangGraph: Memory concepts](https://langchain-ai.github.io/langgraph/concepts/memory/) | 1h |
 | 18 | Agent tools = your RAG retriever | [LangChain docs](https://python.langchain.com/docs/concepts/tools/) — **"Tools"** | 30m |
 
 **✅ Checkpoint 6D** — 🖥️ Local / ☁️ Colab — one per topic:
