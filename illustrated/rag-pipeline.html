@@ -24,10 +24,34 @@
     </div>
   </div>
 
-  <p>An LLM only knows what's in its weights. <b>RAG</b> gives it fresh, private knowledge by
-  <em>retrieving</em> relevant passages and pasting them into the prompt as context — so the answer is
-  grounded in <em>your</em> documents and can cite its sources. Below is a tiny, real RAG engine running
-  in your browser (a bag-of-words embedder + cosine search + a templated generator).</p>
+  <h2>The problem RAG solves</h2>
+  <p>A large language model is, at heart, a very sophisticated <em>autocomplete</em>: it predicts the next
+  word using patterns frozen into its weights during training. That gives it two stubborn limitations.
+  First, its knowledge is <b>frozen and generic</b> — it knows nothing about your company's wiki, last
+  night's incident report, or a PDF you just downloaded. Second, when it doesn't know something, it often
+  <b>makes up</b> a fluent, confident, wrong answer (a "hallucination"), because generating plausible text
+  is exactly what it was trained to do.</p>
+  <p>You could re-train the model on your documents, but that's slow, expensive, and goes stale the moment
+  your data changes. <b>Retrieval-Augmented Generation (RAG)</b> takes a cheaper, smarter route: instead of
+  forcing the model to <em>memorize</em> your knowledge, you let it <em>look things up</em> at the moment it
+  answers.</p>
+
+  <div class="callout"><b>The open-book exam analogy.</b> A closed-book exam tests what you memorized — and
+  you'll bluff when you forget. RAG turns it into an <b>open-book exam</b>: right before answering, you flip
+  to the most relevant pages and write your answer <em>from them</em>. The model's reasoning ability stays;
+  the facts come from your documents. That's why a good RAG answer is both fluent <em>and</em> grounded — and
+  can point to its sources.</p></div>
+
+  <h2>How it works, end to end</h2>
+  <p>RAG is two halves glued together. <b>Retrieval</b> finds the passages most relevant to the question;
+  <b>generation</b> writes an answer using only those passages. The trick that makes retrieval work is
+  <b>embeddings</b>: every passage (and the question) is converted into a vector of numbers so that text with
+  <em>similar meaning</em> ends up <em>close together</em> in vector space. We then rank passages by how close
+  they are to the question — usually with <b>cosine similarity</b> (the angle between two vectors). The
+  closest few get pasted into the prompt as context.</p>
+  <p>Below is a tiny but <em>real</em> RAG engine running entirely in your browser — a bag-of-words embedder,
+  cosine search, and a templated generator (no API calls). Type a question and watch each stage light up;
+  the same five stages run in every production RAG system, just with stronger components.</p>
 
   <!-- pipeline diagram -->
   <div class="panel">
@@ -57,6 +81,23 @@
     <p class="small muted">Try: “what is a vector database?”, “what is prompt injection?”, “why split documents?”</p>
   </div>
 
+  <h3>Step 2, in depth — turning meaning into numbers</h3>
+  <p>This is the heart of RAG, so it's worth slowing down. To find "relevant" passages we need a way to
+  measure <em>relevance</em> mathematically. The idea: convert each passage into a list of numbers (a
+  <b>vector</b>, or "embedding") chosen so that passages about similar things have similar vectors. Real
+  systems use a trained neural network (like <code>sentence-transformers</code>) for this; our toy uses a
+  simpler <b>bag-of-words</b> vector — one slot per vocabulary word, counting how often it appears — which
+  is enough to see the mechanics.</p>
+  <p>To compare two vectors we use <b>cosine similarity</b>: the cosine of the angle between them. It runs
+  from <code>1.0</code> (pointing the same way → very similar) through <code>0</code> (perpendicular →
+  unrelated). We use the <em>angle</em>, not the distance, so a long document and a short query can still
+  match if they point the same direction. We embed the question, compare it to every passage, and keep the
+  <b>top-k</b> highest-scoring ones. (Curious about the geometry? The
+  <a href="embeddings.html">embeddings explainer</a> lets you drag vectors and watch cosine change.)</p>
+  <p>One detail hides a real tradeoff: <b>chunking</b>. Documents are split into small passages
+  <em>before</em> embedding. Chunks too large dilute the signal (one vector tries to represent many ideas);
+  too small and you lose context. Chunk size and overlap are among the biggest levers on RAG quality.</p>
+
   <!-- knowledge base + retrieval -->
   <div class="panel">
     <h4>2 · Knowledge base → embed → retrieve (cosine similarity)</h4>
@@ -64,6 +105,17 @@
       Retrieved passages are <span class="chip on">highlighted</span>.</p>
     <div id="kb"></div>
   </div>
+
+  <h3>Step 3, in depth — grounding the model</h3>
+  <p>Now we do something almost embarrassingly simple: we paste the retrieved passages straight into the
+  prompt, with an instruction like <em>"Answer using only the context below, and cite your sources."</em>
+  The model never "knew" these facts — it's reading them right now, the way you'd read the page you just
+  flipped to in an open-book exam. This single move is what makes RAG answers <b>grounded</b>: the facts
+  come from your documents, and instructing the model to stick to them sharply reduces hallucination.</p>
+  <p>The numbered tags <code>[1]</code>, <code>[2]</code> aren't decoration — they let the model (and the
+  reader) <b>cite</b> exactly which passage supports each claim, so a human can verify the answer instead
+  of trusting it. In regulated domains (finance, security, medicine) this traceability is often the whole
+  point. Watch the prompt rebuild as you change the question or <code>top-k</code>.</p>
 
   <!-- prompt -->
   <div class="panel">
@@ -77,10 +129,27 @@
     <div id="answer" style="font-size:1.02rem;"></div>
   </div>
 
-  <div class="note green"><b>Why it matters:</b> the model never "memorized" your docs — it just read the
+  <h2>What RAG is good at — and where it breaks</h2>
+  <p>RAG shines when answers should come from a <b>specific, changing, or private</b> body of knowledge:
+  company docs, product manuals, legal/financial filings, a security knowledge base. You can update the
+  knowledge by changing documents — no retraining — and every answer can cite its evidence.</p>
+  <p>But RAG is only as good as its <b>retrieval</b>. If the right passage isn't retrieved, the model can't
+  use it — "garbage in, garbage out." Common failure modes and their fixes:</p>
+  <ul>
+    <li><b>Wrong chunks retrieved</b> → tune chunk size/overlap; add a <em>re-ranker</em> that re-scores the
+      top candidates more carefully.</li>
+    <li><b>Vocabulary mismatch</b> (question and answer use different words) → real embedding models handle
+      this far better than our bag-of-words toy; you can also rewrite/expand the query first.</li>
+    <li><b>The answer spans many passages</b> → retrieve more, or summarize retrieved context before answering.</li>
+    <li><b>The model ignores the context and bluffs anyway</b> → stronger "use only the context" instructions,
+      and <em>evaluation</em> (e.g. RAGAS faithfulness) to catch it.</li>
+  </ul>
+
+  <div class="note green"><b>The big picture:</b> the model never "memorized" your docs — it just read the
   retrieved context. Swap the bag-of-words embedder for <code>sentence-transformers</code>, the in-memory
-  search for a real vector DB, and the templated generator for an LLM, and you have a production RAG app.
-  That's exactly <a href="../challenges/byo-09-rag/README.md">BYO-9</a>.</div>
+  search for a real vector database, and the templated generator for an LLM, and you have a production RAG
+  app. Build exactly that, piece by piece, in <a href="../challenges/byo-09-rag/README.md">BYO-9</a>, and
+  see the retrieval internals in the <a href="vector-search.html">vector-search explainer</a>.</div>
 
   <div class="footer">
     Next: <a href="vector-search.html">Vector search (brute-force vs ANN) →</a> ·

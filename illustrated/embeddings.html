@@ -22,9 +22,33 @@
     <div class="tagrow"><span class="tag">vectors</span><span class="tag">cosine</span><span class="tag">semantic search</span><span class="tag">analogies</span></div>
   </div>
 
-  <h2>1 · Cosine = direction, not length</h2>
-  <p>Drag the tips of <b style="color:#1456b0">A</b> and <b style="color:#0a7d2c">B</b>. Cosine similarity
-  is <code>(A·B)/(|A||B|)</code> — it depends only on the <em>angle</em>, so scaling a vector doesn't change it.</p>
+  <h2>What is an embedding?</h2>
+  <p>Computers don't understand words — they understand numbers. An <b>embedding</b> is how we bridge that
+  gap: it's a vector (a list of numbers) that represents a piece of meaning — a word, a sentence, an image,
+  even a user. The magic isn't the numbers themselves; it's <em>how they're arranged</em>. Embedding models
+  are trained so that things with <b>similar meaning land close together</b> in the vector space, and
+  unrelated things land far apart.</p>
+  <p>That one property is enormously powerful, because it turns <b>meaning into geometry</b>. Once meaning is
+  geometry, three hard problems become easy:</p>
+  <ul>
+    <li>"How similar are these?" → <b>measure the angle</b> between their vectors (Part 1).</li>
+    <li>"Find me things like this" → <b>nearest-neighbor search</b> in the space (Part 2).</li>
+    <li>"king is to man as ? is to woman" → <b>do algebra</b> on the vectors (Part 3).</li>
+  </ul>
+  <p>Real embeddings live in hundreds or thousands of dimensions (you can't draw those), but every intuition
+  below works the same in 2-D, so we'll stay where you can see it.</p>
+
+  <h2>1 · Cosine similarity = direction, not length</h2>
+  <p>To use embeddings we need to <em>measure</em> similarity. The standard tool is <b>cosine
+  similarity</b>: the cosine of the angle between two vectors, <code>(A·B)/(|A||B|)</code>. Why the angle
+  and not plain distance? Because in embedding spaces, <b>direction carries the meaning</b> and length
+  often just reflects incidental things like text length or word frequency. Cosine deliberately
+  <em>ignores length</em> — a short query and a long document can score a perfect <code>1.0</code> if they
+  point the same way. It ranges from <code>1</code> (same direction → very similar), through <code>0</code>
+  (perpendicular → unrelated), to <code>−1</code> (opposite → contrasting).</p>
+  <p>Drag the tips of <b style="color:#1456b0">A</b> and <b style="color:#0a7d2c">B</b> and watch the number
+  move. Then tick "show unit vectors": both arrows snap to length 1 but the cosine <em>doesn't change</em> —
+  proof that only the angle matters.</p>
   <div class="panel">
     <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
       <svg id="vec" viewBox="0 0 360 300" style="border:1px solid var(--border); border-radius:10px; background:#fff; touch-action:none; flex:1; min-width:300px;" role="img" aria-label="two draggable vectors"></svg>
@@ -40,8 +64,14 @@
   </div>
 
   <h2>2 · Search by meaning</h2>
-  <p>Each sentence is embedded (here a simple bag-of-words vector). Pick a query; results are ranked by
-  cosine similarity — sentences that <em>share meaning</em> score high even when worded differently.</p>
+  <p>Old-style <b>keyword search</b> matches exact words: search "car" and you miss a document that only
+  says "automobile." <b>Semantic search</b> fixes this by comparing <em>embeddings</em> instead of words —
+  so text with the same meaning scores high even when it shares no vocabulary. Below, each sentence is
+  embedded and ranked by cosine similarity to your chosen query. Watch the pairs that mean the same thing
+  ("the cat sat on the warm mat" / "a kitten rested on a cozy rug") rise to the top.</p>
+  <p class="small muted">(Our toy uses bag-of-words vectors, so it leans on shared words; a real embedding
+  model would match "cat"↔"kitten" and "fell"↔"dropped" even more strongly. Same mechanism, stronger vectors —
+  and exactly what powers <a href="rag-pipeline.html">RAG retrieval</a>.)</p>
   <div class="panel">
     <div class="ctrl" style="max-width:420px;">
       <label for="qsel">Query</label>
@@ -51,8 +81,14 @@
   </div>
 
   <h2>3 · Word arithmetic — the analogy trick</h2>
-  <p>Embeddings place related words in related directions, so you can do algebra on meaning. We compute
-  <code>king − man + woman</code> and find its <b>nearest word</b>.</p>
+  <p>Here's the result that made embeddings famous (word2vec, 2013). Because related words end up in
+  <em>related directions</em>, you can do <b>algebra on meaning</b>. The vector from <b>man</b> to
+  <b>woman</b> turns out to be roughly the same as the vector from <b>king</b> to <b>queen</b> — a
+  consistent "gender direction." So if you take <code>king</code>, subtract the male part, and add the
+  female part — <code>king − man + woman</code> — you land almost exactly on <code>queen</code>. Nobody
+  programmed that in; the model discovered these directions purely from how words co-occur in text.</p>
+  <p>Press the button to compute the result vector (✦) and find its nearest word. This is why embeddings
+  feel like they "understand" — relationships in the world show up as <b>geometry</b> in the space.</p>
   <div class="panel">
     <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
       <svg id="words" viewBox="-260 -150 520 300" style="border:1px solid var(--border); border-radius:10px; background:#fff; flex:1; min-width:300px;" role="img" aria-label="word vector space"></svg>
@@ -65,9 +101,20 @@
     </div>
   </div>
 
-  <div class="note green"><b>Why it matters:</b> every modern retrieval system — search, RAG, recommendation —
-  runs on embeddings + cosine similarity. See it power
-  <a href="rag-pipeline.html">RAG</a> and <a href="vector-search.html">vector search</a>.</div>
+  <h2>Key takeaways</h2>
+  <ul>
+    <li><b>An embedding turns meaning into a vector</b> — trained so similar things are close.</li>
+    <li><b>Cosine similarity</b> measures <em>direction</em> (angle), ignoring length — the standard way to
+      score "how similar."</li>
+    <li><b>Semantic search</b> = nearest neighbors in embedding space; it matches meaning, not keywords.</li>
+    <li><b>Analogies</b> work because relationships become consistent directions you can add and subtract.</li>
+    <li>Where do they come from? A neural network trained on huge text (word2vec, GloVe, or modern
+      <code>sentence-transformers</code>) learns the layout from data — you just <em>use</em> the vectors.</li>
+  </ul>
+  <div class="note green"><b>The big picture:</b> embeddings + cosine similarity are the quiet foundation of
+  modern AI retrieval — they power semantic search, recommendations, and the retrieval step in
+  <a href="rag-pipeline.html">RAG</a>. The "find the nearest vectors fast" problem is its own engineering
+  challenge — see the <a href="vector-search.html">vector-search explainer</a>.</div>
 
   <div class="footer"><a href="index.html">All explainers</a> · <a href="../phases/phase-6-llms-rag-agents.md">Phase 6 guide</a></div>
 </div>

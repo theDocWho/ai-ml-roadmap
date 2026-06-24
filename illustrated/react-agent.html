@@ -24,14 +24,47 @@
     </div>
   </div>
 
-  <p>The model never does arithmetic or lookups itself — it <b>decides which tool to call</b>, the tool
-  returns an <b>Observation</b>, and that gets fed back so the model can decide the next step. The
-  <code>max_steps</code> cap stops runaway loops.</p>
+  <h2>Why an agent at all?</h2>
+  <p>A plain LLM has two weaknesses for real tasks. It can't <b>act</b> on the world — it can't run code,
+  query a database, hit an API, or look something up — and it's unreliable at things like exact arithmetic
+  or fresh facts, because it's generating text, not computing. An <b>agent</b> fixes this by giving the
+  model <b>tools</b> and a <b>loop</b>: the model decides <em>what</em> to do, a tool actually does it, and
+  the result is fed back so the model can decide the next step.</p>
+
+  <h2>The ReAct idea: interleave reasoning and acting</h2>
+  <p>"ReAct" stands for <b>Reason + Act</b>. Instead of answering in one shot, the model alternates between
+  thinking out loud and taking actions:</p>
+  <ul>
+    <li><b>Thought</b> — the model reasons about what it needs next ("this is arithmetic, I should use the
+      calculator").</li>
+    <li><b>Action</b> — it emits a structured tool call, e.g. <code>calculator("23 * 19")</code>.</li>
+    <li><b>Observation</b> — your code runs the tool and feeds the real result back into the prompt.</li>
+  </ul>
+  <p>Then it loops: the new observation informs the next thought. The model never does the arithmetic or
+  lookup itself — it <em>orchestrates</em>. Crucially, the <b>scratchpad</b> (the growing transcript of
+  thoughts/actions/observations) is fed back every step, so the model always sees what it has learned so far.</p>
+
+  <div class="callout"><b>The intern analogy.</b> Think of the LLM as a sharp intern with no memory and no
+  hands. It can reason brilliantly, but it can't open a spreadsheet or call the bank. You give it a phone
+  (tools) and a notepad (the scratchpad). It says "I'll call accounting" (Action), you dial and read back
+  the answer (Observation), it writes it down and decides the next call. The intern's <em>judgment</em>
+  drives the task; the <em>tools</em> do the work.</div>
+
+  <p>One more essential: a <code>max_steps</code> cap. Because the model controls the loop, a confused model
+  could loop forever. The cap forces a stop — a small detail that matters a lot in production.</p>
 
   <div class="panel">
     <h4>The loop</h4>
     <svg id="loop" viewBox="0 0 760 200" role="img" aria-label="ReAct reasoning loop"></svg>
   </div>
+
+  <h3>Try it</h3>
+  <p>Pick a task and press <b>Step</b> to advance one phase at a time (or <b>Auto-run</b>). Watch three
+  things: the <b>loop diagram</b> highlights which phase you're in; the <b>scratchpad</b> grows with each
+  Thought / Action / Observation; and the tools <em>genuinely execute</em> — the calculator really evaluates
+  the expression, the search really looks it up. The two-step task is the interesting one: notice how the
+  first <em>Observation</em> gets substituted into the second tool call, exactly how a real agent chains
+  steps together.</p>
 
   <div class="panel">
     <h4>Pick a task &nbsp;·&nbsp; tools available: <span class="chip">calculator</span> <span class="chip">search</span></h4>
@@ -49,10 +82,30 @@
     <div id="pad" style="font-family:var(--mono); font-size:13.5px; white-space:pre-wrap; line-height:1.7; min-height:80px;"></div>
   </div>
 
-  <div class="note green"><b>Why it matters:</b> grounding an LLM in <em>tools</em> (a calculator, a search
-  index, your <a href="rag-pipeline.html">RAG retriever</a>) beats a bare model for real tasks. Build the
-  loop yourself in <a href="../challenges/byo-10-react-agent/README.md">BYO-10</a>, then scale it with
-  LangGraph (Phase 8).</div>
+  <h2>Where agents help — and where they bite</h2>
+  <p>Agents are powerful when a task needs <b>multiple steps, real tools, or decisions the model can't make
+  in one shot</b>: research that requires several lookups, workflows that branch on intermediate results, or
+  anything touching live systems. But that power comes with costs you should respect:</p>
+  <ul>
+    <li><b>Cost & latency</b> — each loop step is another LLM call. A 5-step task is 5× the tokens and time
+      of a single answer.</li>
+    <li><b>Error compounding</b> — a wrong Action early sends the whole loop down a bad path. Good tool
+      descriptions, validation, and retries matter.</li>
+    <li><b>Runaway loops</b> — without <code>max_steps</code> (and ideally a budget), a stuck model loops
+      forever. Always cap it.</li>
+    <li><b>Security</b> — tools are real power. A prompt-injection attack can trick an agent into misusing a
+      tool (see the upcoming prompt-injection explainer). Least-privilege tools and output validation are
+      essential.</li>
+  </ul>
+  <p>A good rule from Anthropic's <em>Building Effective Agents</em>: <b>use the simplest thing that works.</b>
+  Many "agent" problems are better solved by a fixed <em>workflow</em> (a predetermined sequence of steps);
+  reach for a true autonomous agent only when you genuinely need the model to decide the path at runtime.</p>
+
+  <div class="note green"><b>The big picture:</b> grounding an LLM in <em>tools</em> — a calculator, a search
+  index, your <a href="rag-pipeline.html">RAG retriever</a> — beats a bare model for real tasks, because the
+  model brings judgment and the tools bring truth. Build the loop yourself in
+  <a href="../challenges/byo-10-react-agent/README.md">BYO-10</a>, then scale it to stateful, multi-agent
+  systems with LangGraph in Phase 8.</div>
 
   <div class="footer">
     Next: <a href="rag-pipeline.html">RAG pipeline →</a> · <a href="vector-search.html">Vector search →</a> ·

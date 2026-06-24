@@ -37,7 +37,18 @@ Pro). When you're ready to share a live site:
 Because every page uses **relative** asset paths and no external CDNs, it works identically locally and
 on Pages — no changes needed.
 
+## The teaching standard (how these are written)
+Following StatQuest and Jay Alammar's *Illustrated Transformer*: **the prose teaches; the interactive
+diagram reinforces.** Every explainer should:
+1. **Introduce the idea & the problem it solves** (the "why") before any widget.
+2. **Explain in depth, in words** — build intuition step by step, with an analogy where it helps.
+3. **Use the interactive diagram to *reinforce*** that text (with a short "how to read this" note), not
+   to replace it.
+4. End with **strengths / limitations / where to go deeper** and a link to the matching BYO challenge.
+A reader who never touches a slider should still learn the concept from the text alone.
+
 ## Adding a new explainer
-Copy any `*.html`, keep the `<nav class="topbar">` + `assets/` links, build your widget with the
-`Ill.*` helpers in `app.js`, then add an entry to the `ITEMS` array in `index.html` and a row in
-`CATALOG.md`. Keep it **dependency-free** (no CDNs) so it stays offline-friendly.
+Copy any `*.html`, keep the `<nav class="topbar">` + `assets/` links, write the **prose first** (per the
+standard above), build the widget with the `Ill.*` helpers in `app.js`, then add an entry to the
+`ITEMS` array in `index.html` and a row in `CATALOG.md`. Keep it **dependency-free** (no CDNs) so it
+stays offline-friendly.

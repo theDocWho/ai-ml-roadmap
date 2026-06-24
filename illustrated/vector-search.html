@@ -25,6 +25,28 @@
     </div>
   </div>
 
+  <h2>The problem: finding needles in a billion-vector haystack</h2>
+  <p>Once you've turned text (or images, or users) into <b>embeddings</b> — vectors where similar things sit
+  close together — almost every interesting task becomes the same question: <em>given a query vector, which
+  stored vectors are nearest?</em> That's <b>nearest-neighbor search</b>, and it powers semantic search,
+  RAG retrieval, recommendations, and de-duplication.</p>
+  <p>The obvious approach is <b>brute force</b>: measure the distance from the query to <em>every</em> stored
+  vector, sort, and take the closest <code>k</code>. It's beautifully simple and always exact. The catch is
+  cost: it's <b>O(n)</b> per query. With a few thousand vectors that's instant. With a few <em>billion</em>
+  (web scale), checking every one for every query is hopeless — you'd burn a data center per search.</p>
+
+  <h2>The ANN idea: don't search everything</h2>
+  <p>Approximate Nearest Neighbor (ANN) search trades a tiny bit of accuracy for a huge speedup. The
+  classic <b>IVF</b> (inverted file) recipe is intuitive: once, ahead of time, <b>cluster</b> all the
+  vectors into buckets (using k-means — the ◆ centroids below). At query time, you don't search every
+  bucket — you find the few centroids <em>nearest the query</em> and search only <b>those</b> buckets
+  (<code>n_probe</code> of them). If the points are clustered well, the true neighbors are almost always in
+  the nearest bucket, so you get the same answer while comparing against a fraction of the data.</p>
+  <p>"Almost always" is the catch — and the lesson. A true neighbor sitting just across a bucket boundary
+  can be <em>missed</em> if you don't probe its bucket. That's why ANN reports <b>recall</b> (what fraction
+  of the exact top-k it found). Raising <code>n_probe</code> searches more buckets → higher recall, less
+  speedup. This <b>recall ↔ speed dial</b> is the entire game. Drop a query below and watch it.</p>
+
   <div class="panel">
     <div class="controls">
       <div class="ctrl"><label>top-k <span class="val" id="kv">5</span></label><input id="k" type="range" min="1" max="12" value="5"></div>
@@ -44,11 +66,26 @@
     <div id="stats" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;"></div>
   </div>
 
-  <div class="note green"><b>Why it matters:</b> brute-force is exact but O(n) per query — fine for
-  thousands of vectors, hopeless for billions. IVF clusters the vectors and only searches the nearest
-  <code>n_probe</code> buckets, cutting comparisons dramatically while usually returning the same top
-  results. Raise <code>n_probe</code> to trade speed for recall. Build it in
-  <a href="../challenges/byo-11-vectordb/README.md">BYO-11</a>; production indexes (FAISS, HNSW) push this further.</div>
+  <h2>Reading the demo</h2>
+  <p>Each colored dot is a stored vector; its color is the cluster it was assigned. The ★ is your query.
+  The <span style="color:#0a7d2c">green rings</span> mark the <em>exact</em> top-k (brute force checked
+  every dot). The <span style="color:#1456b0">dashed blue rings</span> mark what <em>ANN</em> returned after
+  searching only the shaded (probed) clusters. When the two agree, recall is 100% — ANN found the truth
+  with far fewer comparisons. Move the query near a cluster boundary, or set <code>n_probe = 1</code>, to
+  watch ANN <em>miss</em> a true neighbor and recall drop — then raise <code>n_probe</code> to recover it.</p>
+
+  <h2>Beyond IVF</h2>
+  <p>IVF is the easiest ANN method to picture, but production systems often use <b>HNSW</b> (a navigable
+  small-world graph) which hops through a graph of vectors to reach the neighborhood fast, usually beating
+  IVF on the recall/speed curve. Libraries like <b>FAISS</b>, and vector databases like <b>Chroma</b>,
+  <b>Qdrant</b>, and <b>pgvector</b>, implement these so you don't have to — but the tradeoff you just felt
+  (probe more → higher recall, lower speed) is universal. Tuning it <em>is</em> the job.</p>
+
+  <div class="note green"><b>The big picture:</b> this is the literal engine under
+  <a href="rag-pipeline.html">RAG retrieval</a> and every "search by meaning" feature. Brute force is exact
+  but O(n); ANN clusters the data and probes a few buckets to go fast, trading a little recall for a lot of
+  speed. Build both — exact search, an IVF index, and persistence — from scratch in
+  <a href="../challenges/byo-11-vectordb/README.md">BYO-11</a>.</div>
 
   <div class="footer">
     Next: <a href="embeddings.html">Embeddings & cosine →</a> · <a href="rag-pipeline.html">RAG pipeline →</a> ·
