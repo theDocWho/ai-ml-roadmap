@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bayes' theorem — updating belief with evidence</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 2 · Math</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Bayes' theorem</h1>
+    <p class="lede">How to update a belief when new evidence arrives — the engine behind Naive Bayes, spam
+      filters, medical diagnosis, and a surprising amount of human-judgment error. The formula is short; the
+      intuition is the famous "a positive test doesn't mean what you think."</p>
+    <div class="tagrow">
+      <span class="tag">prior</span><span class="tag">likelihood</span>
+      <span class="tag">posterior</span><span class="tag">base rate</span>
+      <span class="tag">false positives</span>
+    </div>
+  </div>
+
+  <h2>The formula, in plain words</h2>
+  <p>Bayes' theorem rearranges conditional probability into an <em>update rule</em>:</p>
+  <div class="callout" style="font-family:var(--mono); font-size:15px;">
+    P(disease | +) &nbsp;=&nbsp; <span style="color:var(--green)">P(+ | disease)</span> ·
+    <span style="color:var(--blue)">P(disease)</span> &nbsp;/&nbsp; P(+)
+  </div>
+  <ul>
+    <li><span style="color:var(--blue)"><b>prior</b></span> <code>P(disease)</code> — what you believed
+      <em>before</em> the test (here, how common the disease is — the <b>base rate</b>).</li>
+    <li><span style="color:var(--green)"><b>likelihood</b></span> <code>P(+ | disease)</code> — how the
+      evidence behaves if the hypothesis is true (the test's <b>sensitivity</b>).</li>
+    <li><b>evidence</b> <code>P(+)</code> — how often the evidence shows up overall (true <em>and</em> false
+      positives), which normalises the result.</li>
+    <li><b>posterior</b> <code>P(disease | +)</code> — your <em>updated</em> belief after seeing the evidence.</li>
+  </ul>
+
+  <h2>See it with a population of 1,000</h2>
+  <p>The cleanest way to feel Bayes is to count actual people. Set how common the disease is and how accurate
+  the test is, then look at the 1,000 people: of everyone who tests positive, what fraction is <em>actually</em>
+  sick? That fraction is the posterior — and it's often shockingly low.</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>prevalence (prior) <span class="val" id="vprev"></span></label><input id="prev" type="range" min="0.1" max="50" step="0.1" value="1"></div>
+      <div class="ctrl"><label>sensitivity P(+|sick) <span class="val" id="vsens"></span></label><input id="sens" type="range" min="50" max="100" step="1" value="99"></div>
+      <div class="ctrl"><label>specificity P(−|healthy) <span class="val" id="vspec"></span></label><input id="spec" type="range" min="50" max="100" step="1" value="95"></div>
+    </div>
+
+    <div id="counts" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:8px 0 14px;"></div>
+
+    <p class="small muted" style="margin:0 0 4px;">Everyone who tests <b>positive</b> — true positives (sick) vs false positives (healthy):</p>
+    <svg id="bar" viewBox="0 0 600 60" role="img" aria-label="breakdown of positive tests"></svg>
+
+    <div id="result" style="font-family:var(--mono); font-size:14px; background:#e7efff; border:1px solid #a9c6f5; border-radius:10px; padding:12px 14px; color:var(--blue); margin-top:12px;"></div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>The base-rate trap</h2>
+  <p>Crank the disease down to 1% with a 99%-accurate test and the posterior still lands far below what
+  intuition screams — frequently below 50%. Why? When the disease is rare, the <em>healthy</em> group is so
+  much larger that even a tiny false-positive rate produces a flood of false positives that can swamp the few
+  true ones. The evidence still <em>updates</em> your belief (from 1% up to maybe 16%), it just doesn't make it
+  a certainty. This is the <b>base-rate fallacy</b>, and Bayes' theorem is the cure: it forces the prior into
+  the calculation instead of letting you ignore it.</p>
+
+  <div class="note green"><b>Takeaways:</b> posterior ∝ <b>likelihood × prior</b>, normalised by the total
+  evidence. A test result must be weighed against the <b>base rate</b>: when the prior is small, even an
+  accurate test yields mostly <em>false</em> positives, so <code>P(disease|+)</code> stays low. Updating beliefs
+  with evidence — never from the likelihood alone — is the whole game. (Exam Q12/Q13.)</div>
+
+  <p class="small muted">Curated companion:
+  <a href="https://setosa.io/conditional/" target="_blank" rel="noopener">Setosa — Conditional probability</a> ·
+  <a href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">StatQuest — Bayes' Theorem</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 2 · Math.
+    Practise in <a href="../phases/phase-2-math.md">the Phase 2 guide</a> (Module 2C, topic 23 · exam Q12/Q13).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const N = 1000;
+
+  function cell(label, val, color, sub) {
+    const w = el('div', { style: { border: '1px solid var(--border)', borderRadius: '10px', padding: '8px 10px', textAlign: 'center' } });
+    w.appendChild(el('div', { class: 'small muted', text: label }));
+    w.appendChild(el('div', { style: { fontFamily: 'var(--mono)', fontSize: '20px', fontWeight: '700', color }, text: val }));
+    if (sub) w.appendChild(el('div', { class: 'small muted', text: sub }));
+    return w;
+  }
+
+  function render() {
+    const prev = +$('#prev').value / 100, sens = +$('#sens').value / 100, spec = +$('#spec').value / 100;
+    $('#vprev').textContent = (+$('#prev').value).toFixed(1) + '%';
+    $('#vsens').textContent = $('#sens').value + '%';
+    $('#vspec').textContent = $('#spec').value + '%';
+
+    const sick = N * prev, healthy = N - sick;
+    const TP = sick * sens, FN = sick * (1 - sens);
+    const TN = healthy * spec, FP = healthy * (1 - spec);
+    const posTotal = TP + FP;
+    const posterior = posTotal === 0 ? 0 : TP / posTotal;
+
+    const counts = $('#counts'); counts.innerHTML = '';
+    counts.appendChild(cell('sick & +', Math.round(TP), 'var(--green)', 'true positive'));
+    counts.appendChild(cell('healthy & +', Math.round(FP), 'var(--red)', 'false positive'));
+    counts.appendChild(cell('sick & −', Math.round(FN), 'var(--amber)', 'false negative'));
+    counts.appendChild(cell('healthy & −', Math.round(TN), 'var(--muted)', 'true negative'));
+
+    // bar of positives
+    const svg = $('#bar'); svg.innerHTML = '';
+    const W = 600, frac = posTotal === 0 ? 0 : TP / posTotal;
+    svg.appendChild(el('rect', { x: 0, y: 10, width: W, height: 34, rx: 6, fill: '#fdecea', stroke: '#f1b0a8' }));
+    svg.appendChild(el('rect', { x: 0, y: 10, width: Math.max(0, W * frac), height: 34, rx: 6, fill: '#0a7d2c' }));
+    if (frac > 0.06) svg.appendChild(el('text', { x: 8, y: 32, fill: '#fff', 'font-size': 13, 'font-weight': '700', text: Math.round(TP) + ' truly sick' }));
+    svg.appendChild(el('text', { x: W - 8, y: 32, 'text-anchor': 'end', fill: '#c0392b', 'font-size': 13, 'font-weight': '700', text: Math.round(FP) + ' false alarms' }));
+
+    $('#result').innerHTML = 'P(sick | +) = TP / (TP + FP) = ' + Math.round(TP) + ' / ' + Math.round(posTotal) +
+      ' = <b style="font-size:18px">' + (posterior * 100).toFixed(1) + '%</b>';
+    $('#msg').innerHTML = 'Before the test your belief was the prior, <b>' + (prev * 100).toFixed(1) + '%</b>. After a positive result it updates to <b>' + (posterior * 100).toFixed(1) + '%</b>' +
+      (posterior < 0.5 && prev < 0.1 ? ' — still below 50%, because the many healthy people produce ' + Math.round(FP) + ' false positives that dilute the ' + Math.round(TP) + ' true ones (the base-rate trap).' : '.');
+  }
+  ['prev', 'sens', 'spec'].forEach((k) => $('#' + k).addEventListener('input', render));
+  render();
+})();
+</script>
+</body>
+</html>

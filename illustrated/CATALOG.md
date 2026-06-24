@@ -29,6 +29,9 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🎨 **GroupBy: split–apply–combine** — [pandas-groupby.html](pandas-groupby.html)
 
 ## Phase 2 · Math
+- 🎨 **Matrices as transformations** — [matrix-transformation.html](matrix-transformation.html)
+- 🎨 **Dot product & projection** — [dot-product.html](dot-product.html) · exam Q1
+- 🎨 **Bayes' theorem** — [bayes-theorem.html](bayes-theorem.html) · exam Q12/Q13 · 🔗 [Setosa: Conditional](https://setosa.io/conditional/)
 - 🔗 Eigenvalues & eigenvectors — https://setosa.io/ev/eigenvectors-and-eigenvalues/
 - 🔗 PCA — https://setosa.io/ev/principal-component-analysis/
 - 🔗 Ordinary least squares — https://setosa.io/ev/ordinary-least-squares-regression/
