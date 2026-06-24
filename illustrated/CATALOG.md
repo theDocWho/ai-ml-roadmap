@@ -3,6 +3,18 @@
 Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best existing interactive resource) ·
 ⏳ coming soon. The live, searchable version is [`index.html`](index.html).
 
+## Phase 0 · Python
+- 🎨 **Names, objects & mutability** — [python-data-model.html](python-data-model.html) · exam Q5
+- 🎨 **Truthiness, bool & min/max** — [python-truthiness.html](python-truthiness.html) · exam Q3
+- 🎨 **Comprehensions** — [python-comprehensions.html](python-comprehensions.html)
+
+## Phase 1 · Scientific stack
+- 🎨 **NumPy broadcasting** — [numpy-broadcasting.html](numpy-broadcasting.html)
+- 🎨 **Aggregations & axis** — [numpy-axis.html](numpy-axis.html) · exam Q4
+- 🎨 **Indexing: slices, masks & fancy** — [numpy-indexing.html](numpy-indexing.html)
+- 🎨 **Series, DataFrames & loc/iloc** — [pandas-dataframe.html](pandas-dataframe.html) · exam Q2
+- 🎨 **GroupBy: split–apply–combine** — [pandas-groupby.html](pandas-groupby.html)
+
 ## Phase 2 · Math
 - 🔗 Eigenvalues & eigenvectors — https://setosa.io/ev/eigenvectors-and-eigenvalues/
 - 🔗 PCA — https://setosa.io/ev/principal-component-analysis/

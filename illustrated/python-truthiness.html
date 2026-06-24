@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Truthiness, bool, and min/max — Python</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python · exam Q3</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Truthiness, <code>bool</code> &amp; <code>min</code>/<code>max</code></h1>
+    <p class="lede">Python lets <em>any</em> object stand in for true/false in a condition. Knowing exactly
+      which values are "falsy" — and that <code>True</code>/<code>False</code> are really just
+      <code>1</code>/<code>0</code> in disguise — is the key to reading code like exam Q3.</p>
+    <div class="tagrow">
+      <span class="tag">truthiness</span><span class="tag">falsy values</span>
+      <span class="tag">bool is an int</span><span class="tag">short-circuit and/or</span>
+      <span class="tag byo">exam Q3</span>
+    </div>
+  </div>
+
+  <h2>Every object is either truthy or falsy</h2>
+  <p>In Python you don't only write <code>if x == 0:</code> — you can write <code>if x:</code> and let the
+  object decide. When an object appears in a boolean context (an <code>if</code>, a <code>while</code>, an
+  <code>and</code>/<code>or</code>), Python asks it: "are you truthy or falsy?" The complete list of
+  <b>falsy</b> values is short and worth memorising — everything <em>not</em> on it is truthy:</p>
+  <ul>
+    <li><code>False</code>, <code>None</code></li>
+    <li>any zero number: <code>0</code>, <code>0.0</code>, <code>0j</code></li>
+    <li>any empty container: <code>""</code>, <code>[]</code>, <code>{}</code>, <code>set()</code>, <code>()</code></li>
+  </ul>
+  <p>The traps live in the gaps. <code>-3</code> is <b>truthy</b> (only <em>zero</em> is falsy, not "negative").
+  <code>"0"</code> is <b>truthy</b> (it's a non-empty string — the characters don't matter). <code>[0]</code>
+  is <b>truthy</b> (a non-empty list, even though its one element is falsy). Click any chip to check it
+  yourself:</p>
+
+  <div class="panel">
+    <h4><code>bool(x)</code> — click a value</h4>
+    <div class="chips" id="chips" style="margin-bottom:12px;"></div>
+    <div class="note" id="why" style="margin:0;">Pick a value above to see whether <code>if x:</code> would run, and why.</div>
+  </div>
+
+  <h2><code>True</code> and <code>False</code> <em>are</em> numbers</h2>
+  <p>Here's the fact that makes exam Q3 click: in Python <code>bool</code> is a <b>subclass of <code>int</code></b>.
+  <code>True</code> is literally <code>1</code> and <code>False</code> is literally <code>0</code> for every
+  arithmetic and comparison purpose. So <code>True + True == 2</code>, <code>False &lt; 5</code> is
+  <code>True</code>, and <code>sum([True, False, True]) == 2</code> (a handy way to count matches). This is
+  why <code>min</code> and <code>max</code> — which compare by value — will happily mix booleans and
+  numbers.</p>
+  <p>But there's a twist that the exam leans on: <code>min</code> and <code>max</code> <b>return the actual
+  winning element</b>, not a fresh number. So if <code>False</code> wins a comparison, you get the object
+  <code>False</code> back — even though it compared as <code>0</code>. Watch it resolve step by step:</p>
+
+  <div class="panel">
+    <h4>Evaluate <code style="font-size:1em">min(max(False, -3, -4), 2, 7)</code></h4>
+    <div id="evalbox"></div>
+    <div class="btnrow" style="margin-top:6px;">
+      <button class="ghost" id="eprev">‹ Back</button>
+      <button id="enext">Next step ›</button>
+      <button class="ghost" id="ereset">↻ Restart</button>
+    </div>
+    <div class="note" id="enote" style="margin-top:10px;"></div>
+  </div>
+
+  <p>The punchline: the result is <code>False</code>, <b>not <code>0</code></b> — even though they're equal
+  in value. <code>max(False, -3, -4)</code> compares <code>0, -3, -4</code>, the biggest is <code>0</code>,
+  and the element that carried that value was <code>False</code>, so <code>max</code> hands back
+  <code>False</code>. Then <code>min(False, 2, 7)</code> compares <code>0, 2, 7</code>, the smallest is
+  <code>0</code> → <code>False</code> again. <code>print()</code> shows <code>False</code>. If the answer
+  key says "0" it's numerically right but the object Python returns is the boolean.</p>
+
+  <h2>Short-circuit <code>and</code> / <code>or</code> — and what they actually return</h2>
+  <p>One more piece that surprises Java developers: in Python <code>and</code> and <code>or</code> don't
+  return <code>True</code>/<code>False</code> — they return <b>one of the operands</b>, and they
+  <b>short-circuit</b> (stop as soon as the answer is known).</p>
+  <ul>
+    <li><code>a and b</code> → returns <code>a</code> if <code>a</code> is <em>falsy</em> (and never looks at
+      <code>b</code>); otherwise returns <code>b</code>.</li>
+    <li><code>a or b</code> → returns <code>a</code> if <code>a</code> is <em>truthy</em> (and never looks at
+      <code>b</code>); otherwise returns <code>b</code>.</li>
+  </ul>
+  <p>That's why the idiom <code>name = user_input or "guest"</code> works: if <code>user_input</code> is an
+  empty string (falsy), you fall through to <code>"guest"</code>. And why <code>x and x.method()</code>
+  safely skips the call when <code>x</code> is <code>None</code>. Try a few:</p>
+
+  <div class="panel">
+    <h4>What does <code>a <span id="opname">and</span> b</code> return?</h4>
+    <div class="controls">
+      <div class="ctrl"><label>a</label>
+        <select id="aval"></select></div>
+      <div class="ctrl"><label>operator</label>
+        <select id="op"><option value="and">and</option><option value="or">or</option></select></div>
+      <div class="ctrl"><label>b</label>
+        <select id="bval"></select></div>
+    </div>
+    <div id="scres" style="font-family:var(--mono); font-size:14px;"></div>
+  </div>
+
+  <h2>Why this matters</h2>
+  <p>Truthiness is everywhere in idiomatic Python and ML code: <code>if results:</code> (got any rows?),
+  <code>config.get("lr") or 0.01</code> (default), <code>while queue:</code> (drain it). The cost of the
+  convenience is exactly the traps above — <code>0</code>, <code>""</code>, and empty containers are falsy,
+  which is great until a <em>legitimate</em> zero (a valid price of <code>0.0</code>, an empty-but-real
+  list) gets silently skipped. When zero is a meaningful value, be explicit: write <code>if x is None:</code>
+  instead of <code>if not x:</code>.</p>
+
+  <div class="note green"><b>Takeaways:</b> (1) falsy = <code>False/None/0/0.0/""/[]/{}/()/set()</code>; everything
+  else is truthy. (2) <code>bool</code> is an <code>int</code> — <code>True==1</code>, <code>False==0</code>.
+  (3) <code>min</code>/<code>max</code> return the <em>winning element</em>, so booleans can come back out.
+  (4) <code>and</code>/<code>or</code> short-circuit and return an <em>operand</em>, not a strict boolean.</div>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    See <a href="../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0A, topic 5) and pair this with
+    <a href="python-data-model.html">Names, Objects &amp; Mutability →</a>.
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+
+  // ---------- Truthiness chips ----------
+  const VALUES = [
+    { src: 'False', truthy: false, why: '<code>False</code> is the canonical falsy value (and equals <code>0</code>).' },
+    { src: 'True', truthy: true, why: '<code>True</code> is truthy (and equals <code>1</code>).' },
+    { src: '0', truthy: false, why: 'Zero of any numeric type is falsy.' },
+    { src: '1', truthy: true, why: 'Any non-zero number is truthy.' },
+    { src: '-3', truthy: true, why: '<b>Trap:</b> negatives are non-zero, so <code>-3</code> is truthy. Only <em>zero</em> is falsy.' },
+    { src: '0.0', truthy: false, why: 'Zero as a float is still falsy.' },
+    { src: '""', truthy: false, why: 'The empty string is falsy.' },
+    { src: '"hi"', truthy: true, why: 'A non-empty string is truthy.' },
+    { src: '"0"', truthy: true, why: '<b>Trap:</b> a non-empty string is truthy — the <em>characters</em> don\'t matter, only the length.' },
+    { src: '[]', truthy: false, why: 'An empty list is falsy.' },
+    { src: '[0]', truthy: true, why: '<b>Trap:</b> a non-empty list is truthy even if its only element (<code>0</code>) is itself falsy.' },
+    { src: '{}', truthy: false, why: 'An empty dict (and empty set) is falsy.' },
+    { src: 'None', truthy: false, why: '<code>None</code> is falsy — Python\'s "nothing here" value.' },
+  ];
+  const chips = Ill.$('#chips');
+  const why = Ill.$('#why');
+  VALUES.forEach((v) => {
+    const c = el('button', { class: 'chip', text: v.src, type: 'button',
+      style: { cursor: 'pointer', borderColor: v.truthy ? '#b6e3c4' : '#f1b0a8', background: v.truthy ? '#eafaef' : '#fdecea', color: v.truthy ? '#1d5b30' : '#c0392b' } });
+    c.addEventListener('click', () => {
+      why.innerHTML = '<code>bool(' + v.src + ')</code> → <b>' + v.truthy + '</b> &nbsp;·&nbsp; ' +
+        '<code>if ' + v.src + ':</code> ' + (v.truthy ? 'runs' : 'is skipped') + '. ' + v.why;
+    });
+    chips.appendChild(c);
+  });
+
+  // ---------- Q3 step evaluator ----------
+  const ESTEPS = [
+    { html: '<span class="hl">min(<span class="hl2">max(False, -3, -4)</span>, 2, 7)</span>',
+      note: 'Evaluate the innermost call first: <code>max(False, -3, -4)</code>.' },
+    { html: 'min(<span class="hl2">max(<b>0</b>, -3, -4)</span>, 2, 7)',
+      note: '<code>max</code> compares by value. As an <code>int</code>, <code>False</code> is <code>0</code>. So we\'re comparing <code>0</code>, <code>-3</code>, <code>-4</code>.' },
+    { html: 'min(<span class="hl">False</span>, 2, 7)',
+      note: 'The largest value is <code>0</code>, and the element holding it was <code>False</code> → <code>max</code> returns the object <b><code>False</code></b> (not a fresh <code>0</code>).' },
+    { html: 'min(<b>0</b>, 2, 7)',
+      note: 'Now <code>min</code> compares by value: <code>False</code> is <code>0</code>, against <code>2</code> and <code>7</code>.' },
+    { html: '<span class="hl">False</span>',
+      note: 'The smallest value is <code>0</code> → <code>min</code> returns the winning element, <b><code>False</code></b>. Final result: <code>False</code> (equal to 0, but it\'s the boolean object).' },
+  ];
+  let estep = 0;
+  const evalbox = Ill.$('#evalbox');
+  const enote = Ill.$('#enote');
+  function erender() {
+    evalbox.innerHTML = '<div style="font-family:var(--mono); font-size:18px; padding:14px 4px;">' + ESTEPS[estep].html + '</div>';
+    enote.innerHTML = '<b>Step ' + (estep + 1) + '/' + ESTEPS.length + ':</b> ' + ESTEPS[estep].note;
+    Ill.$('#eprev').disabled = estep === 0;
+    Ill.$('#enext').disabled = estep === ESTEPS.length - 1;
+    // style the highlight spans
+    Ill.$$('.hl', evalbox).forEach((s) => { s.style.background = '#e7efff'; s.style.borderRadius = '5px'; s.style.padding = '1px 4px'; });
+    Ill.$$('.hl2', evalbox).forEach((s) => { s.style.background = '#fff8e6'; s.style.borderRadius = '5px'; s.style.padding = '1px 4px'; });
+  }
+  Ill.$('#enext').addEventListener('click', () => { if (estep < ESTEPS.length - 1) { estep++; erender(); } });
+  Ill.$('#eprev').addEventListener('click', () => { if (estep > 0) { estep--; erender(); } });
+  Ill.$('#ereset').addEventListener('click', () => { estep = 0; erender(); });
+  erender();
+
+  // ---------- Short-circuit and/or ----------
+  const OPS = [
+    { src: '""', val: '', truthy: false },
+    { src: '"hi"', val: 'hi', truthy: true },
+    { src: '0', val: 0, truthy: false },
+    { src: '5', val: 5, truthy: true },
+    { src: 'None', val: null, truthy: false },
+    { src: '[1, 2]', val: [1, 2], truthy: true },
+  ];
+  const aSel = Ill.$('#aval'), bSel = Ill.$('#bval'), opSel = Ill.$('#op');
+  OPS.forEach((o, i) => {
+    aSel.appendChild(el('option', { value: i, text: o.src }));
+    bSel.appendChild(el('option', { value: i, text: o.src }));
+  });
+  aSel.value = 0; bSel.value = 3; // "" and 5
+  const scres = Ill.$('#scres');
+  function scrender() {
+    const a = OPS[+aSel.value], b = OPS[+bSel.value], op = opSel.value;
+    Ill.$('#opname').textContent = op;
+    let result, reason;
+    if (op === 'and') {
+      if (!a.truthy) { result = a.src; reason = '<code>a</code> is falsy, so <code>and</code> short-circuits and returns <code>a</code> — <code>b</code> is never evaluated.'; }
+      else { result = b.src; reason = '<code>a</code> is truthy, so <code>and</code> returns whatever <code>b</code> is.'; }
+    } else {
+      if (a.truthy) { result = a.src; reason = '<code>a</code> is truthy, so <code>or</code> short-circuits and returns <code>a</code> — <code>b</code> is never evaluated.'; }
+      else { result = b.src; reason = '<code>a</code> is falsy, so <code>or</code> returns whatever <code>b</code> is.'; }
+    }
+    scres.innerHTML = '<div style="padding:6px 0;"><code>' + a.src + ' ' + op + ' ' + b.src + '</code> &nbsp;→&nbsp; <b style="color:var(--blue)">' + result + '</b></div>' +
+      '<div class="small muted" style="font-family:var(--sans)">' + reason + '</div>';
+  }
+  [aSel, bSel, opSel].forEach((s) => s.addEventListener('change', scrender));
+  scrender();
+})();
+</script>
+</body>
+</html>

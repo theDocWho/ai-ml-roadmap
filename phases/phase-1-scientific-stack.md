@@ -12,6 +12,7 @@ are one click away). Each checkpoint is tagged.
 - [Corey Schafer — *Pandas* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) · [Corey Schafer — *Matplotlib* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_)
 - [*Python Data Science Handbook* (free, online)](https://jakevdp.github.io/PythonDataScienceHandbook/) · [NumPy docs (stable)](https://numpy.org/doc/stable/) · [pandas docs (stable)](https://pandas.pydata.org/docs/)
 - [Kaggle Learn](https://www.kaggle.com/learn) (hands-on, free certs) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (good "NumPy/Pandas from scratch" explainers)
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline) for this phase: [Broadcasting](../illustrated/numpy-broadcasting.html), [Aggregations & axis](../illustrated/numpy-axis.html) (Q4), [Indexing: slices/masks/fancy](../illustrated/numpy-indexing.html), [Series/DataFrame & loc/iloc](../illustrated/pandas-dataframe.html) (Q2), [GroupBy](../illustrated/pandas-groupby.html).
 
 ---
 
@@ -20,10 +21,10 @@ are one click away). Each checkpoint is tagged.
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 1 | Arrays, dtypes, creation | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **Ch.2 "Understanding Data Types in NumPy"** + **"The Basics of NumPy Arrays"** | 40m |
-| 2 | Indexing, slicing, boolean & fancy indexing | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Comparisons, Masks, and Boolean Logic"** + **"Fancy Indexing"** | 40m |
+| 2 | Indexing, slicing, boolean & fancy indexing | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Comparisons, Masks, and Boolean Logic"** + **"Fancy Indexing"** · 🎨 [Visualize](../illustrated/numpy-indexing.html) | 40m |
 | 3 | Vectorized math (ufuncs) — no loops | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Computation on Arrays: Universal Functions"** | 25m |
-| 4 | **Aggregations & `axis`** (exam Q4) | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Aggregations: Min, Max, and Everything in Between"** | 25m |
-| 5 | **Broadcasting** (critical for ML) | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Computation on Arrays: Broadcasting"** | 30m |
+| 4 | **Aggregations & `axis`** (exam Q4) | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Aggregations: Min, Max, and Everything in Between"** · 🎨 [Visualize](../illustrated/numpy-axis.html) | 25m |
+| 5 | **Broadcasting** (critical for ML) | [PDS Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — **"Computation on Arrays: Broadcasting"** · 🎨 [Visualize](../illustrated/numpy-broadcasting.html) | 30m |
 | 6 | Linear algebra ops: `@`, `dot`, `reshape`, `linalg` | [NumPy docs (stable)](https://numpy.org/doc/stable/reference/routines.linalg.html) — **"Linear algebra (numpy.linalg)"** | 30m |
 
 **✅ Checkpoint 1A** — 🖥️ Local (notebook), no Python loops — one per topic:
@@ -41,11 +42,11 @@ are one click away). Each checkpoint is tagged.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 7 | **Series & DataFrame** (exam Q2), loading CSVs | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 1** + **Part 2** | 60m |
+| 7 | **Series & DataFrame** (exam Q2), loading CSVs | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 1** + **Part 2** · 🎨 [Visualize](../illustrated/pandas-dataframe.html) | 60m |
 | 8 | `loc` vs `iloc`, indexes | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 2** + **Part 3 (Indexes)** | 45m |
 | 9 | Filtering with conditionals | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 4 (Filtering)** | 25m |
 | 10 | Add/update/remove columns | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 5 & 6** | 40m |
-| 11 | **GroupBy + aggregation** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 8 (Grouping & Aggregating)** | 35m |
+| 11 | **GroupBy + aggregation** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 8 (Grouping & Aggregating)** · 🎨 [Visualize](../illustrated/pandas-groupby.html) | 35m |
 | 12 | Cleaning: dtypes & **missing values** | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 9 (Cleaning Data)** | 30m |
 | 13 | Merge / join / concat | [Kaggle Learn — Pandas](https://www.kaggle.com/learn/pandas) — **"Combining"** lesson | 40m |
 | 14 | Dates & time series (for finance) | [Corey Schafer Pandas](https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS) — **Part 10 (Dates & Time Series)** | 30m |

@@ -15,6 +15,7 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 - [Corey Schafer — *Python Beginners* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) · [Corey Schafer — *Python OOP* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc)
 - [Real Python](https://realpython.com) (free articles) · [Official Python Tutorial (3.12+)](https://docs.python.org/3/tutorial/)
 - 🆕 [Vizuara](https://www.youtube.com/@vizuara) is more ML/DL-focused — bookmark it now; it becomes a primary source from Phase 2 on.
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline) for this phase: [Names, objects & mutability](../illustrated/python-data-model.html) (Q5), [Truthiness & min/max](../illustrated/python-truthiness.html) (Q3), [Comprehensions](../illustrated/python-comprehensions.html).
 
 ---
 
@@ -25,8 +26,8 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 | 1 | Install Python 3.12+, venv, pip, run scripts | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#1 Install and Setup** + [Real Python — "Python Virtual Environments: A Primer"](https://realpython.com/python-virtual-environments-a-primer/) | 30m |
 | 2 | Java→Python mindset (dynamic typing, indentation, no `;`) | [Official Tutorial (3.12+)](https://docs.python.org/3/tutorial/introduction.html) — **"An Informal Introduction to Python"** | 20m |
 | 3 | Strings (f-strings, slicing) & numbers | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#2 Strings** + **#3 Integers and Floats** | 40m |
-| 4 | **Mutability vs immutability** (exam Q5) | [Real Python — "Python's Mutable vs Immutable Types"](https://realpython.com/python-mutable-vs-immutable-types/) | 25m |
-| 5 | Truthiness & `min/max/bool` (exam Q3) | [Real Python — "Python Booleans"](https://realpython.com/python-boolean/) + run the exam Q3 snippet | 20m |
+| 4 | **Mutability vs immutability** (exam Q5) | [Real Python — "Python's Mutable vs Immutable Types"](https://realpython.com/python-mutable-vs-immutable-types/) · 🎨 [Visualize](../illustrated/python-data-model.html) | 25m |
+| 5 | Truthiness & `min/max/bool` (exam Q3) | [Real Python — "Python Booleans"](https://realpython.com/python-boolean/) + run the exam Q3 snippet · 🎨 [Visualize](../illustrated/python-truthiness.html) | 20m |
 
 **✅ Checkpoint 0A** — 🖥️ Local REPL, no notes — one item per topic:
 - **(T1)** Create & activate a venv, `pip install numpy`, run a script that prints `numpy.__version__`.
@@ -43,7 +44,7 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 |---|-------|-------------------|-------|
 | 6 | list / tuple / set | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#4 Lists, Tuples, and Sets** | 30m |
 | 7 | dict (the workhorse) | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#5 Dictionaries** | 20m |
-| 8 | Comprehensions (list/dict/set) | [Corey Schafer — "Python Tutorial: Comprehensions"](https://www.youtube.com/@coreyms/search?query=comprehensions) | 15m |
+| 8 | Comprehensions (list/dict/set) | [Corey Schafer — "Python Tutorial: Comprehensions"](https://www.youtube.com/@coreyms/search?query=comprehensions) · 🎨 [Visualize](../illustrated/python-comprehensions.html) | 15m |
 | 9 | `enumerate`, `zip`, unpacking | [Corey Schafer — "Python Tutorial: Zip"](https://www.youtube.com/@coreyms/search?query=zip) + [Real Python — "enumerate()"](https://realpython.com/python-enumerate/) | 20m |
 | 10 | `*args` / `**kwargs`, default args | [Corey Schafer — "Python Tutorial: *args and **kwargs"](https://www.youtube.com/@coreyms/search?query=args%20kwargs) | 15m |
 | 11 | Generators & `yield` | [Corey Schafer — "Python Tutorial: Generators"](https://www.youtube.com/@coreyms/search?query=generators) | 15m |

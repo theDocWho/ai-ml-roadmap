@@ -41,6 +41,18 @@
 <script>
 // Catalog data. kind: 'ours' (internal href), 'curated' (external), 'soon'
 const ITEMS = [
+  // ---- Phase 0: Python ----
+  { phase:"Phase 0 · Python", title:"Names, objects & mutability", kind:"ours", desc:"Step through aliasing & the mutable-default trap — the #1 Java→Python gotcha. Exam Q5.", href:"python-data-model.html" },
+  { phase:"Phase 0 · Python", title:"Truthiness, bool & min/max", kind:"ours", desc:"Which values are falsy, why bool is an int, and how exam Q3 resolves to False.", href:"python-truthiness.html" },
+  { phase:"Phase 0 · Python", title:"Comprehensions", kind:"ours", desc:"Build a comprehension and watch it desugar to a loop; list / set / dict / generator.", href:"python-comprehensions.html" },
+
+  // ---- Phase 1: Scientific stack ----
+  { phase:"Phase 1 · Scientific stack", title:"NumPy broadcasting", kind:"ours", desc:"Check shape compatibility & watch the stretch happen. The rule behind every bias-add.", href:"numpy-broadcasting.html" },
+  { phase:"Phase 1 · Scientific stack", title:"Aggregations & axis", kind:"ours", desc:"axis=0 vs axis=1 made obvious: the named axis collapses. Exam Q4.", href:"numpy-axis.html" },
+  { phase:"Phase 1 · Scientific stack", title:"Indexing: slices, masks & fancy", kind:"ours", desc:"Slice (view) vs boolean mask (copy) vs fancy indexing (copy), interactively.", href:"numpy-indexing.html" },
+  { phase:"Phase 1 · Scientific stack", title:"Series, DataFrames & loc/iloc", kind:"ours", desc:"label vs position selection; one row/col → Series, several → DataFrame. Exam Q2.", href:"pandas-dataframe.html" },
+  { phase:"Phase 1 · Scientific stack", title:"GroupBy: split–apply–combine", kind:"ours", desc:"Watch rows split by key, a function apply per group, and results combine.", href:"pandas-groupby.html" },
+
   // ---- Phase 2: Math ----
   { phase:"Phase 2 · Math", title:"Eigenvalues & eigenvectors", kind:"curated", desc:"Watch a matrix stretch space; eigenvectors are the directions that don't rotate.", href:"https://setosa.io/ev/eigenvectors-and-eigenvalues/" },
   { phase:"Phase 2 · Math", title:"PCA", kind:"curated", desc:"Interactive principal component analysis on 2-D/3-D data.", href:"https://setosa.io/ev/principal-component-analysis/" },
@@ -105,7 +117,7 @@ const ITEMS = [
       if (ql && !(it.title + " " + it.desc + " " + it.phase).toLowerCase().includes(ql)) return;
       (groups[it.phase] = groups[it.phase] || []).push(it);
     });
-    const order = ["Phase 2 · Math","Phase 3 · Classic ML","Phase 4 · Deep Learning","Phase 5 · NLP & Transformers","Phase 6 · LLMs, RAG & Agents","Phase 6B · LLM in-depth","Phase 7 · MLOps","Modules"];
+    const order = ["Phase 0 · Python","Phase 1 · Scientific stack","Phase 2 · Math","Phase 3 · Classic ML","Phase 4 · Deep Learning","Phase 5 · NLP & Transformers","Phase 6 · LLMs, RAG & Agents","Phase 6B · LLM in-depth","Phase 7 · MLOps","Modules"];
     let any = false;
     order.forEach((ph) => {
       const list = groups[ph];
