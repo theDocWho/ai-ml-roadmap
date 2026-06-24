@@ -83,7 +83,7 @@ const ITEMS = [
   { phase:"Phase 5 · NLP & Transformers", title:"The Illustrated Transformer", kind:"curated", desc:"Jay Alammar — the canonical illustrated guide.", href:"https://jalammar.github.io/illustrated-transformer/" },
   { phase:"Phase 5 · NLP & Transformers", title:"Transformer Explainer (live)", kind:"curated", desc:"poloclub — a running GPT-2 you can poke.", href:"https://poloclub.github.io/transformer-explainer/" },
   { phase:"Phase 5 · NLP & Transformers", title:"The Illustrated Word2vec", kind:"curated", desc:"Jay Alammar — embeddings, illustrated.", href:"https://jalammar.github.io/illustrated-word2vec/" },
-  { phase:"Phase 5 · NLP & Transformers", title:"Self-attention (Q·Kᵀ→softmax→·V)", kind:"soon", desc:"Step through attention on a tiny sentence.", href:"#" },
+  { phase:"Phase 5 · NLP & Transformers", title:"Self-attention (Q·Kᵀ→softmax→·V)", kind:"ours", desc:"Click a token; watch query·key scores, softmax weights & the value blend. Ties to BYO-8.", href:"self-attention.html" },
 
   // ---- Phase 6: LLMs, RAG & Agents (our focus) ----
   { phase:"Phase 6 · LLMs, RAG & Agents", title:"RAG pipeline", kind:"ours", desc:"Animate chunk → embed → retrieve → generate, with citations. Ties to BYO-9.", href:"rag-pipeline.html" },
@@ -97,10 +97,10 @@ const ITEMS = [
   { phase:"Phase 6B · LLM in-depth", title:"LLM decoding (temp / top-k / top-p)", kind:"ours", desc:"Reshape a token distribution and sample from it — greedy vs nucleus.", href:"llm-decoding.html" },
   { phase:"Phase 6B · LLM in-depth", title:"LoRA & quantization", kind:"ours", desc:"Low-rank adapters + bit-width tradeoffs, with live param/memory math.", href:"lora-quantization.html" },
   { phase:"Phase 6B · LLM in-depth", title:"Diffusion Explainer", kind:"curated", desc:"poloclub — text-to-image diffusion, interactive.", href:"https://poloclub.github.io/diffusion-explainer/" },
-  { phase:"Phase 6B · LLM in-depth", title:"Prompt injection (OWASP LLM01)", kind:"soon", desc:"Attack & defend a mock assistant. Ties to BYO-16.", href:"#" },
+  { phase:"Phase 6B · LLM in-depth", title:"Prompt injection (OWASP LLM01)", kind:"ours", desc:"Run direct & indirect attacks on a mock bot, then layer defenses. Ties to BYO-16.", href:"prompt-injection.html" },
 
   // ---- Phase 7: MLOps ----
-  { phase:"Phase 7 · MLOps", title:"MLOps lifecycle & drift", kind:"soon", desc:"Interactive data → train → track → serve → monitor.", href:"#" },
+  { phase:"Phase 7 · MLOps", title:"MLOps lifecycle & drift", kind:"ours", desc:"Click through the lifecycle loop, then simulate drift, monitoring & auto-retrain.", href:"mlops-lifecycle.html" },
 
   // ---- Modules ----
   { phase:"Modules", title:"Graph Neural Networks", kind:"curated", desc:"Distill — “A Gentle Introduction to GNNs”, interactive.", href:"https://distill.pub/2021/gnn-intro/" },

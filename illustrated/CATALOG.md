@@ -44,7 +44,7 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🔗 The Illustrated Transformer (Alammar) — https://jalammar.github.io/illustrated-transformer/
 - 🔗 Transformer Explainer, live GPT-2 (poloclub) — https://poloclub.github.io/transformer-explainer/
 - 🔗 The Illustrated Word2vec (Alammar) — https://jalammar.github.io/illustrated-word2vec/
-- ⏳ Self-attention (Q·Kᵀ→softmax→·V)
+- 🎨 **Self-attention (Q·Kᵀ→softmax→·V)** — [self-attention.html](self-attention.html) · ties to BYO-8
 
 ## Phase 6 · LLMs, RAG & Agents
 - 🎨 **RAG pipeline** — [rag-pipeline.html](rag-pipeline.html) · ties to BYO-9
@@ -58,10 +58,10 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🎨 **LLM decoding (temp / top-k / top-p)** — [llm-decoding.html](llm-decoding.html)
 - 🎨 **LoRA & quantization** — [lora-quantization.html](lora-quantization.html)
 - 🔗 Diffusion Explainer (poloclub) — https://poloclub.github.io/diffusion-explainer/
-- ⏳ Prompt injection / OWASP LLM01 (ties to BYO-16)
+- 🎨 **Prompt injection / OWASP LLM01** — [prompt-injection.html](prompt-injection.html) · ties to BYO-16
 
 ## Phase 7 · MLOps
-- ⏳ MLOps lifecycle & drift
+- 🎨 **MLOps lifecycle & drift** — [mlops-lifecycle.html](mlops-lifecycle.html)
 
 ## Modules
 - 🔗 Graph Neural Networks (Distill) — https://distill.pub/2021/gnn-intro/
