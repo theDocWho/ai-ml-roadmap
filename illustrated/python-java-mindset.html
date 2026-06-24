@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java → Python — the mindset shift, side by side</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Java → Python: the mindset shift</h1>
+    <p class="lede">You already know how to program. What changes moving to Python isn't the logic — it's the
+      <em>texture</em>: no type declarations, no semicolons, whitespace that actually matters, and a few traps
+      where a familiar symbol means something different. See the same idea written both ways and the new habits
+      become obvious.</p>
+    <div class="tagrow">
+      <span class="tag">dynamic typing</span><span class="tag">indentation = blocks</span>
+      <span class="tag">no semicolons</span><span class="tag">== vs is</span>
+      <span class="tag">None / True</span>
+    </div>
+  </div>
+
+  <h2>The three big shifts</h2>
+  <ul>
+    <li><b>Types are inferred and dynamic.</b> You never write a type — you just assign
+      <code>x = 5</code>, and the same name can later hold a string. The object carries the type, not the
+      variable (see <a href="python-data-model.html">names &amp; objects</a>). Optional <em>type hints</em>
+      (<code>x: int = 5</code>) exist for readability and tooling, but they don't change runtime behaviour.</li>
+    <li><b>Indentation <em>is</em> the syntax.</b> Java uses <code>{ }</code> for blocks and <code>;</code> to
+      end statements, with whitespace ignored. Python deletes both: a <code>:</code> opens a block and the
+      <b>indentation</b> (4 spaces, consistently) defines what's inside it. Misaligned code isn't ugly — it's a
+      different program, or an error.</li>
+    <li><b>Read like prose.</b> No <code>new</code>, no boilerplate <code>public static void main</code>,
+      collections have literal syntax (<code>[]</code>, <code>{}</code>). The result is fewer lines that read
+      closer to the intent.</li>
+  </ul>
+
+  <p>Pick a concept and compare the two languages line for line — the highlighted parts are where the habit
+  changes:</p>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;"><label>concept</label>
+      <select id="topic"></select></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px;">
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--amber); margin-bottom:4px;">JAVA</div>
+        <div id="java" class="codebox" style="border-color:#e6cf8a; background:#fff8e6;"></div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--green); margin-bottom:4px;">PYTHON</div>
+        <div id="py" class="codebox" style="border-color:#b6e3c4; background:#eafaef;"></div>
+      </div>
+    </div>
+    <p class="note" id="note" style="margin-top:14px;"></p>
+  </div>
+
+  <h2>The one that bites: <code>==</code> vs <code>is</code></h2>
+  <p>This pair is <em>inverted</em> from Java and catches everyone. In Java you compare object <em>values</em>
+  with <code>.equals()</code> and reference identity with <code>==</code>. In Python it's the other way round:
+  <code>==</code> compares <b>values</b> (it calls <a href="python-dunder.html"><code>__eq__</code></a>), and
+  <code>is</code> compares <b>identity</b> (same object in memory). So you almost always want <code>==</code>;
+  reserve <code>is</code> for the singletons <code>None</code>, <code>True</code>, <code>False</code> —
+  idiomatically <code>if x is None:</code>. (More in <a href="python-truthiness.html">truthiness</a>.)</p>
+
+  <h2>A few more renames to internalise</h2>
+  <p>Beyond syntax, a handful of names differ: <code>null</code>→<code>None</code>,
+  <code>true/false</code>→<code>True/False</code>, <code>&amp;&amp; / || / !</code>→<code>and / or /
+  not</code>, <code>this</code>→<code>self</code> (and it's an explicit first parameter, not a keyword —
+  see <a href="python-oop.html">classes</a>). Comments are <code>#</code>, not <code>//</code>. None of these
+  are hard; they just need a day or two of muscle-memory rewiring.</p>
+
+  <div class="note green"><b>Takeaways:</b> Python infers types and they're dynamic (no declarations);
+  <b>indentation defines blocks</b> (<code>:</code> + 4 spaces) — there are no braces or semicolons. Watch the
+  inversion: <code>==</code> is <em>value</em> equality, <code>is</code> is <em>identity</em> (use it only for
+  <code>None</code>). Learn the renames (<code>None/True/and/self/#</code>) and lean on the literal
+  collection syntax. The algorithms you know all transfer unchanged.</div>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0A, topic 2).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  // hl = wrap key tokens; we store code as plain text with {{ }} marking highlights
+  const TOPICS = [
+    {
+      label: 'Variables & typing',
+      java: 'int count = 5;\nString name = "Ada";\ndouble pi = 3.14;',
+      py: 'count = 5\nname = "Ada"\npi = 3.14',
+      note: 'No type declarations — Python infers the type from the value, and the variable can later be reassigned to any type. (Optional hints: <code>count: int = 5</code>.)',
+    },
+    {
+      label: 'Blocks & statements',
+      java: 'if (x > 0) {\n    total += x;\n    log(x);\n}',
+      py: 'if x > 0:\n    total += x\n    log(x)',
+      note: 'A <code>:</code> opens the block and <b>indentation</b> defines its body — no <code>{ }</code>, no <code>;</code>, and no parentheses needed around the condition. Indentation is required, not cosmetic.',
+    },
+    {
+      label: 'A loop',
+      java: 'for (int i = 0; i < items.size(); i++) {\n    System.out.println(items.get(i));\n}',
+      py: 'for item in items:\n    print(item)',
+      note: 'Python loops <em>over the items directly</em> — no index, no <code>.size()</code>, no <code>.get(i)</code>. Need the index too? Use <code>enumerate(items)</code> (see the zip/enumerate explainer).',
+    },
+    {
+      label: 'Printing',
+      java: 'System.out.println("count = " + count);',
+      py: 'print(f"count = {count}")',
+      note: 'A plain <code>print()</code>, and an <a href="python-strings.html">f-string</a> embeds the value directly instead of string concatenation.',
+    },
+    {
+      label: 'null & booleans',
+      java: 'Account a = null;\nboolean ok = true;\nif (a == null) { ... }',
+      py: 'a = None\nok = True\nif a is None:\n    ...',
+      note: '<code>null→None</code>, <code>true/false→True/False</code> (capitalised). Test for <code>None</code> with <code>is</code>, not <code>==</code>.',
+    },
+    {
+      label: 'Equality: == vs is',
+      java: 'a.equals(b)   // value equality\na == b        // same reference',
+      py: 'a == b        # value equality\na is b        # same object',
+      note: 'Inverted from Java! <code>==</code> compares <b>values</b> (via <code>__eq__</code>); <code>is</code> compares <b>identity</b>. Use <code>==</code> almost always; <code>is</code> only for <code>None</code>.',
+    },
+    {
+      label: 'Collections',
+      java: 'List<Integer> xs = new ArrayList<>();\nMap<String,Integer> m = new HashMap<>();\nxs.add(7);',
+      py: 'xs = []\nm = {}\nxs.append(7)',
+      note: 'Literal syntax, no <code>new</code> and no generic type parameters: <code>[]</code> is a list, <code>{}</code> a dict, <code>set()</code> a set, <code>()</code> a tuple. (See list/tuple/set &amp; dict explainers.)',
+    },
+    {
+      label: 'Methods / functions',
+      java: 'public int add(int a, int b) {\n    return a + b;\n}',
+      py: 'def add(a, b):\n    return a + b',
+      note: 'A function is <code>def name(params):</code> — no return type, no access modifier, no class required (functions can live at module level). Type hints are optional: <code>def add(a: int, b: int) -> int:</code>.',
+    },
+  ];
+
+  const sel = $('#topic');
+  TOPICS.forEach((t, i) => sel.appendChild(el('option', { value: String(i), text: t.label })));
+
+  function renderCode(node, text, accentFg) {
+    node.innerHTML = '';
+    text.split('\n').forEach((line) => {
+      node.appendChild(el('div', { text: line === '' ? ' ' : line, style: { whiteSpace: 'pre' } }));
+    });
+  }
+
+  function render() {
+    const t = TOPICS[+sel.value];
+    renderCode($('#java'), t.java);
+    renderCode($('#py'), t.py);
+    $('#note').innerHTML = '<b>The shift:</b> ' + t.note;
+  }
+  sel.addEventListener('change', render);
+  render();
+})();
+</script>
+<style>
+.codebox { font-family: var(--mono); font-size: 13px; line-height: 1.7; border: 1px solid var(--border);
+           border-radius: 10px; padding: 12px 14px; overflow-x: auto; }
+</style>
+</body>
+</html>

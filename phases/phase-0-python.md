@@ -16,7 +16,8 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 - [Real Python](https://realpython.com) (free articles) · [Official Python Tutorial (3.12+)](https://docs.python.org/3/tutorial/)
 - 🆕 [Vizuara](https://www.youtube.com/@vizuara) is more ML/DL-focused — bookmark it now; it becomes a primary source from Phase 2 on.
 - 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline) — a visual page for *every*
-  topic in this phase: [Names, objects & mutability](../illustrated/python-data-model.html) (Q5),
+  topic in this phase: [Java ↔ Python mindset](../illustrated/python-java-mindset.html),
+  [Names, objects & mutability](../illustrated/python-data-model.html) (Q5),
   [Truthiness & min/max](../illustrated/python-truthiness.html) (Q3),
   [Strings & slicing](../illustrated/python-strings.html), [list/tuple/set](../illustrated/python-collections.html),
   [dict & hashing](../illustrated/python-dicts.html), [Comprehensions](../illustrated/python-comprehensions.html),
@@ -33,7 +34,7 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 1 | Install Python 3.12+, venv, pip, run scripts | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#1 Install and Setup** + [Real Python — "Python Virtual Environments: A Primer"](https://realpython.com/python-virtual-environments-a-primer/) | 30m |
-| 2 | Java→Python mindset (dynamic typing, indentation, no `;`) | [Official Tutorial (3.12+)](https://docs.python.org/3/tutorial/introduction.html) — **"An Informal Introduction to Python"** | 20m |
+| 2 | Java→Python mindset (dynamic typing, indentation, no `;`) | [Official Tutorial (3.12+)](https://docs.python.org/3/tutorial/introduction.html) — **"An Informal Introduction to Python"** · 🎨 [Visualize: Java ↔ Python](../illustrated/python-java-mindset.html) | 20m |
 | 3 | Strings (f-strings, slicing) & numbers | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#2 Strings** + **#3 Integers and Floats** · 🎨 [Visualize: slicing & f-strings](../illustrated/python-strings.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 40m |
 | 4 | **Mutability vs immutability** (exam Q5) | [Real Python — "Python's Mutable vs Immutable Types"](https://realpython.com/python-mutable-vs-immutable-types/) · 🎨 [Visualize](../illustrated/python-data-model.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 25m |
 | 5 | Truthiness & `min/max/bool` (exam Q3) | [Real Python — "Python Booleans"](https://realpython.com/python-boolean/) + run the exam Q3 snippet · 🎨 [Visualize](../illustrated/python-truthiness.html) | 20m |

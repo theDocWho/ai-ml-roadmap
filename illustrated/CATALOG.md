@@ -4,6 +4,7 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 ⏳ coming soon. The live, searchable version is [`index.html`](index.html).
 
 ## Phase 0 · Python
+- 🎨 **Java → Python mindset** — [python-java-mindset.html](python-java-mindset.html)
 - 🎨 **Names, objects & mutability** — [python-data-model.html](python-data-model.html) · exam Q5 · 🔗 [Python Tutor](https://pythontutor.com/)
 - 🎨 **Truthiness, bool & min/max** — [python-truthiness.html](python-truthiness.html) · exam Q3
 - 🎨 **Strings & slicing** — [python-strings.html](python-strings.html) · 🔗 [Python Tutor](https://pythontutor.com/)
