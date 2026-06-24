@@ -115,3 +115,18 @@ svg { max-width: 100%; height: auto; display: block; }
 .legend b.ours { color: var(--green); }
 .legend b.curated { color: var(--blue); }
 .searchbar { width: 100%; font-size: 1rem; padding: 12px 14px; margin: 8px 0 6px; }
+
+/* ---- sequential prev / next nav (injected by app.js) ---- */
+.prevnext { display: flex; justify-content: space-between; gap: 14px; margin: 52px 0 0; }
+.prevnext .pn { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 3px;
+  text-decoration: none; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 12px 16px; background: #fff; box-shadow: var(--shadow); transition: border-color .12s, transform .12s; }
+.prevnext .pn:hover { border-color: var(--blue); transform: translateY(-2px); }
+.prevnext .pn.next { text-align: right; align-items: flex-end; }
+.prevnext .pn .dir { font-size: 12px; font-weight: 700; letter-spacing: .3px; color: var(--muted); text-transform: uppercase; }
+.prevnext .pn .t { color: var(--blue); font-weight: 600; }
+.prevnext .pn.empty { border: none; background: none; box-shadow: none; }
+.topbar .tbnav { display: flex; align-items: center; gap: 12px; margin-left: 14px; }
+.topbar .tbnav a { font-size: 13px; white-space: nowrap; }
+.topbar .tbnav .of { font-size: 12px; color: rgba(255,255,255,.6); font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .topbar .tbnav .of { display: none; } .prevnext { flex-direction: column; } .prevnext .pn.next { text-align: left; align-items: flex-start; } .prevnext .pn.empty { display: none; } }

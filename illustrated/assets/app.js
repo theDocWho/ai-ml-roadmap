@@ -72,5 +72,82 @@
     return `rgb(${Math.round(255 - a*235)},${Math.round(255 - a*169)},${Math.round(255 - a*79)})`;
   }
 
-  global.Ill = { clamp, lerp, dot, norm, cosine, softmax, rng, randn, $, $$, el, slider, diverge };
+  // ---- sequential prev/next navigation across our explainer pages ----
+  // Single source of truth for "next topic" order (roadmap order). [href, short label].
+  const SEQ = [
+    ["python-java-mindset.html", "Java → Python mindset"],
+    ["python-data-model.html", "Names & mutability"],
+    ["python-truthiness.html", "Truthiness & bool"],
+    ["python-strings.html", "Strings & slicing"],
+    ["python-collections.html", "list / tuple / set"],
+    ["python-dicts.html", "dict & hashing"],
+    ["python-comprehensions.html", "Comprehensions"],
+    ["python-zip-enumerate.html", "zip & enumerate"],
+    ["python-args-kwargs.html", "*args & **kwargs"],
+    ["python-generators.html", "Generators & yield"],
+    ["python-oop.html", "Classes & namespaces"],
+    ["python-inheritance.html", "Inheritance & MRO"],
+    ["python-dunder.html", "Dunder methods"],
+    ["python-exceptions.html", "Exceptions"],
+    ["python-context-managers.html", "with / context managers"],
+    ["numpy-vectorization.html", "Vectorization & ufuncs"],
+    ["numpy-broadcasting.html", "Broadcasting"],
+    ["numpy-axis.html", "Aggregations & axis"],
+    ["numpy-indexing.html", "Indexing: slices/masks/fancy"],
+    ["pandas-dataframe.html", "Series, DataFrame, loc/iloc"],
+    ["pandas-groupby.html", "GroupBy"],
+    ["pandas-merge.html", "merge & join"],
+    ["optimizer-comparison.html", "Optimizer comparison"],
+    ["kmeans-steps.html", "k-means steps"],
+    ["backprop.html", "Backpropagation"],
+    ["lstm-gru.html", "LSTM / GRU gates"],
+    ["self-attention.html", "Self-attention"],
+    ["rag-pipeline.html", "RAG pipeline"],
+    ["react-agent.html", "ReAct agent loop"],
+    ["vector-search.html", "Vector search"],
+    ["embeddings.html", "Embeddings & cosine"],
+    ["tokenization-bpe.html", "BPE tokenization"],
+    ["llm-decoding.html", "LLM decoding"],
+    ["lora-quantization.html", "LoRA & quantization"],
+    ["prompt-injection.html", "Prompt injection"],
+    ["mlops-lifecycle.html", "MLOps lifecycle & drift"],
+  ];
+
+  function navCard(item, kind) {
+    if (!item) return el("span", { class: "pn empty" });
+    return el("a", { class: "pn " + kind, href: item[0] }, [
+      el("span", { class: "dir", text: kind === "prev" ? "← Previous" : "Next →" }),
+      el("span", { class: "t", text: item[1] }),
+    ]);
+  }
+
+  function injectNav() {
+    const wrap = document.querySelector(".wrap");
+    if (!wrap) return;
+    const path = (location.pathname.split("/").pop() || "").toLowerCase();
+    const i = SEQ.findIndex((s) => s[0] === path);
+    if (i === -1) return; // index/catalog or an unknown page → no sequential nav
+    const prev = i > 0 ? SEQ[i - 1] : null;
+    const next = i < SEQ.length - 1 ? SEQ[i + 1] : null;
+
+    // bottom prev/next bar (before the footer)
+    const bar = el("div", { class: "prevnext" }, [navCard(prev, "prev"), navCard(next, "next")]);
+    const footer = wrap.querySelector(".footer");
+    if (footer) wrap.insertBefore(bar, footer); else wrap.appendChild(bar);
+
+    // compact prev/next in the sticky topbar (so it's always reachable)
+    const tb = document.querySelector(".topbar");
+    if (tb) {
+      const mini = el("span", { class: "tbnav" });
+      if (prev) mini.appendChild(el("a", { href: prev[0], title: "Previous: " + prev[1], text: "‹ Prev" }));
+      mini.appendChild(el("span", { class: "of", text: (i + 1) + " / " + SEQ.length }));
+      if (next) mini.appendChild(el("a", { href: next[0], title: "Next: " + next[1], text: "Next ›" }));
+      const sp = tb.querySelector(".spacer");
+      if (sp && sp.nextSibling) tb.insertBefore(mini, sp.nextSibling); else tb.appendChild(mini);
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", injectNav);
+  else injectNav();
+
+  global.Ill = { clamp, lerp, dot, norm, cosine, softmax, rng, randn, $, $$, el, slider, diverge, SEQ };
 })(window);
