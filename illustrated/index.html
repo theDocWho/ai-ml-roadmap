@@ -44,7 +44,18 @@ const ITEMS = [
   // ---- Phase 0: Python ----
   { phase:"Phase 0 · Python", title:"Names, objects & mutability", kind:"ours", desc:"Step through aliasing & the mutable-default trap — the #1 Java→Python gotcha. Exam Q5.", href:"python-data-model.html" },
   { phase:"Phase 0 · Python", title:"Truthiness, bool & min/max", kind:"ours", desc:"Which values are falsy, why bool is an int, and how exam Q3 resolves to False.", href:"python-truthiness.html" },
+  { phase:"Phase 0 · Python", title:"Strings & slicing", kind:"ours", desc:"Drive s[start:stop:step] on an index ruler — negative indices, reverse, f-strings. The grammar all sequences share.", href:"python-strings.html" },
+  { phase:"Phase 0 · Python", title:"list / tuple / set", kind:"ours", desc:"Same items, three contracts: mutable/ordered/dups vs immutable vs unique. Plus set algebra on a Venn diagram.", href:"python-collections.html" },
+  { phase:"Phase 0 · Python", title:"dict & hashing", kind:"ours", desc:"Watch a key hash to a bucket so lookup is ~O(1); why keys must be hashable; collisions.", href:"python-dicts.html" },
   { phase:"Phase 0 · Python", title:"Comprehensions", kind:"ours", desc:"Build a comprehension and watch it desugar to a loop; list / set / dict / generator.", href:"python-comprehensions.html" },
+  { phase:"Phase 0 · Python", title:"zip & enumerate", kind:"ours", desc:"Pair two lists in lockstep (zip stops at the shortest); index+item with enumerate. No more range(len()).", href:"python-zip-enumerate.html" },
+  { phase:"Phase 0 · Python", title:"*args & **kwargs", kind:"ours", desc:"Watch a call bind to params: defaults, *args→tuple, **kwargs→dict, and unpacking the other way.", href:"python-args-kwargs.html" },
+  { phase:"Phase 0 · Python", title:"Generators & yield", kind:"ours", desc:"Step a generator as it pauses at yield and resumes; lazy, ~constant-memory sequences vs eager lists.", href:"python-generators.html" },
+  { phase:"Phase 0 · Python", title:"Classes & namespaces", kind:"ours", desc:"Instance-vs-class attribute lookup, shadowing, self/cls, classmethod/staticmethod, @property.", href:"python-oop.html" },
+  { phase:"Phase 0 · Python", title:"Inheritance & the MRO", kind:"ours", desc:"Walk the method resolution order to see how obj.method() is found; override vs super().", href:"python-inheritance.html" },
+  { phase:"Phase 0 · Python", title:"Dunder (magic) methods", kind:"ours", desc:"See a+b dispatch to __add__, ==→__eq__, len()→__len__; why == defaults to identity without __eq__.", href:"python-dunder.html" },
+  { phase:"Phase 0 · Python", title:"Exceptions", kind:"ours", desc:"Trace try / except / else / finally control flow as the body raises (or doesn't); propagation.", href:"python-exceptions.html" },
+  { phase:"Phase 0 · Python", title:"with & context managers", kind:"ours", desc:"See __enter__ then __exit__ run — even when the body raises. Guaranteed cleanup vs try/finally.", href:"python-context-managers.html" },
 
   // ---- Phase 1: Scientific stack ----
   { phase:"Phase 1 · Scientific stack", title:"NumPy broadcasting", kind:"ours", desc:"Check shape compatibility & watch the stretch happen. The rule behind every bias-add.", href:"numpy-broadcasting.html" },

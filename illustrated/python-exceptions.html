@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exceptions — try / except / else / finally control flow</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Exceptions</h1>
+    <p class="lede">Python's error handling looks like Java's <code>try/catch</code>, with two twists: the
+      culture is <b>EAFP</b> — "easier to ask forgiveness than permission," i.e. try the operation and handle
+      failure rather than checking first — and the block has four parts whose ordering is worth getting exactly
+      right: <code>try</code>, <code>except</code>, <code>else</code>, <code>finally</code>.</p>
+    <div class="tagrow">
+      <span class="tag">try / except</span><span class="tag">else</span>
+      <span class="tag">finally</span><span class="tag">EAFP</span>
+      <span class="tag">propagation</span>
+    </div>
+  </div>
+
+  <h2>Four blocks, four jobs</h2>
+  <ul>
+    <li><b><code>try</code></b> — the risky code. Run it and watch for exceptions.</li>
+    <li><b><code>except SomeError</code></b> — the handler. Runs <em>only if</em> the matching exception was
+      raised. You can have several, checked top-to-bottom; the first matching type wins.</li>
+    <li><b><code>else</code></b> — runs <em>only if the <code>try</code> finished with no exception</em>. It's
+      where you put "the rest of the happy path," kept out of the <code>try</code> so you don't accidentally
+      catch <em>its</em> errors.</li>
+    <li><b><code>finally</code></b> — runs <b>no matter what</b>: success, handled error, or even an error on
+      its way out the door. This is your cleanup (close a file, release a lock).</li>
+  </ul>
+  <p>Set whether the <code>try</code> body raises, and which error, then trace exactly which blocks run:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>the try body…</label>
+        <select id="raise">
+          <option value="none">succeeds (no error)</option>
+          <option value="value">raises ValueError</option>
+          <option value="key">raises KeyError</option>
+        </select></div>
+      <div class="ctrl"><label>handlers present</label>
+        <select id="handlers">
+          <option value="value">except ValueError</option>
+          <option value="both">except ValueError / except KeyError</option>
+        </select></div>
+    </div>
+    <div id="code" style="font-family:var(--mono); font-size:13.5px; line-height:1.85; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:14px 16px;"></div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>Catch narrowly; never silence everything</h2>
+  <p>The single most common mistake is a bare <code>except:</code> (or <code>except Exception:</code>) that
+  swallows <em>every</em> error — including typos and <code>KeyboardInterrupt</code> — and hides real bugs.
+  Catch the <b>specific</b> exception you know how to handle and let the rest propagate. Propagation is a
+  feature: an unhandled exception travels <em>up</em> the call stack until something catches it, and if nothing
+  does, Python prints a traceback pinpointing where it came from.</p>
+  <p>When you need your own error category, subclass <code>Exception</code>:
+  <code>class InvalidRowError(Exception): pass</code> — then <code>raise InvalidRowError("bad line 7")</code>
+  and callers can <code>except InvalidRowError</code> precisely. This is exactly the pattern your
+  <a href="../phases/phase-0-python.md">Phase 0 capstone</a> uses to flag bad CSV rows.</p>
+
+  <div class="note green"><b>Takeaways:</b> <code>try</code> runs risky code; the first matching
+  <code>except</code> handles it; <code>else</code> runs only on success; <code>finally</code> runs
+  <b>always</b> (cleanup). Catch <em>specific</em> exceptions — never a bare <code>except</code>. Uncaught
+  exceptions propagate up the stack and print a traceback. Define domain errors by subclassing
+  <code>Exception</code>.</div>
+
+  <p class="small muted">Guaranteed cleanup in <code>finally</code> is usually better expressed with a
+  <a href="python-context-managers.html"><code>with</code> block →</a></p>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0D, topic 21).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+
+  function render() {
+    const raise = $('#raise').value;          // none | value | key
+    const both = $('#handlers').value === 'both';
+    // build the program lines with metadata
+    const lines = [];
+    lines.push({ t: 'try:', run: true });
+    lines.push({ t: '    risky_operation()', run: true, raises: raise });
+    lines.push({ t: 'except ValueError as e:', clause: 'value', dim: false });
+    lines.push({ t: '    handle("value error")', body: 'value' });
+    if (both) {
+      lines.push({ t: 'except KeyError as e:', clause: 'key' });
+      lines.push({ t: '    handle("key error")', body: 'key' });
+    }
+    lines.push({ t: 'else:', clause: 'else' });
+    lines.push({ t: '    rest_of_happy_path()', body: 'else' });
+    lines.push({ t: 'finally:', clause: 'finally' });
+    lines.push({ t: '    cleanup()', body: 'finally' });
+
+    // decide which executed
+    const caught = raise !== 'none' && (raise === 'value' || (raise === 'key' && both));
+    function lineRuns(l) {
+      if (l.run) {
+        // the risky line: it runs; if it raises, the raise itself "executes" up to the throw
+        return true;
+      }
+      if (l.body === 'value') return raise === 'value';
+      if (l.body === 'key') return raise === 'key' && both;
+      if (l.body === 'else') return raise === 'none';
+      if (l.body === 'finally') return true;
+      // clause headers: show as executed if their body runs (or it's the matching check)
+      if (l.clause === 'value') return true;
+      if (l.clause === 'key') return true;
+      if (l.clause === 'else') return raise === 'none';
+      if (l.clause === 'finally') return true;
+      return false;
+    }
+
+    const code = $('#code'); code.innerHTML = '';
+    lines.forEach((l) => {
+      const runs = lineRuns(l);
+      const isRaise = l.raises && l.raises !== 'none';
+      const div = el('div', {
+        style: {
+          padding: '1px 8px', borderRadius: '5px', whiteSpace: 'pre',
+          background: isRaise ? '#fdecea' : runs && (l.body || l.run) ? '#eafaef' : 'transparent',
+          borderLeft: (runs && (l.body || l.run)) ? '3px solid ' + (isRaise ? '#c0392b' : '#0a7d2c') : '3px solid transparent',
+          color: runs ? 'var(--ink)' : 'var(--muted)',
+          opacity: runs ? '1' : '0.5',
+        },
+      });
+      div.textContent = l.t + (isRaise ? '   # 💥 raises ' + (l.raises === 'value' ? 'ValueError' : 'KeyError') : '');
+      code.appendChild(div);
+    });
+
+    let msg;
+    if (raise === 'none') msg = 'No exception → the <code>except</code> handlers are skipped, <b>else</b> runs (the happy path), and <b>finally</b> runs. Order: try → else → finally.';
+    else if (caught) msg = 'The <code>try</code> raised → Python jumps to the matching <b>except</b> (skipping <code>else</code>) → then <b>finally</b>. Order: try → except → finally. The error is handled; execution continues normally afterward.';
+    else msg = 'A <b>KeyError</b> was raised but only <code>except ValueError</code> exists → no handler matches → <b>finally</b> still runs, then the exception <b>propagates</b> up the call stack (and prints a traceback if never caught).';
+    $('#msg').innerHTML = msg;
+  }
+  $('#raise').addEventListener('change', render);
+  $('#handlers').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

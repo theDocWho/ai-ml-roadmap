@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classes & objects — Python's namespace model</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Classes &amp; objects</h1>
+    <p class="lede">You know OOP from Java — but Python's object model is more transparent and a little more
+      surprising. Attributes live in plain dictionaries, the class is itself an object, and lookup follows one
+      simple rule: <b>instance first, then class</b>. Get that rule and class-vs-instance variables,
+      <code>self</code>, and <code>@property</code> all click.</p>
+    <div class="tagrow">
+      <span class="tag">self</span><span class="tag">instance vs class vars</span>
+      <span class="tag">attribute lookup</span><span class="tag">classmethod / staticmethod</span>
+      <span class="tag">@property</span>
+    </div>
+  </div>
+
+  <h2>Two namespaces, one lookup rule</h2>
+  <p>Every instance carries its own little dictionary of attributes (its <code>__dict__</code>). The class has
+  a <em>separate</em> namespace holding things shared by all instances — methods, and any <b>class variables</b>.
+  When you read <code>obj.x</code>, Python looks in the <b>instance</b> first; only if it's not there does it
+  fall back to the <b>class</b>. That single rule explains a lot.</p>
+  <p>An <b>instance variable</b> (set with <code>self.x = …</code>, usually in <code>__init__</code>) is unique
+  to each object. A <b>class variable</b> (declared in the class body) is shared by all of them — until an
+  instance assigns to that name, which creates an instance variable that <em>shadows</em> the class one for
+  that object only. Try it: read attributes (watch the lookup path) and assign them (watch where the value
+  lands).</p>
+
+  <div class="panel">
+    <p class="small muted" style="margin:0 0 8px;">Class <code>Account</code> has a shared class var
+      <code>bank</code>; each instance gets its own <code>owner</code> &amp; <code>balance</code>.</p>
+    <div id="diagram" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;"></div>
+
+    <div class="controls" style="margin-top:16px;">
+      <div class="ctrl"><label>action</label>
+        <select id="act">
+          <option value="read">read attribute</option>
+          <option value="set">assign attribute</option>
+        </select></div>
+      <div class="ctrl"><label>target</label>
+        <select id="tgt">
+          <option value="a1">a1 (instance)</option>
+          <option value="a2">a2 (instance)</option>
+          <option value="cls">Account (class)</option>
+        </select></div>
+      <div class="ctrl"><label>attribute</label>
+        <select id="attr">
+          <option value="bank">bank</option>
+          <option value="balance">balance</option>
+          <option value="owner">owner</option>
+        </select></div>
+      <div class="ctrl" id="valwrap" style="display:none;"><label>value</label>
+        <input id="val" type="text" value="99" style="min-width:90px;"></div>
+      <div class="ctrl" style="justify-content:flex-end;"><button id="go">run</button></div>
+    </div>
+    <p class="note" id="msg" style="min-height:22px;"></p>
+    <button class="ghost" id="reset">reset</button>
+  </div>
+
+  <h2>Methods come in three flavours</h2>
+  <p>What about the functions in the class body? They differ only by what automatic first argument they get:</p>
+  <div style="font-family:var(--mono); font-size:13px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px; line-height:1.7;">
+class Account:<br>
+&nbsp;&nbsp;bank = "PyBank"&nbsp;&nbsp;<span style="color:#5b6678"># class variable (shared)</span><br>
+&nbsp;&nbsp;def __init__(self, owner, balance):&nbsp;&nbsp;<span style="color:#5b6678"># self = this instance</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;self.owner = owner; self.balance = balance<br>
+&nbsp;&nbsp;def deposit(self, x):&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#1456b0"># instance method → gets the object</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;self.balance += x<br>
+&nbsp;&nbsp;@classmethod<br>
+&nbsp;&nbsp;def from_dict(cls, d):&nbsp;&nbsp;<span style="color:#1456b0"># classmethod → gets the class</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;return cls(d["owner"], d["balance"])<br>
+&nbsp;&nbsp;@staticmethod<br>
+&nbsp;&nbsp;def is_valid(x):&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#1456b0"># staticmethod → gets nothing special</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;return x &gt; 0
+  </div>
+  <ul>
+    <li>An <b>instance method</b> takes <code>self</code> — Python passes the object automatically, so
+      <code>a1.deposit(10)</code> really calls <code>Account.deposit(a1, 10)</code>. <code>self</code> isn't a
+      keyword; it's just the conventional name for that first parameter.</li>
+    <li>A <b>@classmethod</b> takes <code>cls</code> (the class) instead — perfect for alternative constructors
+      like <code>Account.from_dict(...)</code>.</li>
+    <li>A <b>@staticmethod</b> takes neither; it's a plain function parked in the class's namespace for tidiness.</li>
+  </ul>
+
+  <h2><code>@property</code>: a method that looks like an attribute</h2>
+  <p>Java reflexively wraps fields in <code>getBalance()</code>/<code>setBalance()</code>. Python says: just
+  expose the attribute — and <em>if</em> you later need logic on access, add it without changing the callers,
+  using <code>@property</code>:</p>
+  <div style="font-family:var(--mono); font-size:13px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:12px 14px; color:#1d5b30; line-height:1.7;">
+@property<br>
+def is_overdrawn(self):<br>
+&nbsp;&nbsp;return self.balance &lt; 0<br>
+<br>
+a1.is_overdrawn&nbsp;&nbsp;<span style="color:#5b6678"># accessed with NO parentheses — runs the method</span>
+  </div>
+  <p>It runs a method but is read like a field — no <code>()</code>. That keeps your public surface clean while
+  still letting you compute, validate, or cache behind it.</p>
+
+  <div class="note green"><b>Takeaways:</b> attributes live in dicts; lookup is <b>instance → class</b>.
+  <code>self.x</code> makes a per-object <b>instance var</b>; a name in the class body is a shared <b>class
+  var</b> (assigning it on an instance <em>shadows</em>, never mutates the shared one). Methods differ by their
+  auto first arg: <code>self</code> (instance), <code>cls</code> (@classmethod), nothing (@staticmethod).
+  <code>@property</code> exposes a method as a parenthesis-free attribute.</div>
+
+  <p class="small muted">See instances and their <code>__dict__</code>s as real boxes in
+  <a href="https://pythontutor.com/" target="_blank" rel="noopener">Python Tutor</a>. Next:
+  <a href="python-inheritance.html">inheritance &amp; the MRO →</a></p>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0C, topics 12–17).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  let cls, a1, a2;
+
+  function reset() {
+    cls = { bank: 'PyBank' };
+    a1 = { owner: "'Ada'", balance: 100 };
+    a2 = { owner: "'Lin'", balance: 50 };
+    $('#msg').textContent = '';
+    render();
+  }
+  function box(title, sub, obj, accent, hi) {
+    const w = el('div', { style: { border: '1px solid ' + accent.bd, borderRadius: '10px', overflow: 'hidden' } });
+    w.appendChild(el('div', { style: { background: accent.bg, color: accent.fg, padding: '6px 10px', fontWeight: '700', fontFamily: 'var(--mono)', fontSize: '13px' }, text: title }));
+    w.appendChild(el('div', { class: 'small muted', text: sub, style: { padding: '4px 10px 0' } }));
+    const body = el('div', { style: { padding: '6px 10px 10px', fontFamily: 'var(--mono)', fontSize: '13px' } });
+    const keys = Object.keys(obj);
+    if (!keys.length) body.appendChild(el('div', { class: 'small muted', text: '(no own attributes)' }));
+    keys.forEach((k) => {
+      body.appendChild(el('div', {
+        text: k + ' = ' + obj[k],
+        style: { padding: '2px 6px', borderRadius: '5px', margin: '2px 0', background: hi === k ? '#fff3df' : 'transparent', fontWeight: hi === k ? '700' : '400' },
+      }));
+    });
+    return w;
+  }
+  function render(hi) {
+    const d = $('#diagram'); d.innerHTML = '';
+    d.appendChild(box('class Account', 'shared by all', cls, { bg: '#e7efff', fg: '#1456b0', bd: '#a9c6f5' }, hi && hi.where === 'cls' ? hi.attr : null));
+    d.appendChild(box('a1', 'instance', a1, { bg: '#eafaef', fg: '#0a7d2c', bd: '#b6e3c4' }, hi && hi.where === 'a1' ? hi.attr : null));
+    d.appendChild(box('a2', 'instance', a2, { bg: '#eafaef', fg: '#0a7d2c', bd: '#b6e3c4' }, hi && hi.where === 'a2' ? hi.attr : null));
+  }
+  const objOf = (t) => t === 'a1' ? a1 : t === 'a2' ? a2 : cls;
+
+  $('#act').addEventListener('change', () => {
+    $('#valwrap').style.display = $('#act').value === 'set' ? '' : 'none';
+  });
+
+  $('#go').addEventListener('click', () => {
+    const act = $('#act').value, tgt = $('#tgt').value, attr = $('#attr').value;
+    if (act === 'read') {
+      const inst = objOf(tgt);
+      if (tgt !== 'cls' && attr in inst) {
+        render({ where: tgt, attr });
+        $('#msg').innerHTML = '<code>' + tgt + '.' + attr + '</code> → found in the <b>instance</b> → <b>' + inst[attr] + '</b>. (Class never consulted.)';
+      } else if (attr in cls) {
+        render({ where: 'cls', attr });
+        $('#msg').innerHTML = '<code>' + tgt + '.' + attr + '</code> → not in the instance → fall back to the <b>class</b> → <b>' + cls[attr] + '</b>.';
+      } else {
+        render();
+        $('#msg').innerHTML = '<code>' + tgt + '.' + attr + '</code> → not in instance or class → <b style="color:#c0392b">AttributeError</b>.';
+      }
+    } else {
+      const raw = $('#val').value.trim();
+      const v = raw === '' ? 'None' : (isNaN(+raw) ? "'" + raw + "'" : +raw);
+      const inst = objOf(tgt);
+      const shadowed = tgt !== 'cls' && attr === 'bank';
+      inst[attr] = v;
+      render({ where: tgt, attr });
+      if (tgt === 'cls') $('#msg').innerHTML = '<code>Account.' + attr + ' = ' + v + '</code> → changes the <b>shared</b> class var; every instance that hasn\'t shadowed it now sees ' + v + '.';
+      else if (shadowed) $('#msg').innerHTML = '<code>' + tgt + '.' + attr + ' = ' + v + '</code> → creates an <b>instance var</b> on ' + tgt + ' that <b>shadows</b> the class\'s <code>bank</code> — the shared one is untouched.';
+      else $('#msg').innerHTML = '<code>' + tgt + '.' + attr + ' = ' + v + '</code> → sets an <b>instance var</b> on ' + tgt + ' only.';
+    }
+  });
+  $('#reset').addEventListener('click', reset);
+  reset();
+})();
+</script>
+</body>
+</html>

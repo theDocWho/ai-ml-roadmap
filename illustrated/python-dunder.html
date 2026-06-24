@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dunder methods — how Python's operators dispatch</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Dunder (magic) methods</h1>
+    <p class="lede">Python's syntax is a thin skin over method calls. <code>a + b</code> is really
+      <code>a.__add__(b)</code>; <code>len(x)</code> is <code>x.__len__()</code>; <code>print(x)</code> reaches
+      for <code>x.__str__()</code>. Define these <b>d</b>ouble-<b>under</b>score methods on your class and the
+      built-in operators "just work" on your own objects — Java's <code>equals</code>/<code>toString</code>,
+      but for <em>every</em> operator.</p>
+    <div class="tagrow">
+      <span class="tag">__init__</span><span class="tag">__repr__ / __str__</span>
+      <span class="tag">__eq__</span><span class="tag">__add__</span>
+      <span class="tag">__len__ / __getitem__</span>
+    </div>
+  </div>
+
+  <h2>Operators are syntactic sugar for method calls</h2>
+  <p>When the interpreter sees an operator or a built-in applied to an object, it translates it into a call to a
+  specially-named method on that object's type. There's no magic beyond the naming convention: implement the
+  right dunder and the corresponding syntax starts working; leave it out and Python either falls back to a
+  default or raises <code>TypeError</code>. Here's a <code>Vector</code> class — pick a piece of syntax and see
+  what Python actually calls:</p>
+
+  <div class="panel">
+    <p class="small muted" style="margin:0 0 8px; font-family:var(--mono);">v = Vector(1, 2)&nbsp;&nbsp;·&nbsp;&nbsp;w = Vector(3, 4)</p>
+    <div class="ctrl" style="min-width:100%;"><label>you write…</label>
+      <select id="expr">
+        <option value="add">v + w</option>
+        <option value="eq">v == w</option>
+        <option value="eq2">v == Vector(1, 2)</option>
+        <option value="repr">repr(v)  /  v in the REPL</option>
+        <option value="str">print(v)  /  str(v)</option>
+        <option value="len">len(v)</option>
+        <option value="getitem">v[0]</option>
+        <option value="mul">v * 3</option>
+      </select></div>
+
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:16px 0;">
+      <div id="youwrite" style="font-family:var(--mono); font-size:17px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 16px;"></div>
+      <div style="font-size:22px; color:var(--blue);">→</div>
+      <div id="pycalls" style="font-family:var(--mono); font-size:17px; background:#e7efff; border:1px solid #a9c6f5; border-radius:10px; padding:12px 16px; color:var(--blue);"></div>
+      <div style="font-size:22px; color:var(--muted);">=</div>
+      <div id="result" style="font-family:var(--mono); font-size:17px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:12px 16px; color:#1d5b30;"></div>
+    </div>
+    <p class="note" id="msg"></p>
+  </div>
+
+  <h2>The most important pair: <code>__repr__</code> and <code>__eq__</code></h2>
+  <p>Two dunders earn their keep on almost every class you write:</p>
+  <ul>
+    <li><b><code>__repr__</code></b> controls how your object prints — in the REPL, in a list, in a debugger.
+      Without it you get the useless <code>&lt;Vector object at 0x10f3…&gt;</code>. Define it and every print
+      becomes informative. (<code>__str__</code> is the "nice" version for end users;
+      <code>__repr__</code> is the unambiguous one for developers, and is the fallback if
+      <code>__str__</code> is missing.)</li>
+    <li><b><code>__eq__</code></b> controls what <code>==</code> means. This one has a sharp edge: if you
+      <em>don't</em> define it, <code>==</code> falls back to <b>identity</b> — the same as <code>is</code> —
+      so two vectors with identical components compare <b>unequal</b> because they're different objects.
+      Toggle it:</li>
+  </ul>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;"><label>Vector defines __eq__ ?</label>
+      <select id="eqdef">
+        <option value="yes">yes — compares by value (x and y)</option>
+        <option value="no">no — inherits object.__eq__ (identity)</option>
+      </select></div>
+    <div style="font-family:var(--mono); font-size:14px; margin-top:10px;">
+      <div>a = Vector(1, 2)</div>
+      <div>b = Vector(1, 2)&nbsp;&nbsp;<span class="muted"># same components, different object</span></div>
+      <div style="margin-top:6px;">a == b&nbsp;&nbsp;→&nbsp;&nbsp;<b id="eqres"></b></div>
+    </div>
+    <p class="note" id="eqmsg" style="margin-top:10px;"></p>
+  </div>
+
+  <p class="small muted">A related caution: if you define <code>__eq__</code> you usually want
+  <code>__hash__</code> too, so your objects still behave in <a href="python-dicts.html">dicts</a> and
+  <a href="python-collections.html">sets</a> — Python ties equality and hashing together.</p>
+
+  <div class="note green"><b>Takeaways:</b> operators &amp; built-ins are sugar for dunder calls —
+  <code>+</code>→<code>__add__</code>, <code>==</code>→<code>__eq__</code>, <code>len()</code>→<code>__len__</code>,
+  <code>x[i]</code>→<code>__getitem__</code>, <code>print</code>→<code>__str__</code>/<code>__repr__</code>.
+  Implement the dunder, get the syntax. Always add <code>__repr__</code>; if you add <code>__eq__</code>
+  remember <code>==</code> defaults to identity without it (and pair it with <code>__hash__</code>).</div>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0C, topic 16).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const $ = Ill.$;
+  const MAP = {
+    add:     { w: 'v + w', c: 'v.__add__(w)', r: 'Vector(4, 6)', m: 'The <code>+</code> operator calls the left operand\'s <code>__add__</code>, passing the right operand. Your method returns a new Vector.' },
+    eq:      { w: 'v == w', c: 'v.__eq__(w)', r: 'False', m: '<code>==</code> dispatches to <code>__eq__</code>; (1,2) ≠ (3,4) so it returns False.' },
+    eq2:     { w: 'v == Vector(1, 2)', c: 'v.__eq__(Vector(1, 2))', r: 'True', m: 'With a value-based <code>__eq__</code>, equal components compare equal even though they\'re two different objects.' },
+    repr:    { w: 'repr(v)', c: 'v.__repr__()', r: "'Vector(1, 2)'", m: '<code>repr()</code> and the REPL call <code>__repr__</code> — the developer-facing, unambiguous string.' },
+    str:     { w: 'print(v)', c: 'v.__str__()', r: '(1, 2)', m: '<code>print</code>/<code>str()</code> call <code>__str__</code> (falling back to <code>__repr__</code> if absent).' },
+    len:     { w: 'len(v)', c: 'v.__len__()', r: '2', m: 'The <code>len()</code> built-in calls <code>__len__</code> — here the number of components.' },
+    getitem: { w: 'v[0]', c: 'v.__getitem__(0)', r: '1', m: 'Indexing &amp; slicing dispatch to <code>__getitem__</code> — define it and your object becomes subscriptable.' },
+    mul:     { w: 'v * 3', c: 'v.__mul__(3)', r: 'Vector(3, 6)', m: '<code>*</code> calls <code>__mul__</code>; here we scale each component by 3.' },
+  };
+  function render() {
+    const m = MAP[$('#expr').value];
+    $('#youwrite').textContent = m.w;
+    $('#pycalls').textContent = m.c;
+    $('#result').textContent = m.r;
+    $('#msg').innerHTML = m.m;
+  }
+  $('#expr').addEventListener('change', render);
+  render();
+
+  function renderEq() {
+    const yes = $('#eqdef').value === 'yes';
+    $('#eqres').textContent = yes ? 'True' : 'False';
+    $('#eqres').style.color = yes ? '#0a7d2c' : '#c0392b';
+    $('#eqmsg').innerHTML = yes
+      ? 'With <code>__eq__</code> comparing <code>self.x, self.y</code>, <code>a == b</code> is <b>True</b> — equality by <em>value</em>.'
+      : 'No <code>__eq__</code> → <code>==</code> uses <code>object</code>\'s identity check, the same as <code>a is b</code>. Different objects → <b>False</b>, even with identical contents. This surprises everyone once.';
+  }
+  $('#eqdef').addEventListener('change', renderEq);
+  renderEq();
+})();
+</script>
+</body>
+</html>

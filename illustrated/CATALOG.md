@@ -4,9 +4,20 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 ⏳ coming soon. The live, searchable version is [`index.html`](index.html).
 
 ## Phase 0 · Python
-- 🎨 **Names, objects & mutability** — [python-data-model.html](python-data-model.html) · exam Q5
+- 🎨 **Names, objects & mutability** — [python-data-model.html](python-data-model.html) · exam Q5 · 🔗 [Python Tutor](https://pythontutor.com/)
 - 🎨 **Truthiness, bool & min/max** — [python-truthiness.html](python-truthiness.html) · exam Q3
+- 🎨 **Strings & slicing** — [python-strings.html](python-strings.html) · 🔗 [Python Tutor](https://pythontutor.com/)
+- 🎨 **list / tuple / set** — [python-collections.html](python-collections.html) · 🔗 [Python Tutor](https://pythontutor.com/)
+- 🎨 **dict & hashing** — [python-dicts.html](python-dicts.html) · 🔗 [VisuAlgo: Hash Table](https://visualgo.net/en/hashtable)
 - 🎨 **Comprehensions** — [python-comprehensions.html](python-comprehensions.html)
+- 🎨 **zip & enumerate** — [python-zip-enumerate.html](python-zip-enumerate.html)
+- 🎨 **\*args & \*\*kwargs** — [python-args-kwargs.html](python-args-kwargs.html) · 🔗 [Python Tutor](https://pythontutor.com/)
+- 🎨 **Generators & yield** — [python-generators.html](python-generators.html) · 🔗 [Python Tutor](https://pythontutor.com/)
+- 🎨 **Classes & namespaces** — [python-oop.html](python-oop.html) · 🔗 [Python Tutor](https://pythontutor.com/)
+- 🎨 **Inheritance & the MRO** — [python-inheritance.html](python-inheritance.html) · 🔗 [Python Tutor](https://pythontutor.com/)
+- 🎨 **Dunder (magic) methods** — [python-dunder.html](python-dunder.html)
+- 🎨 **Exceptions** — [python-exceptions.html](python-exceptions.html)
+- 🎨 **with & context managers** — [python-context-managers.html](python-context-managers.html) · 🔗 [Python Tutor](https://pythontutor.com/)
 
 ## Phase 1 · Scientific stack
 - 🎨 **NumPy broadcasting** — [numpy-broadcasting.html](numpy-broadcasting.html)
