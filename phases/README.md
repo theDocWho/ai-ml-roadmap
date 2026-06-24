@@ -53,10 +53,13 @@ jupyter notebook        # or use VS Code's notebook support
 > locally, push, then `!git clone` your repo into the Colab/Kaggle session for the GPU run.
 
 ## 🎨 Illustrated, interactive explainers
-For visual intuition, see [`../illustrated/`](../illustrated/index.html) — **interactive** explainers we
-built (RAG, ReAct agents, vector search, embeddings…) **plus curated links** to the best existing ones
-(Illustrated Transformer, CNN Explainer, MLU-Explain, R2D3, Setosa, Seeing Theory…). Fully offline, no
-dependencies. Topic rows link to these with a 🎨 marker where available.
+For visual intuition, see [`../illustrated/`](../illustrated/index.html) — **22 interactive** explainers we
+built, spanning every phase: Python (mutability, truthiness, comprehensions), the NumPy/Pandas stack
+(broadcasting, axis, indexing, DataFrames, GroupBy), classic ML/DL (k-means, backprop, optimizers,
+LSTM/GRU), transformers (self-attention), the modern LLM stack (BPE, decoding, LoRA/quant, RAG, ReAct
+agents, vector search, embeddings, prompt injection), and MLOps — **plus curated links** to the best
+existing ones (Illustrated Transformer, CNN Explainer, MLU-Explain, R2D3, Setosa, Seeing Theory…). Fully
+offline, no dependencies. Topic rows across the guides link to these with a 🎨 marker.
 
 ## Guides
 | Phase | Guide | Status |

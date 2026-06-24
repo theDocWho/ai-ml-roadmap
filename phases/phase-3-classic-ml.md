@@ -14,6 +14,7 @@ timeless — StatQuest and ISLP stay valid regardless of age.
 - [StatQuest — *Machine Learning* playlist](https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (ML-from-scratch)
 - [*Intro to Statistical Learning* (ISLP) — free book + videos](https://www.statlearning.com) · [Andrew Ng — ML Specialization (audit free)](https://www.coursera.org/specializations/machine-learning-introduction)
 - [Kaggle Learn](https://www.kaggle.com/learn) (Intro/Intermediate ML, Feature Engineering) · [scikit-learn User Guide (1.x)](https://scikit-learn.org/stable/user_guide.html) · [Google ML Crash Course](https://developers.google.com/machine-learning/crash-course)
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [k-means clustering steps](../illustrated/kmeans-steps.html); plus curated [R2D3 visual intro / decision trees](https://r2d3.us/visual-intro-to-machine-learning-part-1/), [bias–variance](https://mlu-explain.github.io/bias-variance/) & [ROC/AUC](https://mlu-explain.github.io/roc-auc/).
 
 ---
 

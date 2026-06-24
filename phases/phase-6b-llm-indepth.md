@@ -14,6 +14,7 @@ model/tool names below are examples. The *fundamentals* (attention, LoRA math, q
 - [Maxime Labonne — *LLM Course*](https://github.com/mlabonne/llm-course) (Fundamentals/Scientist/Engineer + Colabs) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) ("Build an LLM from scratch")
 - [Sebastian Raschka — *Build an LLM From Scratch* (code)](https://github.com/rasbt/LLMs-from-scratch) · [Stanford CS336 — Language Modeling from Scratch](https://stanford-cs336.github.io)
 - [Karpathy — "Deep Dive into LLMs" + "Let's build the GPT Tokenizer"](https://www.youtube.com/@AndrejKarpathy) · [LLM Visualization (interactive)](https://bbycroft.net/llm) · [HF LLM Course](https://huggingface.co/learn/llm-course)
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [BPE tokenization](../illustrated/tokenization-bpe.html) (BYO-7), [LLM decoding — temp/top-k/top-p](../illustrated/llm-decoding.html), [LoRA & quantization](../illustrated/lora-quantization.html), [Prompt injection — OWASP LLM01](../illustrated/prompt-injection.html) (BYO-16).
 
 ---
 

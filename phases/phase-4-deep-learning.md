@@ -13,6 +13,7 @@ locally, push to git, then `!git clone` into the GPU session.
 - [Andrej Karpathy — *Neural Networks: Zero to Hero*](https://karpathy.ai/zero-to-hero.html) (do it in full) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (DL/“build from scratch”)
 - [StatQuest — *Neural Networks* playlist](https://www.youtube.com/playlist?list=PLblh5JKOoLULxxmbyeF5kxYp_RKB-PfT0) · [3B1B — *Neural Networks*](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)
 - [fast.ai — Practical Deep Learning](https://course.fast.ai) · [*Dive into Deep Learning* (d2l.ai)](https://d2l.ai) · [PyTorch Tutorials (2.x)](https://pytorch.org/tutorials/) · [CS231n (advanced CV)](https://cs231n.github.io)
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [Backpropagation](../illustrated/backprop.html), [LSTM/GRU gates](../illustrated/lstm-gru.html); plus curated [TensorFlow Playground](https://playground.tensorflow.org/), [CNN Explainer](https://poloclub.github.io/cnn-explainer/) & [GAN Lab](https://poloclub.github.io/ganlab/).
 
 ---
 

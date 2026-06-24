@@ -14,6 +14,7 @@ needed in this phase.
 - [3Blue1Brown — *Essence of Linear Algebra*](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) · [*Essence of Calculus*](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) · [*Neural Networks*](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)
 - [StatQuest — *Statistics Fundamentals*](https://www.youtube.com/playlist?list=PLblh5JKOoLUK0FLuzwntyYI10UQFUhsY9) · [Khan Academy](https://www.khanacademy.org) · [*Mathematics for ML* (free PDF)](https://mml-book.github.io)
 - 🆕 [Vizuara](https://www.youtube.com/@vizuara) — excellent "Math for ML" and "from scratch" explainers; a great second angle when a 3B1B chapter doesn't click.
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [Optimizer comparison — SGD/Momentum/RMSprop/Adam](../illustrated/optimizer-comparison.html); plus curated [eigenvectors](https://setosa.io/ev/eigenvectors-and-eigenvalues/), [PCA](https://setosa.io/ev/principal-component-analysis/) & [Seeing Theory](https://seeing-theory.brown.edu/).
 
 ---
 

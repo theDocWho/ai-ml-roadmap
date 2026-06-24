@@ -13,6 +13,7 @@ fine **🖥️ Local**.
 - [Hugging Face — *NLP Course*](https://huggingface.co/learn/nlp-course) (free, hands-on) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (Transformers/LLM "from scratch" series)
 - [Jay Alammar — *The Illustrated Transformer*](https://jalammar.github.io/illustrated-transformer/) · [*The Illustrated Word2vec*](https://jalammar.github.io/illustrated-word2vec/)
 - [Karpathy — *Let's build GPT*](https://karpathy.ai/zero-to-hero.html) · [StatQuest — Transformers](https://www.youtube.com/@statquest) · [Stanford CS224n (optional)](https://web.stanford.edu/class/cs224n/)
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [Self-attention — Q·Kᵀ→softmax→·V](../illustrated/self-attention.html); plus curated [Transformer Explainer (live GPT-2)](https://poloclub.github.io/transformer-explainer/) & [LLM Visualization](https://bbycroft.net/llm).
 
 ---
 
