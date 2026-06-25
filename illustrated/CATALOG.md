@@ -81,12 +81,16 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 ## Phase 6B · LLM in-depth
 - 🎨 **BPE tokenization** — [tokenization-bpe.html](tokenization-bpe.html) · ties to BYO-7
 - 🎨 **LLM decoding (temp / top-k / top-p)** — [llm-decoding.html](llm-decoding.html)
+- 🎨 **Mixture of Experts (MoE)** — [moe.html](moe.html)
 - 🎨 **LoRA & quantization** — [lora-quantization.html](lora-quantization.html)
 - 🔗 Diffusion Explainer (poloclub) — https://poloclub.github.io/diffusion-explainer/
 - 🎨 **Prompt injection / OWASP LLM01** — [prompt-injection.html](prompt-injection.html) · ties to BYO-16
 
 ## Phase 7 · MLOps
 - 🎨 **MLOps lifecycle & drift** — [mlops-lifecycle.html](mlops-lifecycle.html)
+
+## Phase 8 · Agentic systems
+- 🎨 **Agent patterns (workflows vs agents)** — [agent-patterns.html](agent-patterns.html)
 
 ## Modules
 - 🔗 Graph Neural Networks (Distill) — https://distill.pub/2021/gnn-intro/

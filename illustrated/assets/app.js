@@ -119,9 +119,11 @@
     ["embeddings.html", "Embeddings & cosine"],
     ["tokenization-bpe.html", "BPE tokenization"],
     ["llm-decoding.html", "LLM decoding"],
+    ["moe.html", "Mixture of Experts"],
     ["lora-quantization.html", "LoRA & quantization"],
     ["prompt-injection.html", "Prompt injection"],
     ["mlops-lifecycle.html", "MLOps lifecycle & drift"],
+    ["agent-patterns.html", "Agent patterns"],
   ];
 
   function navCard(item, kind) {
