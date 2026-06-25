@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activation functions — the non-linearity that makes nets work</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 4 · Deep Learning</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Activation functions</h1>
+    <p class="lede">The small non-linear function applied after every neuron — and the reason a deep network can
+      learn anything more interesting than a straight line. Pick the wrong one and your gradients vanish; this
+      is the knob behind several exam questions (Q32, Q37, Q38, Q39).</p>
+    <div class="tagrow">
+      <span class="tag">sigmoid</span><span class="tag">tanh</span>
+      <span class="tag">ReLU</span><span class="tag">softmax</span>
+      <span class="tag">vanishing gradient</span>
+    </div>
+  </div>
+
+  <h2>Why a non-linearity is non-negotiable</h2>
+  <p>A neuron computes a weighted sum <code>z = w·x + b</code> — that's <a href="dot-product.html">linear</a>.
+  Stack two linear layers and you get… still just a linear function (a composition of lines is a line). No
+  matter how deep, the network could only draw straight boundaries. The <b>activation function</b> squeezes a
+  bend into each neuron, and <em>that</em> is what lets stacked layers compose into arbitrarily curved
+  functions. So every activation here is <b>non-linear</b> — including ReLU, which looks like two straight
+  pieces but has a kink, and a kink is enough (exam Q38, Q39).</p>
+
+  <p>The blue curve is the function; the <span style="color:#b9770e">amber dashed</span> curve is its
+  <b>derivative</b> — the slope gradients flow through during backprop. Watch where the derivative goes flat:</p>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;"><label>activation</label>
+      <select id="fn">
+        <option value="sigmoid">sigmoid σ(x)</option>
+        <option value="tanh">tanh(x)</option>
+        <option value="relu">ReLU(x)</option>
+        <option value="leaky">Leaky ReLU(x)</option>
+      </select></div>
+    <svg id="plot" viewBox="0 0 420 260" role="img" aria-label="activation function and its derivative"></svg>
+    <div id="info" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px;"></div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>How to choose</h2>
+  <ul>
+    <li><b>ReLU</b> — the default for hidden layers. Cheap, and its derivative is exactly 1 for positive inputs,
+      so gradients don't shrink as they pass through — that's why it largely solved the vanishing-gradient
+      problem and made deep nets trainable. Downside: neurons stuck at negative inputs output 0 and can "die";
+      <b>Leaky ReLU</b> lets a small slope through to avoid that.</li>
+    <li><b>Sigmoid</b> — squashes to (0, 1), so it reads as a probability. Use it for the <b>output</b> of a
+      <em>binary</em> classifier (exam Q37). Avoid it in hidden layers: its derivative is ≤ 0.25 and ≈ 0 at the
+      tails, so stacking sigmoids multiplies tiny gradients into nothing (the vanishing-gradient problem).</li>
+    <li><b>tanh</b> — like sigmoid but centred at 0, range (−1, 1); often better than sigmoid in hidden layers,
+      but still saturates at the tails.</li>
+  </ul>
+
+  <h2>Softmax: the multi-class output</h2>
+  <p>For multi-class output you need a vector of probabilities that <em>sum to 1</em>. <b>Softmax</b> takes raw
+  scores (logits), exponentiates, and normalises: <code>softmax(z)ᵢ = e^{zᵢ} / Σ e^{zⱼ}</code>. The output is a
+  proper probability distribution — every value in <b>(0, 1)</b> and the whole vector adding to <b>1</b> (exam
+  Q32). Drag the three logits and watch the distribution respond (bigger gap ⇒ more peaked):</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>z₁ <span class="val" id="vz1"></span></label><input id="z1" type="range" min="-3" max="5" step="0.1" value="2"></div>
+      <div class="ctrl"><label>z₂ <span class="val" id="vz2"></span></label><input id="z2" type="range" min="-3" max="5" step="0.1" value="1"></div>
+      <div class="ctrl"><label>z₃ <span class="val" id="vz3"></span></label><input id="z3" type="range" min="-3" max="5" step="0.1" value="0"></div>
+    </div>
+    <div id="soft"></div>
+    <p class="small muted" id="softsum" style="margin:6px 0 0;"></p>
+  </div>
+
+  <div class="note green"><b>Takeaways:</b> activations add the <b>non-linearity</b> that lets depth represent
+  curved functions (ReLU's kink counts — it <em>is</em> non-linear). <b>ReLU</b> is the hidden-layer default
+  (slope 1 ⇒ no vanishing gradient); <b>sigmoid</b>/<b>tanh</b> saturate and vanish, but sigmoid is right for a
+  <em>binary output</em>. <b>Softmax</b> turns logits into a multi-class distribution in (0,1) that sums to 1
+  (exam Q32, Q37, Q38, Q39).</div>
+
+  <p class="small muted">Curated companions: <a href="https://playground.tensorflow.org/" target="_blank" rel="noopener">TensorFlow Playground</a> (swap activations live) · <a href="https://cs231n.github.io/neural-networks-1/" target="_blank" rel="noopener">CS231n notes</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="index.html">Illustrated AI/ML</a> catalog · Phase 4 · Deep Learning.
+    Practise in <a href="../phases/phase-4-deep-learning.md">the Phase 4 guide</a> (Module 4A, topic 3 · exam Q32/37/38/39).
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const FN = {
+    sigmoid: { f: (x) => 1 / (1 + Math.exp(-x)), d: (x) => { const s = 1 / (1 + Math.exp(-x)); return s * (1 - s); }, ylo: -1.3, yhi: 1.3, range: '(0, 1)', formula: 'σ(x) = 1 / (1 + e⁻ˣ)', use: 'binary output' },
+    tanh: { f: (x) => Math.tanh(x), d: (x) => 1 - Math.tanh(x) ** 2, ylo: -1.3, yhi: 1.3, range: '(−1, 1)', formula: 'tanh(x)', use: 'zero-centred hidden' },
+    relu: { f: (x) => Math.max(0, x), d: (x) => (x > 0 ? 1 : 0), ylo: -1.3, yhi: 5, range: '[0, ∞)', formula: 'max(0, x)', use: 'hidden default' },
+    leaky: { f: (x) => Math.max(0.1 * x, x), d: (x) => (x > 0 ? 1 : 0.1), ylo: -1.3, yhi: 5, range: '(−∞, ∞)', formula: 'max(0.1x, x)', use: 'avoids dead ReLU' },
+  };
+  const W = 420, H = 260, PAD = 28;
+
+  function plot() {
+    const fn = FN[$('#fn').value];
+    const svg = $('#plot'); svg.innerHTML = '';
+    const xlo = -5, xhi = 5;
+    const X = (x) => PAD + (x - xlo) / (xhi - xlo) * (W - 2 * PAD);
+    const Y = (y) => H - PAD - (y - fn.ylo) / (fn.yhi - fn.ylo) * (H - 2 * PAD);
+    // axes
+    svg.appendChild(el('line', { x1: PAD, y1: Y(0), x2: W - PAD, y2: Y(0), stroke: 'var(--border)' }));
+    svg.appendChild(el('line', { x1: X(0), y1: PAD - 8, x2: X(0), y2: H - PAD + 8, stroke: 'var(--border)' }));
+    // curves
+    let cf = '', cd = '';
+    for (let i = 0; i <= 200; i++) {
+      const x = xlo + (xhi - xlo) * i / 200;
+      cf += (i ? 'L' : 'M') + X(x).toFixed(1) + ' ' + Y(fn.f(x)).toFixed(1) + ' ';
+      cd += (i ? 'L' : 'M') + X(x).toFixed(1) + ' ' + Y(fn.d(x)).toFixed(1) + ' ';
+    }
+    svg.appendChild(el('path', { d: cd, fill: 'none', stroke: '#b9770e', 'stroke-width': 1.6, 'stroke-dasharray': '5 3' }));
+    svg.appendChild(el('path', { d: cf, fill: 'none', stroke: '#1456b0', 'stroke-width': 2.5 }));
+    svg.appendChild(el('text', { x: W - PAD, y: Y(0) + 14, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11, text: 'x' }));
+    svg.appendChild(el('text', { x: W - 60, y: 22, fill: '#1456b0', 'font-size': 11, text: '— f(x)' }));
+    svg.appendChild(el('text', { x: W - 60, y: 36, fill: '#b9770e', 'font-size': 11, text: '-- f′(x)' }));
+
+    const info = $('#info'); info.innerHTML = '';
+    [['formula', fn.formula], ['range', fn.range], ['typical use', fn.use]].forEach(([k, v]) => {
+      const w = el('div', { style: { border: '1px solid var(--border)', borderRadius: '8px', padding: '6px 10px' } });
+      w.appendChild(el('div', { class: 'small muted', text: k }));
+      w.appendChild(el('div', { style: { fontFamily: 'var(--mono)', fontSize: '13px', color: 'var(--navy)' }, text: v }));
+      info.appendChild(w);
+    });
+    const key = $('#fn').value;
+    $('#msg').innerHTML = (key === 'sigmoid' || key === 'tanh')
+      ? 'Notice the derivative (amber) flattens to ≈0 at both tails — that\'s <b>saturation</b>. Stack many of these and gradients multiply toward zero: the <b>vanishing-gradient problem</b>.'
+      : 'The derivative is <b>1</b> wherever x &gt; 0 — gradients pass through undiminished, which is why ReLU-family activations train deep nets well.' + (key === 'leaky' ? ' Leaky keeps a small 0.1 slope for x &lt; 0 so neurons don\'t fully die.' : '');
+  }
+  $('#fn').addEventListener('change', plot);
+  plot();
+
+  function softmax() {
+    const z = [+$('#z1').value, +$('#z2').value, +$('#z3').value];
+    ['1', '2', '3'].forEach((i, k) => $('#vz' + i).textContent = z[k].toFixed(1));
+    const p = Ill.softmax(z, 1);
+    const node = $('#soft'); node.innerHTML = '';
+    p.forEach((pi, i) => {
+      const row = el('div', { class: 'barrow' });
+      row.appendChild(el('div', { class: 'lbl', text: 'class ' + (i + 1) }));
+      const track = el('div');
+      track.appendChild(el('div', { class: 'bar', style: { width: (pi * 100).toFixed(1) + '%' } }));
+      row.appendChild(track);
+      row.appendChild(el('div', { class: 'num', text: (pi * 100).toFixed(1) + '%' }));
+      node.appendChild(row);
+    });
+    $('#softsum').innerHTML = 'sum = ' + p.reduce((a, b) => a + b, 0).toFixed(3) + ' (always 1) — a valid probability distribution.';
+  }
+  ['z1', 'z2', 'z3'].forEach((k) => $('#' + k).addEventListener('input', softmax));
+  softmax();
+})();
+</script>
+</body>
+</html>

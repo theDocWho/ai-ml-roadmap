@@ -106,6 +106,8 @@
     ["knn.html", "k-Nearest Neighbors"],
     ["svm-margin.html", "SVM & the kernel trick"],
     ["kmeans-steps.html", "k-means steps"],
+    ["activations.html", "Activation functions"],
+    ["loss-functions.html", "Loss functions"],
     ["backprop.html", "Backpropagation"],
     ["lstm-gru.html", "LSTM / GRU gates"],
     ["self-attention.html", "Self-attention"],

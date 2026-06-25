@@ -58,6 +58,8 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🔗 CNN Explainer (poloclub) — https://poloclub.github.io/cnn-explainer/
 - 🔗 Image kernels / convolution (Setosa) — https://setosa.io/ev/image-kernels/
 - 🔗 GAN Lab (poloclub) — https://poloclub.github.io/ganlab/
+- 🎨 **Activation functions** — [activations.html](activations.html) · exam Q32/37/38/39
+- 🎨 **Loss functions (MSE vs cross-entropy)** — [loss-functions.html](loss-functions.html)
 - 🎨 **Backpropagation (interactive)** — [backprop.html](backprop.html) · ties to BYO-1 / BYO-5
 - 🎨 **LSTM / GRU gates** — [lstm-gru.html](lstm-gru.html)
 
