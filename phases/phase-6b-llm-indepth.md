@@ -14,7 +14,7 @@ model/tool names below are examples. The *fundamentals* (attention, LoRA math, q
 - [Maxime Labonne — *LLM Course*](https://github.com/mlabonne/llm-course) (Fundamentals/Scientist/Engineer + Colabs) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) ("Build an LLM from scratch")
 - [Sebastian Raschka — *Build an LLM From Scratch* (code)](https://github.com/rasbt/LLMs-from-scratch) · [Stanford CS336 — Language Modeling from Scratch](https://stanford-cs336.github.io)
 - [Karpathy — "Deep Dive into LLMs" + "Let's build the GPT Tokenizer"](https://www.youtube.com/@AndrejKarpathy) · [LLM Visualization (interactive)](https://bbycroft.net/llm) · [HF LLM Course](https://huggingface.co/learn/llm-course)
-- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [BPE tokenization](../illustrated/tokenization-bpe.html) (BYO-7), [LLM decoding — temp/top-k/top-p](../illustrated/llm-decoding.html), [Mixture of Experts](../illustrated/moe.html), [LoRA & quantization](../illustrated/lora-quantization.html), [Prompt injection — OWASP LLM01](../illustrated/prompt-injection.html) (BYO-16).
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [BPE tokenization](../illustrated/6b-llm-indepth/tokenization-bpe.html) (BYO-7), [LLM decoding — temp/top-k/top-p](../illustrated/6b-llm-indepth/llm-decoding.html), [Mixture of Experts](../illustrated/6b-llm-indepth/moe.html), [LoRA & quantization](../illustrated/6b-llm-indepth/lora-quantization.html), [Prompt injection — OWASP LLM01](../illustrated/6b-llm-indepth/prompt-injection.html) (BYO-16).
 
 ---
 
@@ -26,7 +26,7 @@ model/tool names below are examples. The *fundamentals* (attention, LoRA math, q
 | 2 | Tokenization deep (BPE) | [Karpathy — "Let's build the GPT Tokenizer"](https://www.youtube.com/@AndrejKarpathy) · 📖 [HF LLM Course: Tokenizers](https://huggingface.co/learn/llm-course/chapter6/1) | 2h |
 | 3 | Decoding/sampling (greedy, top-k/p, temperature) | [HF LLM Course](https://huggingface.co/learn/llm-course) — **"Generation strategies"** | 30m |
 | 4 | Scaling laws & emergent abilities | [Maxime Labonne — LLM Course](https://github.com/mlabonne/llm-course) — **"Fundamentals → scaling"** refs | 30m |
-| 5 | Mixture of Experts (MoE) | [Hugging Face blog — "Mixture of Experts Explained"](https://huggingface.co/blog/moe) · 🎨 [Visualize: MoE routing](../illustrated/moe.html) | 40m |
+| 5 | Mixture of Experts (MoE) | [Hugging Face blog — "Mixture of Experts Explained"](https://huggingface.co/blog/moe) · 🎨 [Visualize: MoE routing](../illustrated/6b-llm-indepth/moe.html) | 40m |
 
 **✅ Checkpoint 6BA** — ☁️ Colab — one per topic:
 - **(T1)** Explain a transformer forward pass end-to-end using the bbycroft viz; what does the **KV cache** save?

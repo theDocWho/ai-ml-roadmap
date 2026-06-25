@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>with & context managers — guaranteed cleanup</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>The <code>with</code> statement</h1>
+    <p class="lede">Opening a file, acquiring a lock, starting a database transaction — every "set up, use, then
+      <em>always</em> tear down" pattern. Java solved it with try-with-resources; Python's version is the
+      <code>with</code> block, powered by two dunder methods: <code>__enter__</code> and <code>__exit__</code>.
+      The promise: cleanup runs <b>even if the body blows up</b>.</p>
+    <div class="tagrow">
+      <span class="tag">with</span><span class="tag">__enter__ / __exit__</span>
+      <span class="tag">file I/O</span><span class="tag">guaranteed cleanup</span>
+      <span class="tag">RAII</span>
+    </div>
+  </div>
+
+  <h2>The problem: forgetting to clean up</h2>
+  <p>If you <code>open()</code> a file and just read from it, the file stays open until the garbage collector
+  happens to get to it — and if an exception fires mid-read, you might leak the handle entirely. The careful
+  way is a <code>try/finally</code>, but writing that around every resource is noisy and easy to forget. The
+  <code>with</code> statement bottles that pattern up:</p>
+  <div style="font-family:var(--mono); font-size:13px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px; line-height:1.7;">
+with open("data.csv") as f:&nbsp;&nbsp;<span style="color:#5b6678"># __enter__ → gives you f</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;rows = f.read()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#5b6678"># the body, using the resource</span><br>
+<span style="color:#5b6678"># ← f is closed automatically here, even if read() raised</span>
+  </div>
+
+  <h2>How it works: __enter__ then __exit__, always</h2>
+  <p>A <b>context manager</b> is any object with two methods. On entering the block, Python calls
+  <code>__enter__()</code> and binds its return value to the <code>as</code> name. On leaving the block — by
+  finishing, by <code>return</code>, or by an <em>exception</em> — Python guarantees a call to
+  <code>__exit__()</code>. That guarantee is the whole point. Toggle whether the body raises and watch
+  <code>__exit__</code> fire either way:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>the body…</label>
+        <select id="raise">
+          <option value="ok">runs cleanly</option>
+          <option value="boom">raises an exception</option>
+        </select></div>
+    </div>
+    <div id="steps" style="display:flex; flex-direction:column; gap:8px;"></div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>Comparing the two: <code>with</code> vs hand-written <code>try/finally</code></h2>
+  <p>They do the same thing — <code>with</code> is just the distilled, can't-forget-it version:</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+    <div>
+      <p class="small muted" style="margin:0 0 4px;">verbose &amp; forgettable:</p>
+      <div style="font-family:var(--mono); font-size:12.5px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:10px 12px; line-height:1.7;">
+f = open("data.csv")<br>try:<br>&nbsp;&nbsp;&nbsp;&nbsp;rows = f.read()<br>finally:<br>&nbsp;&nbsp;&nbsp;&nbsp;f.close()
+      </div>
+    </div>
+    <div>
+      <p class="small muted" style="margin:0 0 4px;">idiomatic:</p>
+      <div style="font-family:var(--mono); font-size:12.5px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:10px 12px; color:#1d5b30; line-height:1.7;">
+with open("data.csv") as f:<br>&nbsp;&nbsp;&nbsp;&nbsp;rows = f.read()<br><br><span style="color:#5b6678"># close() is automatic</span>
+      </div>
+    </div>
+  </div>
+  <p>You can write your own with the <code>@contextmanager</code> decorator (a generator that
+  <code>yield</code>s once — everything before the yield is "enter," everything after is "exit"), but for now
+  the win is simple: <b>wrap every file, lock, or connection in a <code>with</code></b> and you'll never leak
+  one.</p>
+
+  <div class="note green"><b>Takeaways:</b> <code>with mgr as x:</code> calls <code>mgr.__enter__()</code> (its
+  result → <code>x</code>), runs the body, then <b>always</b> calls <code>mgr.__exit__()</code> — on success
+  <em>or</em> exception. It replaces error-prone <code>try/finally</code> cleanup. Use it for files, locks,
+  connections, transactions. Builds on <a href="python-dunder.html">dunder methods</a> and
+  <a href="python-exceptions.html">exceptions</a>.</div>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0D, topic 22).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  function render() {
+    const boom = $('#raise').value === 'boom';
+    const steps = [
+      { t: '__enter__()  — open the file, return the handle f', kind: 'ok', always: true },
+      boom
+        ? { t: 'body:  rows = f.read()   💥 exception raised', kind: 'err' }
+        : { t: 'body:  rows = f.read()   ✓ completes', kind: 'ok' },
+      { t: '__exit__()  — close the file  (runs no matter what)', kind: 'clean', always: true },
+      boom
+        ? { t: 'exception continues propagating up the stack', kind: 'err' }
+        : { t: 'block done — execution continues normally', kind: 'ok' },
+    ];
+    const root = $('#steps'); root.innerHTML = '';
+    steps.forEach((s, i) => {
+      const color = s.kind === 'err' ? { b: '#fdecea', d: '#c0392b' } : s.kind === 'clean' ? { b: '#e7efff', d: '#1456b0' } : { b: '#eafaef', d: '#0a7d2c' };
+      const row = el('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } });
+      row.appendChild(el('div', { text: String(i + 1), style: { width: '22px', height: '22px', borderRadius: '50%', background: color.d, color: '#fff', textAlign: 'center', fontSize: '13px', fontWeight: '700', lineHeight: '22px', flex: '0 0 auto' } }));
+      row.appendChild(el('div', { text: s.t, style: { fontFamily: 'var(--mono)', fontSize: '13px', background: color.b, border: '1px solid ' + color.d, borderRadius: '8px', padding: '6px 12px', flex: '1' } }));
+      root.appendChild(row);
+    });
+    $('#msg').innerHTML = boom
+      ? 'Even though <code>read()</code> raised, <b><code>__exit__</code> still ran</b> and closed the file — <em>then</em> the exception kept propagating. The resource is never leaked.'
+      : 'Clean run: enter → body → <b><code>__exit__</code></b> closes the file → carry on. Notice <code>__exit__</code> appears in <em>both</em> scenarios — that\'s the guarantee <code>with</code> buys you.';
+  }
+  $('#raise').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

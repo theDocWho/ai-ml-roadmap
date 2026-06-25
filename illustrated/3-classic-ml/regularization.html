@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regularization — Ridge (L2) vs Lasso (L1)</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 3 · Classic ML</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Regularization: Ridge &amp; Lasso</h1>
+    <p class="lede">Left alone, a model will chase noise — fitting big, wobbly coefficients that overfit.
+      Regularization adds a penalty on coefficient size to the loss, keeping the model simpler. The two classic
+      penalties, L2 (Ridge) and L1 (Lasso), look almost identical but do something profoundly different to
+      your features.</p>
+    <div class="tagrow">
+      <span class="tag">L2 / Ridge</span><span class="tag">L1 / Lasso</span>
+      <span class="tag">shrinkage</span><span class="tag">sparsity</span>
+      <span class="tag">feature selection</span>
+    </div>
+  </div>
+
+  <h2>Penalise big coefficients</h2>
+  <p>You fit a model by minimising error. Regularization adds a second term — a penalty on how large the
+  coefficients are — so the model must <em>justify</em> every bit of complexity:</p>
+  <ul>
+    <li><b>Ridge (L2):</b> minimise error + λ·Σ wᵢ² — penalises the <em>squared</em> size.</li>
+    <li><b>Lasso (L1):</b> minimise error + λ·Σ |wᵢ| — penalises the <em>absolute</em> size.</li>
+  </ul>
+  <p>The strength λ dials how hard you push. Crank it up and watch the two penalties shrink the same starting
+  coefficients in very different ways:</p>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;"><label>regularization strength λ <span class="val" id="vlam"></span></label>
+      <input id="lam" type="range" min="0" max="2.4" step="0.05" value="0"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:8px;">
+      <div>
+        <p class="small muted" style="margin:0 0 6px;"><b style="color:var(--blue)">Ridge (L2)</b> — shrinks all toward 0, smoothly</p>
+        <div id="ridge"></div>
+      </div>
+      <div>
+        <p class="small muted" style="margin:0 0 6px;"><b style="color:var(--green)">Lasso (L1)</b> — drives some to exactly 0</p>
+        <div id="lasso"></div>
+      </div>
+    </div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>Why L1 zeros things out and L2 doesn't</h2>
+  <p>This is the famous picture. The penalty defines a "budget" region the coefficients must stay inside, and
+  the solution is where the error contours first touch it. L2's budget is a <b>circle</b> (smooth) — contours
+  usually touch it at a point where <em>both</em> coefficients are small but non-zero. L1's budget is a
+  <b>diamond</b> with sharp corners <em>on the axes</em> — and contours tend to touch a corner, where one
+  coefficient is exactly <b>zero</b>.</p>
+  <svg id="geo" viewBox="0 0 460 200" role="img" aria-label="L2 circle vs L1 diamond constraint regions" style="margin:6px auto;"></svg>
+  <p>That single geometric difference is why <b>Lasso performs feature selection</b> — it throws features out
+  entirely, giving a sparse, interpretable model — while <b>Ridge keeps every feature</b> but small, which
+  behaves better when features are correlated. (Elastic Net blends both.)</p>
+
+  <div class="note green"><b>Takeaways:</b> regularization adds a coefficient-size penalty (strength λ) to fight
+  overfitting. <b>Ridge/L2</b> (Σwᵢ²) shrinks all coefficients smoothly toward — but not to — zero;
+  <b>Lasso/L1</b> (Σ|wᵢ|) drives some to <b>exactly zero</b>, doing automatic feature selection. The diamond's
+  corners on the axes are why. Use Lasso for sparsity/interpretability, Ridge for correlated features.</div>
+
+  <p class="small muted">Curated companion: <a href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">StatQuest — Ridge &amp; Lasso</a> · <a href="https://www.statlearning.com" target="_blank" rel="noopener">ISLP Ch.6</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 3 · Classic ML.
+    Practise in <a href="../../phases/phase-3-classic-ml.md">the Phase 3 guide</a> (Module 3B, topic 11).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const OLS = [2.4, -1.8, 1.1, 0.6, -0.35, 0.15];
+  const NAMES = ['x₁', 'x₂', 'x₃', 'x₄', 'x₅', 'x₆'];
+  const MAXW = 2.6;
+
+  function bars(node, coefs, color, zeroFlags) {
+    node.innerHTML = '';
+    coefs.forEach((c, i) => {
+      const row = el('div', { style: { display: 'grid', gridTemplateColumns: '28px 1fr 52px', alignItems: 'center', gap: '8px', margin: '5px 0' } });
+      row.appendChild(el('div', { class: 'small muted', text: NAMES[i], style: { fontFamily: 'var(--mono)' } }));
+      const track = el('div', { style: { position: 'relative', height: '16px', background: 'var(--light)', borderRadius: '4px' } });
+      const mid = 50;
+      const wpct = Math.abs(c) / MAXW * 50;
+      const isZero = zeroFlags && zeroFlags[i];
+      const bar = el('div', { style: {
+        position: 'absolute', top: '0', height: '16px', borderRadius: '4px',
+        left: c >= 0 ? mid + '%' : (mid - wpct) + '%', width: wpct + '%',
+        background: isZero ? 'transparent' : color,
+        border: isZero ? '1px dashed var(--border)' : 'none',
+      } });
+      track.appendChild(el('div', { style: { position: 'absolute', left: '50%', top: '-2px', bottom: '-2px', width: '1px', background: 'var(--border)' } }));
+      track.appendChild(bar);
+      row.appendChild(track);
+      row.appendChild(el('div', { text: isZero ? '0 ✕' : c.toFixed(2), style: { fontFamily: 'var(--mono)', fontSize: '12px', color: isZero ? 'var(--red)' : color, fontWeight: isZero ? '700' : '400' } }));
+      node.appendChild(row);
+    });
+  }
+
+  function render() {
+    const lam = +$('#lam').value;
+    $('#vlam').textContent = lam.toFixed(2);
+    const ridge = OLS.map((c) => c / (1 + lam));
+    const lasso = OLS.map((c) => Math.sign(c) * Math.max(0, Math.abs(c) - lam * 0.9));
+    const zeros = lasso.map((c) => c === 0);
+    bars($('#ridge'), ridge, '#1456b0', null);
+    bars($('#lasso'), lasso, '#0a7d2c', zeros);
+    const nZero = zeros.filter(Boolean).length;
+    $('#msg').innerHTML = lam === 0
+      ? 'λ = 0 → no penalty: both equal the ordinary least-squares fit.'
+      : 'At λ = ' + lam.toFixed(2) + ', Ridge has shrunk every coefficient toward zero (none vanish), while Lasso has set <b>' + nZero + '</b> of 6 to <b>exactly zero</b> — dropping those features entirely.';
+  }
+  Ill.slider($('#lam'), null, render);
+
+  // static geometry: circle vs diamond with a contour touching a corner
+  (function geo() {
+    const svg = $('#geo');
+    function panel(ox, title, shape, touchAxis) {
+      const cx = ox + 100, cy = 100, R = 55;
+      svg.appendChild(el('text', { x: cx, y: 24, 'text-anchor': 'middle', fill: 'var(--navy)', 'font-weight': '700', 'font-size': 13, text: title }));
+      svg.appendChild(el('line', { x1: cx - 80, y1: cy, x2: cx + 80, y2: cy, stroke: 'var(--border)' }));
+      svg.appendChild(el('line', { x1: cx, y1: cy - 70, x2: cx, y2: cy + 70, stroke: 'var(--border)' }));
+      svg.appendChild(el('text', { x: cx + 84, y: cy + 4, fill: 'var(--muted)', 'font-size': 11, text: 'w₁' }));
+      svg.appendChild(el('text', { x: cx + 4, y: cy - 74, fill: 'var(--muted)', 'font-size': 11, text: 'w₂' }));
+      if (shape === 'circle') svg.appendChild(el('circle', { cx, cy, r: R, fill: 'rgba(20,86,176,.10)', stroke: 'var(--blue)', 'stroke-width': 2 }));
+      else { const p = [[cx, cy - R], [cx + R, cy], [cx, cy + R], [cx - R, cy]].map((q) => q.join(',')).join(' '); svg.appendChild(el('polygon', { points: p, fill: 'rgba(10,125,44,.10)', stroke: 'var(--green)', 'stroke-width': 2 })); }
+      // loss contours (ellipses) centered up-right, touching the region
+      const lc = touchAxis ? [cx, cy - R] : [cx + R * 0.62, cy - R * 0.62];
+      [1, 0.66, 0.36].forEach((s) => svg.appendChild(el('ellipse', { cx: cx + 70, cy: cy - 62, rx: 70 * s, ry: 46 * s, fill: 'none', stroke: '#c0392b', 'stroke-width': 1, opacity: 0.5, transform: 'rotate(20 ' + (cx + 70) + ' ' + (cy - 62) + ')' })));
+      svg.appendChild(el('circle', { cx: lc[0], cy: lc[1], r: 5, fill: '#c0392b' }));
+      svg.appendChild(el('text', { x: cx, y: cy + 92, 'text-anchor': 'middle', fill: touchAxis ? 'var(--green)' : 'var(--muted)', 'font-size': 11, text: touchAxis ? 'touches a corner → w₂ = 0' : 'touches a smooth edge → both ≠ 0' }));
+    }
+    panel(0, 'L2 (Ridge): circle', 'circle', false);
+    panel(230, 'L1 (Lasso): diamond', 'diamond', true);
+  })();
+})();
+</script>
+</body>
+</html>

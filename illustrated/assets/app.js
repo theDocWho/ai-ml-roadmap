@@ -75,60 +75,60 @@
   // ---- sequential prev/next navigation across our explainer pages ----
   // Single source of truth for "next topic" order (roadmap order). [href, short label].
   const SEQ = [
-    ["python-java-mindset.html", "Java → Python mindset"],
-    ["python-data-model.html", "Names & mutability"],
-    ["python-truthiness.html", "Truthiness & bool"],
-    ["python-strings.html", "Strings & slicing"],
-    ["python-collections.html", "list / tuple / set"],
-    ["python-dicts.html", "dict & hashing"],
-    ["python-comprehensions.html", "Comprehensions"],
-    ["python-zip-enumerate.html", "zip & enumerate"],
-    ["python-args-kwargs.html", "*args & **kwargs"],
-    ["python-generators.html", "Generators & yield"],
-    ["python-oop.html", "Classes & namespaces"],
-    ["python-inheritance.html", "Inheritance & MRO"],
-    ["python-dunder.html", "Dunder methods"],
-    ["python-exceptions.html", "Exceptions"],
-    ["python-context-managers.html", "with / context managers"],
-    ["numpy-vectorization.html", "Vectorization & ufuncs"],
-    ["numpy-broadcasting.html", "Broadcasting"],
-    ["numpy-axis.html", "Aggregations & axis"],
-    ["numpy-indexing.html", "Indexing: slices/masks/fancy"],
-    ["pandas-dataframe.html", "Series, DataFrame, loc/iloc"],
-    ["pandas-groupby.html", "GroupBy"],
-    ["pandas-merge.html", "merge & join"],
-    ["matrix-transformation.html", "Matrices as transformations"],
-    ["dot-product.html", "Dot product & projection"],
-    ["bayes-theorem.html", "Bayes' theorem"],
-    ["optimizer-comparison.html", "Optimizer comparison"],
-    ["confusion-matrix.html", "Confusion matrix & metrics"],
-    ["regularization.html", "Regularization (Ridge/Lasso)"],
-    ["knn.html", "k-Nearest Neighbors"],
-    ["svm-margin.html", "SVM & the kernel trick"],
-    ["kmeans-steps.html", "k-means steps"],
-    ["activations.html", "Activation functions"],
-    ["loss-functions.html", "Loss functions"],
-    ["backprop.html", "Backpropagation"],
-    ["lstm-gru.html", "LSTM / GRU gates"],
-    ["tfidf.html", "TF-IDF"],
-    ["self-attention.html", "Self-attention"],
-    ["positional-encoding.html", "Positional encoding"],
-    ["rag-pipeline.html", "RAG pipeline"],
-    ["react-agent.html", "ReAct agent loop"],
-    ["vector-search.html", "Vector search"],
-    ["embeddings.html", "Embeddings & cosine"],
-    ["tokenization-bpe.html", "BPE tokenization"],
-    ["llm-decoding.html", "LLM decoding"],
-    ["moe.html", "Mixture of Experts"],
-    ["lora-quantization.html", "LoRA & quantization"],
-    ["prompt-injection.html", "Prompt injection"],
-    ["mlops-lifecycle.html", "MLOps lifecycle & drift"],
-    ["agent-patterns.html", "Agent patterns"],
+    ["0-python/python-java-mindset.html", "Java → Python mindset"],
+    ["0-python/python-data-model.html", "Names & mutability"],
+    ["0-python/python-truthiness.html", "Truthiness & bool"],
+    ["0-python/python-strings.html", "Strings & slicing"],
+    ["0-python/python-collections.html", "list / tuple / set"],
+    ["0-python/python-dicts.html", "dict & hashing"],
+    ["0-python/python-comprehensions.html", "Comprehensions"],
+    ["0-python/python-zip-enumerate.html", "zip & enumerate"],
+    ["0-python/python-args-kwargs.html", "*args & **kwargs"],
+    ["0-python/python-generators.html", "Generators & yield"],
+    ["0-python/python-oop.html", "Classes & namespaces"],
+    ["0-python/python-inheritance.html", "Inheritance & MRO"],
+    ["0-python/python-dunder.html", "Dunder methods"],
+    ["0-python/python-exceptions.html", "Exceptions"],
+    ["0-python/python-context-managers.html", "with / context managers"],
+    ["1-scientific-stack/numpy-vectorization.html", "Vectorization & ufuncs"],
+    ["1-scientific-stack/numpy-broadcasting.html", "Broadcasting"],
+    ["1-scientific-stack/numpy-axis.html", "Aggregations & axis"],
+    ["1-scientific-stack/numpy-indexing.html", "Indexing: slices/masks/fancy"],
+    ["1-scientific-stack/pandas-dataframe.html", "Series, DataFrame, loc/iloc"],
+    ["1-scientific-stack/pandas-groupby.html", "GroupBy"],
+    ["1-scientific-stack/pandas-merge.html", "merge & join"],
+    ["2-math/matrix-transformation.html", "Matrices as transformations"],
+    ["2-math/dot-product.html", "Dot product & projection"],
+    ["2-math/bayes-theorem.html", "Bayes' theorem"],
+    ["2-math/optimizer-comparison.html", "Optimizer comparison"],
+    ["3-classic-ml/confusion-matrix.html", "Confusion matrix & metrics"],
+    ["3-classic-ml/regularization.html", "Regularization (Ridge/Lasso)"],
+    ["3-classic-ml/knn.html", "k-Nearest Neighbors"],
+    ["3-classic-ml/svm-margin.html", "SVM & the kernel trick"],
+    ["3-classic-ml/kmeans-steps.html", "k-means steps"],
+    ["4-deep-learning/activations.html", "Activation functions"],
+    ["4-deep-learning/loss-functions.html", "Loss functions"],
+    ["4-deep-learning/backprop.html", "Backpropagation"],
+    ["4-deep-learning/lstm-gru.html", "LSTM / GRU gates"],
+    ["5-nlp-transformers/tfidf.html", "TF-IDF"],
+    ["5-nlp-transformers/self-attention.html", "Self-attention"],
+    ["5-nlp-transformers/positional-encoding.html", "Positional encoding"],
+    ["6-llms-rag-agents/rag-pipeline.html", "RAG pipeline"],
+    ["6-llms-rag-agents/react-agent.html", "ReAct agent loop"],
+    ["6-llms-rag-agents/vector-search.html", "Vector search"],
+    ["6-llms-rag-agents/embeddings.html", "Embeddings & cosine"],
+    ["6b-llm-indepth/tokenization-bpe.html", "BPE tokenization"],
+    ["6b-llm-indepth/llm-decoding.html", "LLM decoding"],
+    ["6b-llm-indepth/moe.html", "Mixture of Experts"],
+    ["6b-llm-indepth/lora-quantization.html", "LoRA & quantization"],
+    ["6b-llm-indepth/prompt-injection.html", "Prompt injection"],
+    ["7-mlops/mlops-lifecycle.html", "MLOps lifecycle & drift"],
+    ["8-agentic/agent-patterns.html", "Agent patterns"],
   ];
 
   function navCard(item, kind) {
     if (!item) return el("span", { class: "pn empty" });
-    return el("a", { class: "pn " + kind, href: item[0] }, [
+    return el("a", { class: "pn " + kind, href: "../" + item[0] }, [
       el("span", { class: "dir", text: kind === "prev" ? "← Previous" : "Next →" }),
       el("span", { class: "t", text: item[1] }),
     ]);
@@ -137,7 +137,7 @@
   function injectNav() {
     const wrap = document.querySelector(".wrap");
     if (!wrap) return;
-    const path = (location.pathname.split("/").pop() || "").toLowerCase();
+    const path = location.pathname.split("/").slice(-2).join("/").toLowerCase();
     const i = SEQ.findIndex((s) => s[0] === path);
     if (i === -1) return; // index/catalog or an unknown page → no sequential nav
     const prev = i > 0 ? SEQ[i - 1] : null;
@@ -152,9 +152,9 @@
     const tb = document.querySelector(".topbar");
     if (tb) {
       const mini = el("span", { class: "tbnav" });
-      if (prev) mini.appendChild(el("a", { href: prev[0], title: "Previous: " + prev[1], text: "‹ Prev" }));
+      if (prev) mini.appendChild(el("a", { href: "../" + prev[0], title: "Previous: " + prev[1], text: "‹ Prev" }));
       mini.appendChild(el("span", { class: "of", text: (i + 1) + " / " + SEQ.length }));
-      if (next) mini.appendChild(el("a", { href: next[0], title: "Next: " + next[1], text: "Next ›" }));
+      if (next) mini.appendChild(el("a", { href: "../" + next[0], title: "Next: " + next[1], text: "Next ›" }));
       const sp = tb.querySelector(".spacer");
       if (sp && sp.nextSibling) tb.insertBefore(mini, sp.nextSibling); else tb.appendChild(mini);
     }

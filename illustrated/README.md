@@ -22,20 +22,20 @@ python3 -m http.server 8000
 - `assets/style.css`, `assets/app.js` — shared design system + tiny vanilla-JS helpers (math, SVG, sliders).
 - `*.html` — one self-contained interactive explainer per concept. Built so far:
   - **Phase 0 · Python** (start here):
-    - [`python-data-model.html`](python-data-model.html) — names, objects, mutability & aliasing (exam Q5)
-    - [`python-truthiness.html`](python-truthiness.html) — truthiness, `bool`, and `min`/`max` (exam Q3)
-    - [`python-comprehensions.html`](python-comprehensions.html) — list/set/dict/generator comprehensions
+    - [`python-data-model.html`](0-python/python-data-model.html) — names, objects, mutability & aliasing (exam Q5)
+    - [`python-truthiness.html`](0-python/python-truthiness.html) — truthiness, `bool`, and `min`/`max` (exam Q3)
+    - [`python-comprehensions.html`](0-python/python-comprehensions.html) — list/set/dict/generator comprehensions
   - **Phase 1 · Scientific stack:**
-    - [`numpy-broadcasting.html`](numpy-broadcasting.html) — shape rules + watch the stretch
-    - [`numpy-axis.html`](numpy-axis.html) — `axis=0` vs `axis=1` aggregations (exam Q4)
-    - [`numpy-indexing.html`](numpy-indexing.html) — slices (views) vs masks vs fancy (copies)
-    - [`pandas-dataframe.html`](pandas-dataframe.html) — Series vs DataFrame, `loc` vs `iloc` (exam Q2)
-    - [`pandas-groupby.html`](pandas-groupby.html) — split → apply → combine
+    - [`numpy-broadcasting.html`](1-scientific-stack/numpy-broadcasting.html) — shape rules + watch the stretch
+    - [`numpy-axis.html`](1-scientific-stack/numpy-axis.html) — `axis=0` vs `axis=1` aggregations (exam Q4)
+    - [`numpy-indexing.html`](1-scientific-stack/numpy-indexing.html) — slices (views) vs masks vs fancy (copies)
+    - [`pandas-dataframe.html`](1-scientific-stack/pandas-dataframe.html) — Series vs DataFrame, `loc` vs `iloc` (exam Q2)
+    - [`pandas-groupby.html`](1-scientific-stack/pandas-groupby.html) — split → apply → combine
   - **Phase 6 · modern stack:**
-    - [`rag-pipeline.html`](rag-pipeline.html) — chunk → embed → retrieve → generate, with citations (ties to BYO-9)
-    - [`react-agent.html`](react-agent.html) — Reason → Act → Observe loop; tools really run (ties to BYO-10)
-    - [`vector-search.html`](vector-search.html) — brute-force vs ANN/IVF on a 2-D cloud (ties to BYO-11)
-    - [`embeddings.html`](embeddings.html) — cosine playground + semantic search + the king−man+woman analogy
+    - [`rag-pipeline.html`](6-llms-rag-agents/rag-pipeline.html) — chunk → embed → retrieve → generate, with citations (ties to BYO-9)
+    - [`react-agent.html`](6-llms-rag-agents/react-agent.html) — Reason → Act → Observe loop; tools really run (ties to BYO-10)
+    - [`vector-search.html`](6-llms-rag-agents/vector-search.html) — brute-force vs ANN/IVF on a 2-D cloud (ties to BYO-11)
+    - [`embeddings.html`](6-llms-rag-agents/embeddings.html) — cosine playground + semantic search + the king−man+woman analogy
 - `CATALOG.md` — the concept → resource map (mirrors the catalog).
 
 ## Publishing as a website later (GitHub Pages)

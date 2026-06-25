@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pandas GroupBy — split, apply, combine</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 1 · Pandas</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>GroupBy: Split → Apply → Combine</h1>
+    <p class="lede">The workhorse of data analysis: "for each category, what's the average / total / count?"
+      Every <code>groupby</code> is the same three-step dance — and once you see the steps, SQL's
+      <code>GROUP BY</code> and pandas click into the same shape.</p>
+    <div class="tagrow">
+      <span class="tag">split–apply–combine</span><span class="tag">aggregation</span>
+      <span class="tag">like SQL GROUP BY</span>
+    </div>
+  </div>
+
+  <h2>The pattern</h2>
+  <p>You have rows; you want a summary <em>per category</em>. Average score per city. Total spend per
+  customer. Number of orders per day. The naive way is a loop with a dictionary of running totals. Pandas
+  gives you one expression instead, built on the <b>split–apply–combine</b> idea (the same one behind SQL's
+  <code>GROUP BY</code> and MapReduce):</p>
+  <ol>
+    <li><b>Split</b> the rows into groups by the value of a <b>key</b> column (all the NYC rows together, all
+      the LA rows together, …).</li>
+    <li><b>Apply</b> a function to each group independently — usually an <b>aggregation</b> that reduces the
+      group to one number (<code>mean</code>, <code>sum</code>, <code>count</code>, <code>max</code>…).</li>
+    <li><b>Combine</b> the per-group results back into a single Series or DataFrame, <b>indexed by the group
+      key</b>.</li>
+  </ol>
+  <p>In code that's just: <code>df.groupby('city')['score'].mean()</code> — read it as "split by
+  <code>city</code>, take the <code>score</code> column, apply <code>mean</code> to each group." Change the
+  key, the column, or the function below and watch all three stages update:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>group by (the key)</label>
+        <select id="key"><option value="city">city</option><option value="plan">plan</option></select></div>
+      <div class="ctrl"><label>value column</label>
+        <select id="col"><option value="score">score</option><option value="age">age</option></select></div>
+      <div class="ctrl"><label>aggregation</label>
+        <select id="agg"><option value="mean">mean</option><option value="sum">sum</option><option value="count">count</option><option value="max">max</option><option value="min">min</option></select></div>
+    </div>
+
+    <div style="font-family:var(--mono); font-size:14px; margin:4px 0 16px;" id="code"></div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr 0.85fr; gap:14px; align-items:start;">
+      <div>
+        <div class="stagehdr">① Split</div>
+        <div id="split"></div>
+      </div>
+      <div>
+        <div class="stagehdr">② Apply</div>
+        <div id="apply"></div>
+      </div>
+      <div>
+        <div class="stagehdr">③ Combine</div>
+        <div id="combine"></div>
+      </div>
+    </div>
+    <div class="note" id="gbnote" style="margin-top:14px;"></div>
+  </div>
+
+  <h2>Beyond a single number per group</h2>
+  <p>Aggregation is the common case, but <code>groupby</code> does more:</p>
+  <ul>
+    <li><b>Several aggregations at once:</b> <code>df.groupby('city')['score'].agg(['mean', 'max', 'count'])</code>
+      returns a DataFrame with a column per statistic.</li>
+    <li><b>Different functions per column:</b> <code>df.groupby('city').agg(avg_score=('score','mean'), n=('name','count'))</code>
+      — named aggregations, the tidy modern style.</li>
+    <li><b>Multiple keys:</b> <code>df.groupby(['city', 'plan'])</code> splits on the combination, giving a
+      hierarchical (Multi-)index.</li>
+    <li><b>Transform (not reduce):</b> <code>df.groupby('city')['score'].transform('mean')</code> returns a
+      result <em>the same length as the input</em> — each row gets its group's mean — perfect for
+      "subtract the group average" feature engineering.</li>
+  </ul>
+
+  <h2>Why it matters</h2>
+  <p>Grouped aggregation is most of exploratory data analysis and a huge chunk of feature engineering:
+  per-user averages, per-category rates, per-day counts, rolling cohort stats. It's declarative (you say
+  <em>what</em>, not <em>how</em>), it runs in fast vectorized C, and the split–apply–combine framing
+  transfers directly to SQL and Spark. The main gotcha is forgetting that an aggregation <b>moves the key
+  into the index</b> — if you'd rather keep it as a normal column, tack on
+  <code>.reset_index()</code> (or pass <code>as_index=False</code>).</p>
+
+  <div class="note green"><b>Takeaways:</b> <code>groupby</code> = <b>split</b> rows by a key → <b>apply</b> a
+  function per group → <b>combine</b> into a result indexed by the key. <code>df.groupby(k)[c].f()</code> is
+  the core; reach for <code>.agg(...)</code> for several stats and <code>.transform(...)</code> when you need
+  a same-length result.</div>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 1 · Pandas.
+    Drill it in <a href="../../phases/phase-1-scientific-stack.md">the Phase 1 guide</a> (Module 1B, topic 11);
+    pairs with <a href="pandas-dataframe.html">Series, DataFrames &amp; loc/iloc →</a>.
+  </div>
+</div>
+
+<style>
+  .stagehdr { font-weight: 700; color: var(--navy); font-size: .95rem; margin-bottom: 8px; }
+</style>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+  const PEOPLE = [
+    { name: 'amy', city: 'NYC', plan: 'pro', age: 34, score: 88 },
+    { name: 'bob', city: 'LA', plan: 'free', age: 29, score: 72 },
+    { name: 'cara', city: 'NYC', plan: 'free', age: 41, score: 95 },
+    { name: 'dan', city: 'SF', plan: 'pro', age: 23, score: 64 },
+    { name: 'eve', city: 'LA', plan: 'pro', age: 37, score: 80 },
+    { name: 'finn', city: 'NYC', plan: 'pro', age: 31, score: 77 },
+  ];
+  const TINTS = ['#e7efff', '#eafaef', '#fff3e0', '#fde7f3', '#eef9ff'];
+  const INKS = ['#1456b0', '#0a7d2c', '#b9770e', '#b03060', '#1a8ab0'];
+
+  const keySel = Ill.$('#key'), colSel = Ill.$('#col'), aggSel = Ill.$('#agg');
+  const splitEl = Ill.$('#split'), applyEl = Ill.$('#apply'), combineEl = Ill.$('#combine'),
+        codeEl = Ill.$('#code'), gbnote = Ill.$('#gbnote');
+
+  const reduce = (arr, agg) => {
+    if (agg === 'count') return arr.length;
+    if (agg === 'sum') return arr.reduce((a, b) => a + b, 0);
+    if (agg === 'mean') return +(arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1);
+    if (agg === 'max') return Math.max(...arr);
+    return Math.min(...arr);
+  };
+
+  function render() {
+    const key = keySel.value, col = colSel.value, agg = aggSel.value;
+
+    // distinct group keys in first-appearance order
+    const groups = [];
+    PEOPLE.forEach((p) => { if (!groups.includes(p[key])) groups.push(p[key]); });
+    const colorOf = {};
+    groups.forEach((g, i) => { colorOf[g] = i; });
+
+    // code line
+    const valPart = agg === 'count' ? "['" + col + "']" : "['" + col + "']";
+    codeEl.innerHTML = '<span class="muted">&gt;&gt;&gt;</span> df.groupby(<b style="color:var(--green)">\'' + key +
+      '\'</b>)<b style="color:var(--blue)">[\'' + col + '\']</b>.<b style="color:var(--amber)">' + agg + '()</b>';
+
+    // ① Split: table tinted by group
+    let s = '<table style="border-collapse:collapse;font-size:12.5px;">';
+    s += '<tr>' + ['name', key, col].map((h) => '<th style="padding:5px 8px;border:1px solid var(--border);background:var(--navy);color:#fff;font-family:var(--mono);font-size:11px;">' + h + '</th>').join('') + '</tr>';
+    // sort rows by group so the split reads cleanly
+    const sorted = PEOPLE.slice().sort((a, b) => colorOf[a[key]] - colorOf[b[key]]);
+    sorted.forEach((p) => {
+      const ci = colorOf[p[key]];
+      s += '<tr style="background:' + TINTS[ci % TINTS.length] + '">' +
+        '<td style="padding:5px 8px;border:1px solid var(--border);font-family:var(--mono);">' + p.name + '</td>' +
+        '<td style="padding:5px 8px;border:1px solid var(--border);font-family:var(--mono);font-weight:700;color:' + INKS[ci % INKS.length] + '">' + p[key] + '</td>' +
+        '<td style="padding:5px 8px;border:1px solid var(--border);font-family:var(--mono);text-align:center;">' + p[col] + '</td></tr>';
+    });
+    s += '</table>';
+    splitEl.innerHTML = s;
+
+    // ② Apply: per group function call
+    let a = '';
+    groups.forEach((g) => {
+      const ci = colorOf[g];
+      const vals = PEOPLE.filter((p) => p[key] === g).map((p) => p[col]);
+      const res = reduce(vals, agg);
+      const inner = agg === 'count' ? vals.length + ' rows' : '[' + vals.join(', ') + ']';
+      a += '<div style="margin-bottom:8px;padding:7px 10px;border:1px solid ' + INKS[ci % INKS.length] +
+        '33;border-left:4px solid ' + INKS[ci % INKS.length] + ';border-radius:0 8px 8px 0;background:' + TINTS[ci % TINTS.length] + ';font-family:var(--mono);font-size:12.5px;">' +
+        '<b style="color:' + INKS[ci % INKS.length] + '">' + g + '</b>: ' + agg + '(' + inner + ') = <b>' + res + '</b></div>';
+    });
+    applyEl.innerHTML = a;
+
+    // ③ Combine: result Series
+    let c = '<table style="border-collapse:collapse;font-size:13px;">';
+    c += '<tr><th style="padding:5px 10px;border:1px solid var(--border);background:#eef2f8;font-family:var(--mono);font-size:11px;">' + key + '</th>' +
+      '<th style="padding:5px 10px;border:1px solid var(--border);background:#eef2f8;font-family:var(--mono);font-size:11px;">' + col + '</th></tr>';
+    groups.forEach((g) => {
+      const ci = colorOf[g];
+      const vals = PEOPLE.filter((p) => p[key] === g).map((p) => p[col]);
+      const res = reduce(vals, agg);
+      c += '<tr><td style="padding:5px 10px;border:1px solid var(--border);font-family:var(--mono);font-weight:700;color:' + INKS[ci % INKS.length] + '">' + g + '</td>' +
+        '<td style="padding:5px 10px;border:1px solid var(--border);font-family:var(--mono);text-align:center;color:var(--blue);font-weight:700">' + res + '</td></tr>';
+    });
+    c += '</table><div class="small muted" style="margin-top:6px;">↑ a Series, indexed by <code>' + key + '</code></div>';
+    combineEl.innerHTML = c;
+
+    gbnote.innerHTML = 'Read it as: <b>split</b> the ' + PEOPLE.length + ' rows into ' + groups.length +
+      ' groups by <code>' + key + '</code>, <b>apply</b> <code>' + agg + '</code> to each group\'s <code>' + col +
+      '</code> values, then <b>combine</b> into one Series indexed by <code>' + key + '</code>.' +
+      (agg === 'count' ? ' <code>count</code> ignores the value column — it just counts rows per group.' : '');
+  }
+
+  [keySel, colSel, aggSel].forEach((s) => s.addEventListener('change', render));
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comprehensions — Python's collection-building idiom</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Comprehensions</h1>
+    <p class="lede">The single most "Pythonic" idiom: build a new list, set, or dict from an existing
+      iterable in one readable line — the rough equivalent of Java's
+      <code>stream().filter().map().collect()</code>, but built into the language.</p>
+    <div class="tagrow">
+      <span class="tag">list comp</span><span class="tag">dict comp</span>
+      <span class="tag">set comp</span><span class="tag">filter + map</span>
+      <span class="tag">generators</span>
+    </div>
+  </div>
+
+  <h2>The pattern they replace</h2>
+  <p>Constantly in Python you take one sequence and build another from it — square each number, keep the
+  even ones, map words to their lengths. The literal way is a three-line loop:</p>
+  <div style="font-family:var(--mono); font-size:13px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px;">
+out = []<br>for n in range(8):<br>&nbsp;&nbsp;&nbsp;&nbsp;if n % 2 == 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.append(n * n)
+  </div>
+  <p>A <b>comprehension</b> collapses that exact pattern — <em>create an empty collection, loop, optionally
+  filter, transform, append</em> — into one expression:</p>
+  <div style="font-family:var(--mono); font-size:14px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:12px 14px; color:#1d5b30;">
+out = [n * n &nbsp;<b>for</b> n <b>in</b> range(8)&nbsp; <b>if</b> n % 2 == 0]
+  </div>
+  <p>It's not just shorter — it signals intent ("I'm building a list by transforming a sequence") and is
+  usually faster than the manual loop. The trick to reading one is that the parts are in a slightly
+  surprising order.</p>
+
+  <h2>How to read a comprehension</h2>
+  <p>Although you write the <b>output expression first</b>, Python evaluates it <b>left-to-right in
+  execution order</b>:</p>
+  <div class="callout" style="font-family:var(--mono); font-size:14px;">
+    [ <span style="color:var(--green)"><b>n * n</b></span> &nbsp;
+    <span style="color:var(--navy)"><b>for n in range(8)</b></span> &nbsp;
+    <span style="color:var(--amber)"><b>if n % 2 == 0</b></span> ]
+  </div>
+  <ol>
+    <li><span style="color:var(--navy)"><b>for n in range(8)</b></span> — the <b>source</b>: walk each item, binding it to <code>n</code>.</li>
+    <li><span style="color:var(--amber)"><b>if n % 2 == 0</b></span> — the optional <b>filter</b>: skip items that fail the test.</li>
+    <li><span style="color:var(--green)"><b>n * n</b></span> — the <b>transform</b>: this expression's value is what goes into the result.</li>
+  </ol>
+  <p>So: <em>source → filter → transform → collect</em>. Build one yourself and watch each item flow
+  through. Toggle the collection type to see the three siblings — <b>list</b> <code>[…]</code>,
+  <b>set</b> <code>{…}</code> (de-duplicates!), and <b>dict</b> <code>{k: v …}</code>.</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>transform (the output expression)</label>
+        <select id="expr">
+          <option value="sq">n * n</option>
+          <option value="id">n</option>
+          <option value="dbl">n * 2</option>
+          <option value="mod3">n % 3</option>
+        </select></div>
+      <div class="ctrl"><label>filter</label>
+        <select id="filt">
+          <option value="even">if n % 2 == 0</option>
+          <option value="none">(no filter)</option>
+          <option value="gt3">if n &gt; 3</option>
+        </select></div>
+      <div class="ctrl"><label>collection type</label>
+        <select id="kind">
+          <option value="list">list  [ … ]</option>
+          <option value="set">set  { … }</option>
+          <option value="dict">dict  { n: … }</option>
+        </select></div>
+    </div>
+
+    <p class="small muted" style="margin:4px 0;">source = <code>range(8)</code> — each item is kept (✓) or dropped by the filter (✕), then transformed:</p>
+    <div id="flow" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">The comprehension:</p>
+        <div id="comp" style="font-family:var(--mono); font-size:14px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:12px 14px; color:#1d5b30;"></div>
+        <p class="small muted" style="margin:12px 0 4px;">…is exactly this loop:</p>
+        <div id="loop" style="font-family:var(--mono); font-size:12.5px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px; white-space:pre;"></div>
+      </div>
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">Result:</p>
+        <div id="result" style="font-family:var(--mono); font-size:15px; background:#e7efff; border:1px solid #a9c6f5; border-radius:10px; padding:12px 14px; color:var(--blue); word-break:break-word;"></div>
+        <div class="note" id="kindnote" style="margin-top:12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>The generator sibling: <code>( … )</code></h2>
+  <p>Swap the brackets for parentheses and you get a <b>generator expression</b>:
+  <code>(n * n for n in range(8))</code>. It looks identical but behaves very differently: it doesn't build
+  the whole collection in memory — it produces items <b>one at a time, on demand</b> (lazy evaluation).
+  That's why <code>sum(n * n for n in range(1_000_000))</code> uses almost no memory, while the list version
+  <code>[n * n for n in range(1_000_000)]</code> would materialise a million numbers first. Reach for a
+  generator when you only need to iterate once (feeding <code>sum</code>, <code>any</code>,
+  <code>max</code>, a <code>for</code> loop) and the data is large.</p>
+
+  <h2>When to use them — and when not to</h2>
+  <p>Comprehensions shine for the <em>map/filter</em> shape: one source, a simple condition, a simple
+  transform. They're declarative and fast. But they're easy to abuse:</p>
+  <ul>
+    <li><b>Don't nest deeply.</b> Two <code>for</code> clauses can be fine
+      (<code>[x for row in grid for x in row]</code> flattens), but three levels or a tangle of
+      <code>if</code>s is unreadable — use a real loop.</li>
+    <li><b>Don't comprehend for side effects.</b> If you're not collecting a result (just printing or
+      calling something), write a plain <code>for</code> loop — a comprehension that throws its list away is
+      a code smell.</li>
+    <li><b>Reach for a generator <code>( … )</code></b> when the sequence is large and consumed once.</li>
+  </ul>
+
+  <div class="note green"><b>Takeaways:</b> a comprehension is <em>source → filter → transform → collect</em>
+  in one line. <code>[…]</code> builds a list, <code>{…}</code> a set (de-duped) or dict
+  (<code>{k: v}</code>), <code>(…)</code> a lazy generator. Use them for clear map/filter work; fall back to
+  a loop when logic gets gnarly or you only want side effects.</div>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0B, topics 8 &amp; 11).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+  const SRC = [0, 1, 2, 3, 4, 5, 6, 7];
+
+  const EXPR = {
+    sq: { str: 'n * n', fn: (n) => n * n },
+    id: { str: 'n', fn: (n) => n },
+    dbl: { str: 'n * 2', fn: (n) => n * 2 },
+    mod3: { str: 'n % 3', fn: (n) => n % 3 },
+  };
+  const FILT = {
+    even: { str: 'if n % 2 == 0', cond: 'n % 2 == 0', fn: (n) => n % 2 === 0 },
+    none: { str: '', cond: null, fn: () => true },
+    gt3: { str: 'if n > 3', cond: 'n > 3', fn: (n) => n > 3 },
+  };
+
+  const exprSel = Ill.$('#expr'), filtSel = Ill.$('#filt'), kindSel = Ill.$('#kind');
+  const flow = Ill.$('#flow'), comp = Ill.$('#comp'), loop = Ill.$('#loop'),
+        result = Ill.$('#result'), kindnote = Ill.$('#kindnote');
+
+  function render() {
+    const e = EXPR[exprSel.value], f = FILT[filtSel.value], kind = kindSel.value;
+
+    // flow chips
+    flow.innerHTML = '';
+    SRC.forEach((n) => {
+      const kept = f.fn(n);
+      const out = e.fn(n);
+      const chip = el('div', {
+        style: {
+          fontFamily: 'var(--mono)', fontSize: '12px', textAlign: 'center', minWidth: '52px',
+          padding: '6px 8px', borderRadius: '8px',
+          border: '1px solid ' + (kept ? '#a9c6f5' : '#e0a0a0'),
+          background: kept ? '#e7efff' : '#fdecea',
+          opacity: kept ? '1' : '0.55',
+        },
+      });
+      chip.innerHTML = 'n=' + n + (kept ? ' ✓<br><b style="color:#1456b0">' + out + '</b>' : ' ✕<br><span style="color:#c0392b">drop</span>');
+      flow.appendChild(chip);
+    });
+
+    // comprehension string
+    const inner = (s) => (s ? ' ' + s : '');
+    let compStr, open, close, head;
+    if (kind === 'list') { open = '['; close = ']'; head = e.str; }
+    else if (kind === 'set') { open = '{'; close = '}'; head = e.str; }
+    else { open = '{'; close = '}'; head = 'n: ' + e.str; }
+    compStr = open + head + ' for n in range(8)' + inner(f.str) + close;
+    comp.textContent = 'out = ' + compStr;
+
+    // equivalent loop
+    const indent = f.cond ? '        ' : '    ';
+    let init, add;
+    if (kind === 'list') { init = 'out = []'; add = 'out.append(' + e.str + ')'; }
+    else if (kind === 'set') { init = 'out = set()'; add = 'out.add(' + e.str + ')'; }
+    else { init = 'out = {}'; add = 'out[n] = ' + e.str; }
+    let loopStr = init + '\nfor n in range(8):';
+    if (f.cond) loopStr += '\n    if ' + f.cond + ':';
+    loopStr += '\n' + indent + add;
+    loop.textContent = loopStr;
+
+    // result
+    const kept = SRC.filter(f.fn);
+    let res;
+    if (kind === 'list') {
+      res = '[' + kept.map(e.fn).join(', ') + ']';
+      kindnote.innerHTML = 'A <b>list</b> keeps every item in order, duplicates and all.';
+    } else if (kind === 'set') {
+      const vals = kept.map(e.fn);
+      const uniq = Array.from(new Set(vals)).sort((a, b) => a - b);
+      res = '{' + uniq.join(', ') + '}';
+      const dropped = vals.length - uniq.length;
+      kindnote.innerHTML = 'A <b>set</b> de-duplicates' + (dropped > 0
+        ? ': ' + vals.length + ' transformed values collapsed to ' + uniq.length + ' unique ones.'
+        : ' — here every value happened to be unique already.');
+    } else {
+      res = '{' + kept.map((n) => n + ': ' + e.fn(n)).join(', ') + '}';
+      kindnote.innerHTML = 'A <b>dict</b> comp uses <code>{key: value …}</code> — here key <code>n</code> maps to <code>' + e.str + '</code>.';
+    }
+    result.textContent = res;
+  }
+
+  [exprSel, filtSel, kindSel].forEach((s) => s.addEventListener('change', render));
+  render();
+})();
+</script>
+</body>
+</html>

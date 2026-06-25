@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>list / tuple / set — choosing a Python container</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>list · tuple · set</h1>
+    <p class="lede">Three built-in containers that look interchangeable but encode three different promises.
+      Picking the right one is half of writing Pythonic code — and it maps cleanly onto containers you
+      already know from Java: <code>ArrayList</code>, an immutable record, and <code>HashSet</code>.</p>
+    <div class="tagrow">
+      <span class="tag">mutable vs immutable</span><span class="tag">ordered</span>
+      <span class="tag">de-duplication</span><span class="tag">set algebra</span>
+      <span class="tag">hashable</span>
+    </div>
+  </div>
+
+  <h2>Same items, three contracts</h2>
+  <p>The difference isn't what they <em>hold</em> — it's what they <em>guarantee</em>:</p>
+  <ul>
+    <li>A <b>list</b> <code>[…]</code> is an ordered, <b>mutable</b> sequence that keeps duplicates — Java's
+      <code>ArrayList</code>. Use it as your default "bunch of things in order I'll change."</li>
+    <li>A <b>tuple</b> <code>(…)</code> is an ordered sequence that is <b>immutable</b> — fixed once built.
+      Use it for a small fixed record (an <code>(x, y)</code> point, a row) or any time you want a value that
+      can't be accidentally mutated. Because it can't change, a tuple is <em>hashable</em>, so it can be a
+      dict key or a set member; a list cannot.</li>
+    <li>A <b>set</b> <code>{…}</code> is an <b>unordered</b> collection of <b>unique</b> items — Java's
+      <code>HashSet</code>. It silently drops duplicates and answers "is <code>x</code> in here?" in roughly
+      constant time instead of scanning the whole thing.</li>
+  </ul>
+  <p>Type a few items (commas separate them — repeat one to see what de-duplicates):</p>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;">
+      <label for="items">items</label>
+      <input id="items" type="text" value="apple, apple, banana, cherry, banana" autocomplete="off">
+    </div>
+    <div id="containers" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:12px;"></div>
+  </div>
+
+  <h2>Sets are algebra, not just storage</h2>
+  <p>The real power of a set is that it brings the operations of mathematical set theory into your code as
+  fast one-liners. Membership testing (<code>x in s</code>), and combining two sets:</p>
+  <ul>
+    <li><code>A | B</code> — <b>union</b>: everything in either.</li>
+    <li><code>A &amp; B</code> — <b>intersection</b>: only what's in both.</li>
+    <li><code>A - B</code> — <b>difference</b>: in A but not B.</li>
+    <li><code>A ^ B</code> — <b>symmetric difference</b>: in exactly one, not both.</li>
+  </ul>
+  <p>These show up constantly: "which users are in group A but not B?", "which features do two models share?"
+  Pick an operation and watch which region lights up.</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>operation</label>
+        <select id="op">
+          <option value="union">A | B&nbsp;&nbsp;(union)</option>
+          <option value="inter">A &amp; B&nbsp;&nbsp;(intersection)</option>
+          <option value="diff">A - B&nbsp;&nbsp;(difference)</option>
+          <option value="sym">A ^ B&nbsp;&nbsp;(symmetric difference)</option>
+        </select></div>
+    </div>
+    <svg id="venn" viewBox="0 0 460 230" role="img" aria-label="Two overlapping sets A and B"></svg>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px;">
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">Expression:</p>
+        <div id="sexpr" style="font-family:var(--mono); font-size:15px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:10px 12px;"></div>
+      </div>
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">Result:</p>
+        <div id="sres" style="font-family:var(--mono); font-size:15px; background:#e7efff; border:1px solid #a9c6f5; border-radius:10px; padding:10px 12px; color:var(--blue);"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>How to choose — a 3-question test</h2>
+  <ol>
+    <li><b>Will it change?</b> No → tuple. Yes → list or set.</li>
+    <li><b>Do duplicates matter / does order matter?</b> Yes → list. No → set.</li>
+    <li><b>Will I test membership a lot, on big data?</b> Strongly favour a set — <code>x in big_set</code>
+      is ~O(1), <code>x in big_list</code> is O(n).</li>
+  </ol>
+  <p>One caveat: a set's speed comes from <em>hashing</em>, so its members must be hashable (immutable). You
+  can put numbers, strings, and tuples in a set, but not lists or dicts. That's the same reason a tuple can be
+  a dict key and a list can't — see the <a href="python-dicts.html">dict explainer</a>.</p>
+
+  <div class="note green"><b>Takeaways:</b> <b>list</b> = ordered, mutable, keeps dups (your default).
+  <b>tuple</b> = ordered, immutable, hashable (fixed records / dict keys). <b>set</b> = unordered, unique,
+  fast membership + set algebra (<code>| &amp; - ^</code>). Mutability and hashability are two sides of the
+  same coin — see <a href="python-data-model.html">names &amp; objects</a>.</div>
+
+  <p class="small muted">Step through how these are stored in memory with
+  <a href="https://pythontutor.com/" target="_blank" rel="noopener">Python Tutor</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0B, topic 6).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+
+  function parseItems() {
+    return $('#items').value.split(',').map((s) => s.trim()).filter((s) => s.length);
+  }
+
+  function box(title, sub, body, accent) {
+    const wrap = el('div', { style: { border: '1px solid var(--border)', borderRadius: '10px', overflow: 'hidden' } });
+    wrap.appendChild(el('div', {
+      style: { background: accent.bg, color: accent.fg, padding: '8px 12px', fontWeight: '700', fontFamily: 'var(--mono)' },
+      text: title,
+    }));
+    wrap.appendChild(el('div', { class: 'small muted', text: sub, style: { padding: '6px 12px 0' } }));
+    const chips = el('div', { class: 'chips', style: { padding: '8px 12px 12px' } });
+    body.forEach((b) => chips.appendChild(el('span', { class: 'chip ' + (b.dim ? '' : 'on'), text: b.t, style: b.dim ? { opacity: '.4', textDecoration: 'line-through' } : null })));
+    wrap.appendChild(chips);
+    return wrap;
+  }
+
+  function renderContainers() {
+    const items = parseItems();
+    const root = $('#containers'); root.innerHTML = '';
+    // list: keep all, in order
+    root.appendChild(box('list  [ … ]', 'ordered · mutable · keeps duplicates',
+      items.map((t) => ({ t })), { bg: '#e7efff', fg: '#1456b0' }));
+    // tuple: same but immutable
+    root.appendChild(box('tuple  ( … )', 'ordered · immutable · hashable',
+      items.map((t) => ({ t })), { bg: '#fff3df', fg: '#b9770e' }));
+    // set: dedup, mark dropped
+    const seen = new Set();
+    const setBody = items.map((t) => {
+      if (seen.has(t)) return { t, dim: true };
+      seen.add(t); return { t };
+    });
+    root.appendChild(box('set  { … }', 'unordered · unique · ~O(1) lookup',
+      setBody, { bg: '#eafaef', fg: '#0a7d2c' }));
+  }
+  $('#items').addEventListener('input', renderContainers);
+  renderContainers();
+
+  // ---- set algebra ----
+  const A = [1, 2, 3, 4], B = [3, 4, 5, 6];
+  const onlyA = [1, 2], both = [3, 4], onlyB = [5, 6];
+  const OPS = {
+    union: { e: 'A | B', f: (r) => true },
+    inter: { e: 'A & B', f: (r) => r === 'both' },
+    diff:  { e: 'A - B', f: (r) => r === 'a' },
+    sym:   { e: 'A ^ B', f: (r) => r !== 'both' },
+  };
+
+  function renderVenn() {
+    const op = OPS[$('#op').value];
+    const svg = $('#venn'); svg.innerHTML = '';
+    const regOn = { a: op.f('a'), both: op.f('both'), b: op.f('b') };
+    // two circles
+    const mk = (cx, on) => el('circle', {
+      cx, cy: 115, r: 92, fill: on ? 'rgba(20,86,176,.10)' : 'none',
+      stroke: 'var(--blue)', 'stroke-width': 2,
+    });
+    // For union/sym we shade per-region via overlapping translucent fills; simplest: draw base circles, then highlight included element chips.
+    svg.appendChild(el('circle', { cx: 175, cy: 115, r: 92, fill: regOn.a ? 'rgba(20,86,176,.12)' : 'rgba(20,86,176,.03)', stroke: 'var(--blue)', 'stroke-width': 2 }));
+    svg.appendChild(el('circle', { cx: 285, cy: 115, r: 92, fill: regOn.b ? 'rgba(10,125,44,.12)' : 'rgba(10,125,44,.03)', stroke: 'var(--green)', 'stroke-width': 2 }));
+    svg.appendChild(el('text', { x: 120, y: 35, 'text-anchor': 'middle', fill: 'var(--blue)', 'font-weight': '700', text: 'A' }));
+    svg.appendChild(el('text', { x: 340, y: 35, 'text-anchor': 'middle', fill: 'var(--green)', 'font-weight': '700', text: 'B' }));
+
+    function place(arr, x, on) {
+      arr.forEach((v, i) => {
+        const y = 95 + i * 30;
+        svg.appendChild(el('circle', { cx: x, cy: y, r: 13, fill: on ? '#0a7d2c' : '#fff', stroke: on ? '#0a7d2c' : 'var(--muted)', 'stroke-width': 1.5 }));
+        svg.appendChild(el('text', { x, y: y + 4, 'text-anchor': 'middle', fill: on ? '#fff' : 'var(--muted)', 'font-family': 'var(--mono)', 'font-size': 13, 'font-weight': '700', text: String(v) }));
+      });
+    }
+    place(onlyA, 120, regOn.a);
+    place(both, 230, regOn.both);
+    place(onlyB, 340, regOn.b);
+
+    const result = []
+      .concat(regOn.a ? onlyA : [], regOn.both ? both : [], regOn.b ? onlyB : [])
+      .sort((x, y) => x - y);
+    $('#sexpr').textContent = op.e + '   with A={1,2,3,4}, B={3,4,5,6}';
+    $('#sres').textContent = '{' + result.join(', ') + '}';
+  }
+  $('#op').addEventListener('change', renderVenn);
+  renderVenn();
+})();
+</script>
+</body>
+</html>

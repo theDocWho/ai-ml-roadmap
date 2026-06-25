@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dot product & projection — the geometry of alignment</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 2 · Math</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Dot product &amp; projection</h1>
+    <p class="lede">The dot product is the most-used operation in all of ML — it's inside every matrix multiply,
+      every similarity score, every neuron. Underneath the formula <code>u·v = Σ uᵢvᵢ</code> is one geometric
+      idea: <b>how much do two vectors point the same way?</b></p>
+    <div class="tagrow">
+      <span class="tag">u·v = Σ uᵢvᵢ</span><span class="tag">|u||v|cos θ</span>
+      <span class="tag">projection</span><span class="tag">orthogonality</span>
+      <span class="tag">cosine similarity</span>
+    </div>
+  </div>
+
+  <h2>Two formulas, one number</h2>
+  <p>The dot product can be computed two equivalent ways. Algebraically, multiply matching components and add:
+  <code>u·v = u₁v₁ + u₂v₂</code>. Geometrically, it's <code>|u| |v| cos θ</code>, where θ is the angle between
+  them. Setting them equal is what makes the dot product useful — it converts <em>coordinates</em> into an
+  <em>angle</em>. The sign alone already tells a story:</p>
+  <ul>
+    <li><b>Positive</b> → the vectors broadly agree (θ &lt; 90°).</li>
+    <li><b>Zero</b> → they're exactly <b>perpendicular</b> (θ = 90°). This is the definition of orthogonality.</li>
+    <li><b>Negative</b> → they point in opposing directions (θ &gt; 90°).</li>
+  </ul>
+  <p>Move <b>v</b> around and watch the dot product, the angle, and the <b>projection</b> of v onto u (the
+  shadow v casts on u) all update together:</p>
+
+  <div class="panel">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:center;">
+      <div class="controls" style="margin:0;">
+        <div class="ctrl"><label>v&nbsp;·&nbsp;x <span class="val" id="vvx"></span></label><input id="vx" type="range" min="-4" max="4" step="0.1" value="3"></div>
+        <div class="ctrl"><label>v&nbsp;·&nbsp;y <span class="val" id="vvy"></span></label><input id="vy" type="range" min="-4" max="4" step="0.1" value="2"></div>
+        <p class="small muted" style="margin:6px 0 0;">u is fixed at (4, 0) — along the x-axis — so the angle is easy to read.</p>
+        <div id="readout" style="font-family:var(--mono); font-size:13px; margin-top:8px; line-height:1.7;"></div>
+      </div>
+      <svg id="plane" viewBox="0 0 300 300" role="img" aria-label="two vectors u and v with the projection of v onto u"></svg>
+    </div>
+    <p class="note" id="msg"></p>
+  </div>
+
+  <h2>Projection: the dot product's "shadow"</h2>
+  <p>Geometrically, <code>u·v</code> measures how much of v lies <em>along</em> u. If you shine a light
+  straight down onto u, the length of v's shadow is its projection, <code>(u·v)/|u|</code>. That's the precise
+  sense in which the dot product is "how aligned are they": maximal when v points the same way as u, zero when
+  v is perpendicular (no shadow), negative when v leans backwards. Normalising by both lengths gives
+  <b>cosine similarity</b> <code>cos θ = u·v / (|u||v|)</code>, the ±1 alignment score used everywhere from
+  word embeddings to recommendation systems (see the <a href="../6-llms-rag-agents/embeddings.html">embeddings explainer</a>).</p>
+
+  <h2>Why it's everywhere</h2>
+  <p>A single neuron computes <code>w·x + b</code> — a dot product of weights and inputs — so it literally
+  measures how aligned an input is with the pattern the weights encode. A matrix multiply is just a stack of
+  dot products (each output is one row dotted with the input). Master this one operation and a huge amount of
+  ML stops being mysterious.</p>
+
+  <div class="note green"><b>Takeaways:</b> <code>u·v = Σ uᵢvᵢ = |u||v|cos θ</code> turns coordinates into an
+  angle. Its <b>sign</b> shows agreement; <b>zero ⟺ perpendicular</b> (orthogonal); it equals v's
+  <b>projection</b> onto u times |u|. Normalised, it's <b>cosine similarity</b>. Neurons and matrix multiplies
+  are built from it.</div>
+
+  <p class="small muted">Curated companion:
+  <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" target="_blank" rel="noopener">3Blue1Brown — "Dot products and duality"</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 2 · Math.
+    Practise in <a href="../../phases/phase-2-math.md">the Phase 2 guide</a> (Module 2A, topic 6 · exam Q1).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const S = 30, CX = 150, CY = 150;
+  const X = (x) => CX + x * S, Y = (y) => CY - y * S;
+  const U = [4, 0];
+
+  function arrow(svg, x, y, color, label, w) {
+    svg.appendChild(el('line', { x1: X(0), y1: Y(0), x2: X(x), y2: Y(y), stroke: color, 'stroke-width': w || 2.5 }));
+    const ang = Math.atan2(-y, x), hx = X(x), hy = Y(y);
+    [-0.4, 0.4].forEach((da) => svg.appendChild(el('line', { x1: hx, y1: hy, x2: hx - 9 * Math.cos(ang - da), y2: hy + 9 * Math.sin(ang - da), stroke: color, 'stroke-width': w || 2.5 })));
+    if (label) svg.appendChild(el('text', { x: hx + 6, y: hy - 5, fill: color, 'font-size': 14, 'font-weight': '700', 'font-family': 'var(--mono)', text: label }));
+  }
+
+  function render() {
+    const vx = +$('#vx').value, vy = +$('#vy').value;
+    $('#vvx').textContent = vx.toFixed(1); $('#vvy').textContent = vy.toFixed(1);
+    const dot = U[0] * vx + U[1] * vy;
+    const magU = Math.hypot(U[0], U[1]), magV = Math.hypot(vx, vy);
+    const cos = magV === 0 ? 0 : dot / (magU * magV);
+    const ang = Math.acos(Math.max(-1, Math.min(1, cos))) * 180 / Math.PI;
+    const projLen = dot / magU;           // scalar projection onto u
+    const projVec = [U[0] / magU * projLen, U[1] / magU * projLen];
+
+    const svg = $('#plane'); svg.innerHTML = '';
+    for (let i = -4; i <= 4; i++) {
+      svg.appendChild(el('line', { x1: X(i), y1: Y(-4.6), x2: X(i), y2: Y(4.6), stroke: '#eef2f8' }));
+      svg.appendChild(el('line', { x1: X(-4.6), y1: Y(i), x2: X(4.6), y2: Y(i), stroke: '#eef2f8' }));
+    }
+    svg.appendChild(el('line', { x1: X(-4.6), y1: Y(0), x2: X(4.6), y2: Y(0), stroke: '#cfd8e6' }));
+    svg.appendChild(el('line', { x1: X(0), y1: Y(-4.6), x2: X(0), y2: Y(4.6), stroke: '#cfd8e6' }));
+
+    // projection drop line + projection vector
+    svg.appendChild(el('line', { x1: X(vx), y1: Y(vy), x2: X(projVec[0]), y2: Y(projVec[1]), stroke: '#b9770e', 'stroke-width': 1.3, 'stroke-dasharray': '4 3' }));
+    svg.appendChild(el('line', { x1: X(0), y1: Y(0), x2: X(projVec[0]), y2: Y(projVec[1]), stroke: '#b9770e', 'stroke-width': 6, opacity: 0.35 }));
+
+    arrow(svg, U[0], U[1], '#1456b0', 'u');
+    arrow(svg, vx, vy, '#0a7d2c', 'v');
+
+    const near0 = Math.abs(dot) < 0.25;
+    $('#readout').innerHTML =
+      'u·v = 4·' + vx.toFixed(1) + ' + 0·' + vy.toFixed(1) + ' = <b style="color:' + (near0 ? 'var(--red)' : 'var(--blue)') + '">' + dot.toFixed(2) + '</b><br>' +
+      'angle θ = <b>' + ang.toFixed(0) + '°</b>&nbsp;&nbsp;cos θ = ' + cos.toFixed(2) + '<br>' +
+      'projection of v onto u = <b style="color:#b9770e">' + projLen.toFixed(2) + '</b>';
+
+    let msg;
+    if (near0) msg = '<b style="color:#c0392b">u·v ≈ 0 → v is perpendicular to u</b> (θ ≈ 90°). v casts no shadow on u — they\'re orthogonal.';
+    else if (dot > 0) msg = 'Positive dot product → v leans the <b>same way</b> as u (θ &lt; 90°); its projection (orange) points along u.';
+    else msg = 'Negative dot product → v leans <b>against</b> u (θ &gt; 90°); the projection points backwards.';
+    $('#msg').innerHTML = msg;
+  }
+  ['vx', 'vy'].forEach((k) => $('#' + k).addEventListener('input', render));
+  render();
+})();
+</script>
+</body>
+</html>

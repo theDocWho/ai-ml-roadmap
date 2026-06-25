@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>k-Means — the assign / update loop, step by step</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 3 · Clustering · ties to BYO-4</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>k-Means Clustering, Step by Step</h1>
+    <p class="lede">An unsupervised algorithm that finds groups in unlabeled data by repeating two dead-simple
+      moves — <b>assign</b> each point to its nearest center, then <b>move</b> each center to the middle of
+      its points — until nothing changes.</p>
+    <div class="tagrow">
+      <span class="tag">unsupervised</span><span class="tag">assign → update</span>
+      <span class="tag">centroids</span><span class="tag">inertia</span><span class="tag byo">BYO-4</span>
+    </div>
+  </div>
+
+  <h2>The goal &amp; the loop</h2>
+  <p>You have points but no labels, and you suspect there are <code>k</code> natural groups. k-means finds
+  them by maintaining <code>k</code> <b>centroids</b> (cluster centers) and alternating two steps — this is
+  <b>Lloyd's algorithm</b>:</p>
+  <ol>
+    <li><b>Assign</b> — color every point by whichever centroid is <em>nearest</em> (Euclidean distance).
+      This carves the plane into regions, one per centroid.</li>
+    <li><b>Update</b> — move each centroid to the <em>mean</em> (center of gravity) of the points now
+      assigned to it.</li>
+  </ol>
+  <p>Repeat. Each round can only lower the total <b>inertia</b> — the sum of squared distances from points to
+  their centroid — so it's guaranteed to converge. When an update moves the centroids essentially nowhere,
+  you're done. Step it one move at a time and watch the centroids (◆) slide into the heart of each blob while
+  the inertia drops:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>k (number of clusters) <span class="val" id="kv">3</span></label><input id="k" type="range" min="2" max="5" step="1" value="3"></div>
+      <div class="ctrl" style="justify-content:flex-end;"><label>&nbsp;</label><button class="ghost" id="newpts">↻ New points</button></div>
+      <div class="ctrl" style="justify-content:flex-end;"><label>&nbsp;</label><button class="ghost" id="reinit">🎲 Re-init centroids</button></div>
+    </div>
+    <svg id="plot" viewBox="0 0 500 340" style="border:1px solid var(--border); border-radius:10px; background:#fff;" role="img" aria-label="k-means clustering"></svg>
+    <div class="btnrow">
+      <button id="stepb"></button>
+      <button class="ghost" id="run">Run to convergence</button>
+      <span class="small muted" id="kstat"></span>
+    </div>
+    <div class="note" id="knote" style="margin-top:10px;"></div>
+  </div>
+
+  <p class="small muted"><b>How to read it:</b> dots are data points colored by their current cluster; the
+  large ◆ are the centroids. An <b>Assign</b> step recolors the dots (Voronoi regions); an <b>Update</b> step
+  glides each ◆ to the average of its same-colored dots. The two steps chase each other until the centroids
+  stop moving.</p>
+
+  <h2>The catches you must know</h2>
+  <ul>
+    <li><b>It's sensitive to initialization.</b> Different starting centroids can converge to different
+      (worse) solutions — k-means only finds a <em>local</em> optimum. Click <b>Re-init centroids</b> a few
+      times to see the final clustering change. The fix in practice is <b>k-means++</b> (smart spread-out
+      seeding) and running it several times, keeping the lowest inertia.</li>
+    <li><b>You must choose <code>k</code> yourself.</b> It won't tell you how many clusters exist. The
+      <b>elbow method</b> (plot inertia vs <code>k</code> and look for the bend) and the <b>silhouette
+      score</b> help — but it's partly judgment.</li>
+    <li><b>It assumes round, similar-size clusters.</b> Because it uses distance-to-mean, k-means struggles
+      with elongated, nested, or very unequal clusters (try forcing the wrong <code>k</code>). For those,
+      reach for DBSCAN or Gaussian Mixture Models.</li>
+    <li><b>Scale your features first.</b> Distance is dominated by large-range features, so standardize
+      before clustering (see <a href="../1-scientific-stack/numpy-axis.html">per-column standardization</a>).</li>
+  </ul>
+
+  <div class="note green"><b>Takeaways:</b> k-means alternates <b>assign</b> (point → nearest centroid) and
+  <b>update</b> (centroid → mean of its points), lowering inertia until it converges to a <em>local</em>
+  optimum. Pick <code>k</code> yourself (elbow/silhouette), seed smartly (k-means++) and run several times,
+  scale your features, and remember it likes round clusters. Build it from scratch in
+  <a href="../../challenges/byo-04-kmeans-pca/README.md">BYO-4</a>.</div>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 3 · Classic ML.
+    See <a href="../../phases/phase-3-classic-ml.md">the Phase 3 guide</a>.
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+  const COLORS = ['#1456b0', '#0a7d2c', '#b9770e', '#b03060', '#1a8ab0'];
+  const W = 500, H = 340, pad = 18;
+  let pts, cents, assign, phase, iter, seed = 7, inertia = 0, converged = false;
+
+  function rndPoints() {
+    const r = Ill.rng(seed++);
+    const nBlobs = 3 + Math.floor(r() * 2); // 3-4 blobs
+    const centers = [];
+    for (let i = 0; i < nBlobs; i++) centers.push([15 + r() * 70, 15 + r() * 70]);
+    pts = [];
+    centers.forEach((c) => {
+      const n = 14 + Math.floor(r() * 10);
+      for (let i = 0; i < n; i++) pts.push([
+        Math.max(2, Math.min(98, c[0] + Ill.randn(r) * 7)),
+        Math.max(2, Math.min(98, c[1] + Ill.randn(r) * 7)),
+      ]);
+    });
+  }
+  function initCentroids() {
+    const r = Ill.rng(seed++);
+    const k = +Ill.$('#k').value;
+    const idx = new Set();
+    while (idx.size < k) idx.add(Math.floor(r() * pts.length));
+    cents = Array.from(idx).map((i) => pts[i].slice());
+    assign = pts.map(() => -1);
+    phase = 'assign'; iter = 0; converged = false; inertia = 0;
+  }
+  const d2 = (a, b) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+
+  function doAssign() {
+    inertia = 0;
+    assign = pts.map((p) => {
+      let bi = 0, bd = Infinity;
+      cents.forEach((c, i) => { const d = d2(p, c); if (d < bd) { bd = d; bi = i; } });
+      inertia += bd;
+      return bi;
+    });
+  }
+  function doUpdate() {
+    let moved = 0;
+    cents = cents.map((c, i) => {
+      const mine = pts.filter((_, j) => assign[j] === i);
+      if (!mine.length) return c;
+      const nc = [mine.reduce((s, p) => s + p[0], 0) / mine.length, mine.reduce((s, p) => s + p[1], 0) / mine.length];
+      moved += Math.sqrt(d2(c, nc));
+      return nc;
+    });
+    return moved;
+  }
+
+  function step() {
+    if (converged) return;
+    if (phase === 'assign') { doAssign(); phase = 'update'; }
+    else { const moved = doUpdate(); iter++; phase = 'assign'; if (moved < 0.4) converged = true; }
+    draw();
+  }
+
+  function draw() {
+    const sx = (x) => pad + (x / 100) * (W - 2 * pad);
+    const sy = (y) => H - pad - (y / 100) * (H - 2 * pad);
+    let svg = '';
+    pts.forEach((p, j) => {
+      const a = assign[j];
+      const col = a < 0 ? '#9aa3b2' : COLORS[a % COLORS.length];
+      svg += '<circle cx="' + sx(p[0]) + '" cy="' + sy(p[1]) + '" r="3.6" fill="' + col + '" opacity="0.78"/>';
+    });
+    cents.forEach((c, i) => {
+      const col = COLORS[i % COLORS.length];
+      svg += '<path d="M ' + sx(c[0]) + ' ' + (sy(c[1]) - 9) + ' L ' + (sx(c[0]) + 9) + ' ' + sy(c[1]) + ' L ' + sx(c[0]) + ' ' + (sy(c[1]) + 9) + ' L ' + (sx(c[0]) - 9) + ' ' + sy(c[1]) + ' Z" fill="' + col + '" stroke="#fff" stroke-width="2"/>';
+    });
+    Ill.$('#plot').innerHTML = svg;
+
+    Ill.$('#kv').textContent = +Ill.$('#k').value;
+    Ill.$('#kstat').innerHTML = 'iteration <b>' + iter + '</b>' + (assign[0] >= 0 ? ' · inertia <b>' + inertia.toFixed(0) + '</b>' : '') + (converged ? ' · <span style="color:var(--green)">converged ✓</span>' : '');
+    Ill.$('#stepb').textContent = converged ? 'Converged' : (phase === 'assign' ? '① Assign points' : '② Update centroids');
+    Ill.$('#stepb').disabled = converged;
+
+    const note = Ill.$('#knote');
+    if (converged) note.innerHTML = '✓ <b>Converged</b> after ' + iter + ' iterations — the last update barely moved the centroids. Final inertia <b>' + inertia.toFixed(0) + '</b>. Try <b>Re-init centroids</b> to see whether a different start reaches a different (maybe worse) solution.';
+    else if (phase === 'assign') note.innerHTML = 'Next: <b>Assign</b> — each point will be recolored to its nearest centroid, partitioning the space.';
+    else note.innerHTML = 'Next: <b>Update</b> — each ◆ will slide to the mean of its currently-colored points, lowering inertia.';
+  }
+
+  function resetAll() { rndPoints(); initCentroids(); draw(); }
+  Ill.$('#k').addEventListener('input', () => { initCentroids(); draw(); });
+  Ill.$('#newpts').addEventListener('click', resetAll);
+  Ill.$('#reinit').addEventListener('click', () => { initCentroids(); draw(); });
+  Ill.$('#stepb').addEventListener('click', step);
+  Ill.$('#run').addEventListener('click', () => { let guard = 0; const tick = () => { if (!converged && guard++ < 40) { step(); setTimeout(tick, 220); } }; tick(); });
+  resetAll();
+})();
+</script>
+</body>
+</html>

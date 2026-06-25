@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confusion matrix — precision, recall & the threshold</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 3 · Classic ML</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>The confusion matrix</h1>
+    <p class="lede">"Accuracy" is the metric that lies. The confusion matrix is the honest picture: it splits
+      every prediction into four boxes, and from those four numbers come precision, recall, and F1 — the
+      metrics that actually matter when the classes are imbalanced (fraud, disease, intrusion).</p>
+    <div class="tagrow">
+      <span class="tag">TP / FP / FN / TN</span><span class="tag">precision</span>
+      <span class="tag">recall</span><span class="tag">F1</span>
+      <span class="tag">decision threshold</span>
+    </div>
+  </div>
+
+  <h2>Four outcomes, not one</h2>
+  <p>A binary classifier doesn't just output right/wrong — it can be wrong in two different ways, and they have
+  very different costs. A model usually emits a <em>score</em>; you pick a <b>threshold</b> above which you
+  predict "positive." That choice sorts every example into one of four boxes:</p>
+  <ul>
+    <li><b>True Positive</b> — predicted positive, really positive ✓</li>
+    <li><b>False Positive</b> — predicted positive, actually negative (a false alarm)</li>
+    <li><b>False Negative</b> — predicted negative, actually positive (a miss)</li>
+    <li><b>True Negative</b> — predicted negative, really negative ✓</li>
+  </ul>
+  <p>Each dot below is one example, placed by its score; <span style="color:#0a7d2c">green = truly
+  positive</span>, <span style="color:#5b6678">grey = truly negative</span>. Slide the threshold and watch the
+  four boxes — and the metrics — move:</p>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;"><label>decision threshold <span class="val" id="vthr"></span></label>
+      <input id="thr" type="range" min="0" max="1" step="0.01" value="0.5"></div>
+    <svg id="line" viewBox="0 0 600 90" role="img" aria-label="examples placed by score with a threshold"></svg>
+
+    <div style="display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:center; margin-top:10px;">
+      <table id="cm" style="border-collapse:collapse; font-family:var(--mono); font-size:13px;"></table>
+      <div id="metrics" style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px;"></div>
+    </div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>Precision vs recall — you can't max both</h2>
+  <p>Two ratios read off the matrix capture the trade-off:</p>
+  <ul>
+    <li><b>Precision</b> = TP / (TP + FP) — "when I say positive, how often am I right?" Raising the threshold
+      makes you pickier → precision up, but you miss more.</li>
+    <li><b>Recall</b> = TP / (TP + FN) — "of all the real positives, how many did I catch?" Lowering the
+      threshold catches more → recall up, but with more false alarms.</li>
+  </ul>
+  <p>Push the threshold to either extreme and you'll see them pull in opposite directions. <b>F1</b> is their
+  harmonic mean — <code>2·P·R / (P + R)</code> — a single number that's only high when <em>both</em> are
+  decent, which is why it's the go-to metric for imbalanced problems (exam Q23). Notice how <b>accuracy</b> can
+  stay high even when the model is useless on the rare class: with 95% negatives, "always predict negative"
+  scores 95% accuracy and 0% recall. That's the trap the confusion matrix exposes.</p>
+
+  <div class="note green"><b>Takeaways:</b> a classifier's score + a <b>threshold</b> produce TP/FP/FN/TN.
+  <b>Precision</b> = TP/(TP+FP) (trust when it says yes), <b>recall</b> = TP/(TP+FN) (coverage of real
+  positives) — raising the threshold trades recall for precision. <b>F1</b> balances them; prefer it to
+  <b>accuracy</b> when classes are imbalanced. Pick the threshold by which error costs more in your domain.</div>
+
+  <p class="small muted">Curated companion: <a href="https://mlu-explain.github.io/roc-auc/" target="_blank" rel="noopener">MLU-Explain — ROC &amp; AUC</a> (sweeping the threshold draws the ROC curve).</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 3 · Classic ML.
+    Practise in <a href="../../phases/phase-3-classic-ml.md">the Phase 3 guide</a> (Module 3A, topic 7 · exam Q23).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  // fixed dataset: scores with true labels (1 = positive)
+  const POS = [0.97, 0.92, 0.88, 0.83, 0.79, 0.71, 0.66, 0.61, 0.54, 0.47, 0.41, 0.34];
+  const NEG = [0.04, 0.09, 0.14, 0.19, 0.27, 0.33, 0.39, 0.46, 0.51, 0.58, 0.64, 0.73];
+  const DATA = POS.map((s) => ({ s, y: 1 })).concat(NEG.map((s) => ({ s, y: 0 })));
+
+  function metric(label, val, color) {
+    const w = el('div', { style: { border: '1px solid var(--border)', borderRadius: '10px', padding: '8px 10px' } });
+    w.appendChild(el('div', { class: 'small muted', text: label }));
+    w.appendChild(el('div', { style: { fontFamily: 'var(--mono)', fontSize: '18px', fontWeight: '700', color }, text: val }));
+    return w;
+  }
+
+  function render() {
+    const thr = +$('#thr').value;
+    $('#vthr').textContent = thr.toFixed(2);
+    let TP = 0, FP = 0, FN = 0, TN = 0;
+    DATA.forEach((d) => {
+      const pred = d.s >= thr ? 1 : 0;
+      if (d.y === 1 && pred === 1) TP++; else if (d.y === 0 && pred === 1) FP++;
+      else if (d.y === 1 && pred === 0) FN++; else TN++;
+    });
+    const prec = TP + FP ? TP / (TP + FP) : 0;
+    const rec = TP + FN ? TP / (TP + FN) : 0;
+    const f1 = prec + rec ? 2 * prec * rec / (prec + rec) : 0;
+    const acc = (TP + TN) / DATA.length;
+
+    // number line
+    const svg = $('#line'); svg.innerHTML = '';
+    const W = 600, x = (s) => 20 + s * (W - 40);
+    svg.appendChild(el('line', { x1: 20, y1: 60, x2: W - 20, y2: 60, stroke: 'var(--border)' }));
+    DATA.forEach((d) => {
+      const pred = d.s >= thr ? 1 : 0;
+      const wrong = pred !== d.y;
+      svg.appendChild(el('circle', {
+        cx: x(d.s), cy: 38 + (d.y === 1 ? -0 : 18), r: 6,
+        fill: d.y === 1 ? '#0a7d2c' : '#9aa6b8',
+        stroke: wrong ? '#c0392b' : 'none', 'stroke-width': wrong ? 2.5 : 0,
+      }));
+    });
+    svg.appendChild(el('line', { x1: x(thr), y1: 12, x2: x(thr), y2: 78, stroke: 'var(--blue)', 'stroke-width': 2 }));
+    svg.appendChild(el('text', { x: x(thr), y: 10, 'text-anchor': 'middle', fill: 'var(--blue)', 'font-size': 11, text: 'threshold' }));
+    svg.appendChild(el('text', { x: W - 24, y: 86, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 10, text: 'predict + →' }));
+    svg.appendChild(el('text', { x: 24, y: 86, fill: 'var(--muted)', 'font-size': 10, text: '← predict −' }));
+
+    // confusion matrix table
+    const cm = $('#cm'); cm.innerHTML = '';
+    const mk = (txt, bg, fg, b) => el('td', { text: txt, style: { border: '1px solid var(--border)', padding: '10px 14px', textAlign: 'center', background: bg || '#fff', color: fg || 'var(--ink)', fontWeight: b ? '700' : '400', minWidth: '74px' } });
+    let r0 = el('tr'); r0.appendChild(mk('', '#fff')); r0.appendChild(mk('pred +', 'var(--light)', 'var(--muted)')); r0.appendChild(mk('pred −', 'var(--light)', 'var(--muted)')); cm.appendChild(r0);
+    let r1 = el('tr'); r1.appendChild(mk('real +', 'var(--light)', 'var(--muted)')); r1.appendChild(mk('TP ' + TP, '#eafaef', '#0a7d2c', 1)); r1.appendChild(mk('FN ' + FN, '#fff3df', '#b9770e', 1)); cm.appendChild(r1);
+    let r2 = el('tr'); r2.appendChild(mk('real −', 'var(--light)', 'var(--muted)')); r2.appendChild(mk('FP ' + FP, '#fdecea', '#c0392b', 1)); r2.appendChild(mk('TN ' + TN, '#eef2f8', 'var(--muted)', 1)); cm.appendChild(r2);
+
+    const m = $('#metrics'); m.innerHTML = '';
+    m.appendChild(metric('precision', (prec * 100).toFixed(0) + '%', 'var(--blue)'));
+    m.appendChild(metric('recall', (rec * 100).toFixed(0) + '%', 'var(--green)'));
+    m.appendChild(metric('F1', f1.toFixed(2), 'var(--navy)'));
+    m.appendChild(metric('accuracy', (acc * 100).toFixed(0) + '%', 'var(--muted)'));
+
+    $('#msg').innerHTML = thr > 0.8
+      ? 'High threshold → very <b>precise</b> (' + (prec * 100).toFixed(0) + '%) but low <b>recall</b> (' + (rec * 100).toFixed(0) + '%): you only flag the surest cases and miss many real positives (FN ' + FN + ').'
+      : thr < 0.25
+        ? 'Low threshold → high <b>recall</b> (' + (rec * 100).toFixed(0) + '%) but poor <b>precision</b> (' + (prec * 100).toFixed(0) + '%): you catch almost everything, at the cost of ' + FP + ' false alarms.'
+        : 'Balanced threshold: precision ' + (prec * 100).toFixed(0) + '%, recall ' + (rec * 100).toFixed(0) + '%, F1 ' + f1.toFixed(2) + '. Red-ringed dots are the current mistakes.';
+  }
+  Ill.slider($('#thr'), null, render);
+})();
+</script>
+</body>
+</html>

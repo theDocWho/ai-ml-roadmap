@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NumPy Broadcasting — how arrays of different shapes combine</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 1 · NumPy</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>NumPy Broadcasting</h1>
+    <p class="lede">How NumPy combines arrays of <em>different</em> shapes without writing a single loop —
+      and without copying data. Master this one rule and most "why is my matrix the wrong shape?" bugs in ML
+      code disappear.</p>
+    <div class="tagrow">
+      <span class="tag">vectorization</span><span class="tag">shape rules</span>
+      <span class="tag">no loops</span><span class="tag">bias add / normalize</span>
+    </div>
+  </div>
+
+  <h2>The problem broadcasting solves</h2>
+  <p>You constantly need to combine arrays whose shapes don't match. Add a <b>bias vector</b> of length 3 to
+  every row of a <code>(100, 3)</code> matrix. <b>Standardize</b> each column by subtracting its mean (a
+  length-3 vector) from a <code>(100, 3)</code> matrix. Multiply a batch of images by a single per-channel
+  scale. In a language like Java you'd write nested loops, or first <em>tile</em> the small array into a big
+  one that matches. Both are slow and verbose.</p>
+  <p><b>Broadcasting</b> is NumPy's answer: when shapes are <em>compatible</em>, it <b>virtually stretches</b>
+  the smaller array across the missing dimensions and does the operation elementwise — at C speed, with
+  <em>no</em> extra memory for the stretched copy. <code>matrix + bias</code> just works. The whole skill is
+  knowing when two shapes are "compatible," and that's three small rules.</p>
+
+  <h2>The three rules</h2>
+  <p>To check whether shapes <code>A</code> and <code>B</code> can broadcast, <b>line them up from the right</b>
+  and walk the dimensions:</p>
+  <ol>
+    <li><b>Pad on the left.</b> If one shape has fewer dimensions, prepend <code>1</code>s until they're the
+      same length. <code>(3,)</code> becomes <code>(1, 3)</code> next to a 2-D array.</li>
+    <li><b>Each dimension must match.</b> Two sizes are compatible if they're <b>equal</b>, or if <b>one of
+      them is 1</b>. A size-<code>1</code> dimension is stretched to match the other.</li>
+    <li><b>Otherwise it's an error.</b> If two sizes differ and neither is <code>1</code>, NumPy raises
+      <code>ValueError: operands could not be broadcast together</code>.</li>
+  </ol>
+  <p>The result shape takes the <b>maximum</b> along each dimension. Try shapes below — including a couple
+  that <em>fail</em> — and read the right-aligned check:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>shape A</label><select id="shA"></select></div>
+      <div class="ctrl" style="min-width:60px; align-items:center; justify-content:flex-end;"><label>&nbsp;</label><div style="font-size:20px; color:var(--muted);">+</div></div>
+      <div class="ctrl"><label>shape B</label><select id="shB"></select></div>
+    </div>
+    <div id="align" style="font-family:var(--mono); font-size:14px; overflow-x:auto;"></div>
+    <div class="note" id="verdict" style="margin-top:12px;"></div>
+  </div>
+
+  <p class="small muted"><b>How to read it:</b> the two shapes are right-aligned (the way NumPy compares
+  them). Under each column: <span style="color:var(--green)">=</span> means the sizes already match,
+  <span style="color:var(--blue)">↔ stretch</span> means a <code>1</code> is being broadcast up to the other
+  size, and <span style="color:var(--red)">✗</span> means an incompatible pair that errors.</p>
+
+  <h2>Watch the stretch actually happen</h2>
+  <p>The canonical picture: a <b>column</b> of shape <code>(m, 1)</code> plus a <b>row</b> of shape
+  <code>(1, n)</code>. Neither matches the other, but each has a <code>1</code> to stretch — so the column
+  is copied across <code>n</code> columns, the row is copied down <code>m</code> rows, and you get a full
+  <code>(m, n)</code> grid. (This is exactly how you'd build a multiplication table, or an outer sum.)
+  Each result cell is <code>op(A[i], B[j])</code>:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>m (rows of column A) <span class="val" id="mv">3</span></label><input id="m" type="range" min="1" max="5" value="3"></div>
+      <div class="ctrl"><label>n (cols of row B) <span class="val" id="nv">4</span></label><input id="n" type="range" min="1" max="6" value="4"></div>
+      <div class="ctrl"><label>operation</label><select id="op"><option value="add">A + B</option><option value="mul">A * B</option></select></div>
+    </div>
+    <div id="grid" style="overflow-x:auto;"></div>
+    <p class="small muted" id="gridcap" style="margin-top:8px;"></p>
+  </div>
+
+  <h2>What it looks like in real ML code</h2>
+  <p>Once you see the rule, you'll spot broadcasting everywhere:</p>
+  <ul>
+    <li><b>Add a bias:</b> <code>X (100, 3) + b (3,)</code> → <code>b</code> pads to <code>(1, 3)</code> and
+      stretches down all 100 rows. Every neuron layer does this.</li>
+    <li><b>Standardize per column:</b> <code>(X - X.mean(axis=0)) / X.std(axis=0)</code> — the mean/std are
+      shape <code>(3,)</code>, broadcast across all rows. (See the
+      <a href="numpy-axis.html">axis explainer</a> for why <code>axis=0</code> gives a per-column vector.)</li>
+    <li><b>Outer product / distance matrices:</b> <code>a[:, None] - b[None, :]</code> turns two vectors into
+      a full <code>(m, n)</code> difference grid — the trick behind pairwise-distance computations.</li>
+    <li><b>Scale image channels:</b> <code>img (H, W, 3) * scale (3,)</code> multiplies each channel.</li>
+  </ul>
+  <p>That <code>None</code> (a.k.a. <code>np.newaxis</code>) is the manual version of rule 1 — it inserts a
+  size-<code>1</code> axis so you control <em>which</em> dimension stretches.</p>
+
+  <h2>Strengths &amp; the gotcha</h2>
+  <p>Broadcasting is the heart of "vectorized" NumPy: it replaces Python loops with one expression that runs
+  in optimized C, and it never materializes the stretched array, so it's memory-cheap. The one real danger
+  is <b>silent</b> broadcasting — a shape you didn't intend still happens to be "compatible," so instead of
+  an error you get a wrong-shaped result. Classic case: subtracting a <code>(n,)</code> row vector when you
+  meant a <code>(n, 1)</code> column vector. <b>Always sanity-check <code>.shape</code></b> of your result;
+  use <code>None</code>/<code>reshape</code> to make your intent explicit.</p>
+
+  <div class="note green"><b>Takeaways:</b> right-align the shapes; each dimension must be equal or
+  <code>1</code> (which stretches); the result is the per-dimension max; mismatch with no <code>1</code> is
+  an error. It's how you add biases, normalize columns, and build grids — with zero loops and zero copies.</div>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 1 · NumPy.
+    Drill it in <a href="../../phases/phase-1-scientific-stack.md">the Phase 1 guide</a> (Module 1A, topic 5);
+    pairs with <a href="numpy-axis.html">Aggregations &amp; <code>axis</code> →</a>.
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+
+  // ---------- shape compatibility checker ----------
+  const SHAPES = ['(3, 4)', '(4,)', '(3, 1)', '(1, 4)', '(3,)', '(1,)', '(2, 3, 4)', '(5, 1, 4)', '(3, 2)', '(100, 3)'];
+  const parse = (s) => s.replace(/[()]/g, '').split(',').map((x) => x.trim()).filter((x) => x !== '').map(Number);
+
+  const shA = Ill.$('#shA'), shB = Ill.$('#shB');
+  SHAPES.forEach((s) => { shA.appendChild(el('option', { value: s, text: s })); shB.appendChild(el('option', { value: s, text: s })); });
+  shA.value = '(3, 1)'; shB.value = '(1, 4)';
+
+  function broadcast(a, b) {
+    const len = Math.max(a.length, b.length);
+    const pa = Array(len - a.length).fill(1).concat(a);
+    const pb = Array(len - b.length).fill(1).concat(b);
+    const cols = [];
+    let ok = true;
+    for (let i = 0; i < len; i++) {
+      const x = pa[i], y = pb[i];
+      let kind, res;
+      if (x === y) { kind = 'eq'; res = x; }
+      else if (x === 1 || y === 1) { kind = 'stretch'; res = Math.max(x, y); }
+      else { kind = 'err'; res = '✗'; ok = false; }
+      cols.push({ x, y, res, kind });
+    }
+    return { ok, pa, pb, cols, padA: len - a.length, padB: len - b.length };
+  }
+
+  function cell(txt, color, bg, bold) {
+    return '<td style="text-align:center; padding:7px 12px; border:1px solid var(--border); min-width:44px;' +
+      (color ? 'color:' + color + ';' : '') + (bg ? 'background:' + bg + ';' : '') + (bold ? 'font-weight:700;' : '') + '">' + txt + '</td>';
+  }
+
+  function renderCheck() {
+    const a = parse(shA.value), b = parse(shB.value);
+    const r = broadcast(a, b);
+    const align = Ill.$('#align'), verdict = Ill.$('#verdict');
+
+    const lbl = (t) => '<td style="padding:7px 10px; color:var(--muted); font-size:12px; text-align:right; white-space:nowrap;">' + t + '</td>';
+    const rowA = '<tr>' + lbl('A &nbsp;' + shA.value) + r.cols.map((c, i) =>
+      cell(c.x, null, i < r.padA ? '#eef2f8' : null, false)).join('') + '</tr>';
+    const rowB = '<tr>' + lbl('B &nbsp;' + shB.value) + r.cols.map((c, i) =>
+      cell(c.y, null, i < r.padB ? '#eef2f8' : null, false)).join('') + '</tr>';
+    const sym = { eq: '<span style="color:var(--green)">=</span>', stretch: '<span style="color:var(--blue)">↔</span>', err: '<span style="color:var(--red)">✗</span>' };
+    const rowS = '<tr>' + lbl('') + r.cols.map((c) => '<td style="text-align:center; padding:2px;">' + sym[c.kind] + '</td>').join('') + '</tr>';
+    const rowR = '<tr>' + lbl('<b>result</b>') + r.cols.map((c) =>
+      cell(c.res, c.kind === 'err' ? 'var(--red)' : c.kind === 'stretch' ? 'var(--blue)' : 'var(--ink)',
+        c.kind === 'err' ? '#fdecea' : c.kind === 'stretch' ? '#e7efff' : '#f3f6fb', true)).join('') + '</tr>';
+
+    align.innerHTML = '<table style="border-collapse:collapse; margin:4px 0;">' + rowA + rowB + rowS + rowR + '</table>';
+
+    if (r.ok) {
+      const resShape = '(' + r.cols.map((c) => c.res).join(', ') + (r.cols.length === 1 ? ',' : '') + ')';
+      const stretched = r.cols.some((c) => c.kind === 'stretch');
+      verdict.className = 'note green';
+      verdict.innerHTML = '✓ <b>Compatible.</b> Result shape <code>' + resShape + '</code>.' +
+        (stretched ? ' Dimensions marked <span style="color:var(--blue)">↔</span> have a <code>1</code> stretched up to match — no data is copied.' : ' Every dimension already matched.');
+    } else {
+      const bad = r.cols.find((c) => c.kind === 'err');
+      verdict.className = 'note';
+      verdict.style.background = '#fdecea'; verdict.style.borderColor = '#f1b0a8'; verdict.style.color = '#c0392b';
+      verdict.innerHTML = '✗ <b>ValueError</b> — sizes <code>' + bad.x + '</code> and <code>' + bad.y +
+        '</code> differ and neither is <code>1</code>, so they can\'t broadcast.';
+    }
+  }
+  // reset note styling each render for the success path
+  const baseVerdict = Ill.$('#verdict');
+  function renderCheckWrapped() {
+    baseVerdict.removeAttribute('style');
+    renderCheck();
+  }
+  [shA, shB].forEach((s) => s.addEventListener('change', renderCheckWrapped));
+  renderCheckWrapped();
+
+  // ---------- live 2-D stretch grid ----------
+  const mEl = Ill.$('#m'), nEl = Ill.$('#n'), opEl = Ill.$('#op');
+  const grid = Ill.$('#grid'), gridcap = Ill.$('#gridcap');
+
+  function renderGrid() {
+    const m = +mEl.value, n = +nEl.value, op = opEl.value;
+    Ill.$('#mv').textContent = m; Ill.$('#nv').textContent = n;
+    const A = Array.from({ length: m }, (_, i) => (i + 1) * 10); // 10,20,30...
+    const B = Array.from({ length: n }, (_, j) => j);            // 0,1,2...
+    const f = op === 'add' ? (a, b) => a + b : (a, b) => a * b;
+    const opsym = op === 'add' ? '+' : '×';
+
+    const box = (txt, bg, color, w) =>
+      '<div style="display:flex;align-items:center;justify-content:center;width:' + (w || 44) + 'px;height:40px;border:1px solid var(--border);border-radius:7px;background:' + bg + ';color:' + color + ';font-family:var(--mono);font-size:13px;font-weight:600;">' + txt + '</div>';
+
+    let html = '<div style="display:inline-block;">';
+    // top row: corner + B (the row vector, shape (1,n))
+    html += '<div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">';
+    html += box('B&nbsp;(1,' + n + ')', 'transparent', 'var(--muted)', 80);
+    B.forEach((b) => { html += box(b, '#e7efff', 'var(--blue)'); });
+    html += '</div>';
+    // each A row
+    A.forEach((a) => {
+      html += '<div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">';
+      html += box('A=' + a, '#eafaef', 'var(--green)', 80);
+      B.forEach((b) => { html += box(f(a, b), '#fff', 'var(--ink)'); });
+      html += '</div>';
+    });
+    html += '</div>';
+    grid.innerHTML = html;
+
+    gridcap.innerHTML = '<code>A (' + m + ', 1) ' + opsym + ' B (1, ' + n + ') → (' + m + ', ' + n +
+      ')</code>. The green column stretches right across all ' + n + ' columns; the blue row stretches down all ' +
+      m + ' rows. Each white cell is <code>A[i] ' + opsym + ' B[j]</code>.';
+  }
+  [mEl, nEl, opEl].forEach((s) => s.addEventListener('input', renderGrid));
+  renderGrid();
+})();
+</script>
+</body>
+</html>

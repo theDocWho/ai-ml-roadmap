@@ -13,7 +13,7 @@ fine **🖥️ Local**.
 - [Hugging Face — *NLP Course*](https://huggingface.co/learn/nlp-course) (free, hands-on) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (Transformers/LLM "from scratch" series)
 - [Jay Alammar — *The Illustrated Transformer*](https://jalammar.github.io/illustrated-transformer/) · [*The Illustrated Word2vec*](https://jalammar.github.io/illustrated-word2vec/)
 - [Karpathy — *Let's build GPT*](https://karpathy.ai/zero-to-hero.html) · [StatQuest — Transformers](https://www.youtube.com/@statquest) · [Stanford CS224n (optional)](https://web.stanford.edu/class/cs224n/)
-- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [TF-IDF](../illustrated/tfidf.html), [Self-attention — Q·Kᵀ→softmax→·V](../illustrated/self-attention.html), [Positional encoding](../illustrated/positional-encoding.html) (Q46); plus curated [Transformer Explainer (live GPT-2)](https://poloclub.github.io/transformer-explainer/) & [LLM Visualization](https://bbycroft.net/llm).
+- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline): [TF-IDF](../illustrated/5-nlp-transformers/tfidf.html), [Self-attention — Q·Kᵀ→softmax→·V](../illustrated/5-nlp-transformers/self-attention.html), [Positional encoding](../illustrated/5-nlp-transformers/positional-encoding.html) (Q46); plus curated [Transformer Explainer (live GPT-2)](https://poloclub.github.io/transformer-explainer/) & [LLM Visualization](https://bbycroft.net/llm).
 
 ---
 
@@ -22,7 +22,7 @@ fine **🖥️ Local**.
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 1 | Text preprocessing: tokenize, stem/lemmatize, stopwords | [HF NLP Course](https://huggingface.co/learn/nlp-course/chapter6/1) — **Ch.6 "Tokenizers"** (intro) | 40m |
-| 2 | Bag-of-words, **TF-IDF**, n-grams | [scikit-learn UG](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction) — **"Text feature extraction (TF-IDF)"** · 🎨 [Visualize: TF-IDF](../illustrated/tfidf.html) | 40m |
+| 2 | Bag-of-words, **TF-IDF**, n-grams | [scikit-learn UG](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction) — **"Text feature extraction (TF-IDF)"** · 🎨 [Visualize: TF-IDF](../illustrated/5-nlp-transformers/tfidf.html) | 40m |
 | 3 | **Word embeddings**: word2vec / GloVe | [Jay Alammar — *The Illustrated Word2vec*](https://jalammar.github.io/illustrated-word2vec/) + [StatQuest](https://www.youtube.com/@statquest) — **"Word Embedding and Word2Vec"** | 45m |
 | 4 | NER & POS tagging | [spaCy 101 (current docs)](https://spacy.io/usage/spacy-101) — **"Linguistic Features → POS, NER"** | 40m |
 | 5 | Topic modeling (LDA) | [Gensim docs](https://radimrehurek.com/gensim/auto_examples/tutorials/run_lda.html) — **"LDA Model"** tutorial | 30m |
@@ -57,7 +57,7 @@ fine **🖥️ Local**.
 |---|-------|-------------------|-------|
 | 9 | The architecture (overview) | [Jay Alammar — *The Illustrated Transformer*](https://jalammar.github.io/illustrated-transformer/) | 1h |
 | 10 | **Self-attention & multi-head attention** | [StatQuest](https://www.youtube.com/@statquest) — **"Transformer Neural Networks, Clearly Explained!!!"** · 📖 [Jay Alammar: The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) | 36m |
-| 11 | **Positional encoding** (exam Q46) | [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — **"Positional Encoding"** section · 🎨 [Visualize: positional encoding](../illustrated/positional-encoding.html) | 20m |
+| 11 | **Positional encoding** (exam Q46) | [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — **"Positional Encoding"** section · 🎨 [Visualize: positional encoding](../illustrated/5-nlp-transformers/positional-encoding.html) | 20m |
 | 12 | **Residual connections + LayerNorm** (exam Q47) | [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — **"The Residuals"** section | 15m |
 | 13 | Build it from scratch | [Karpathy — *Let's build GPT*](https://karpathy.ai/zero-to-hero.html) (full) · 📖 [The Annotated Transformer (Harvard)](http://nlp.seas.harvard.edu/annotated-transformer/) | 2h |
 | 14 | Encoder vs decoder: BERT vs GPT | [HF NLP Course](https://huggingface.co/learn/nlp-course/chapter1/4) — **"How do Transformers work?"** | 30m |

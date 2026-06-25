@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BPE Tokenization — how LLMs turn text into tokens</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 6B · LLM · ties to BYO-7</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Byte-Pair Encoding (BPE) Tokenization</h1>
+    <p class="lede">Before a language model sees a single number, your text is chopped into <b>tokens</b>.
+      BPE is the algorithm that decides where the cuts go — by learning, from data, which character
+      sequences are worth gluing together.</p>
+    <div class="tagrow">
+      <span class="tag">subword tokens</span><span class="tag">merge rules</span>
+      <span class="tag">vocab size vs length</span><span class="tag byo">BYO-7 tokenizer</span>
+    </div>
+  </div>
+
+  <h2>Why models need tokens at all</h2>
+  <p>A neural network can't consume raw text — it consumes vectors. So step one of every LLM is a lookup
+  table that maps each <b>token</b> to an integer ID and then to a learned vector (an
+  <a href="../6-llms-rag-agents/embeddings.html">embedding</a>). That means we need a <b>fixed, finite vocabulary</b>. Two obvious
+  choices both fail:</p>
+  <ul>
+    <li><b>One token per word</b> — the vocabulary would be effectively infinite (every name, typo, URL,
+      and compound word), and any word unseen in training becomes a useless <code>&lt;UNK&gt;</code>.</li>
+    <li><b>One token per character</b> — a tiny vocabulary, but now "tokenization" is 12 tokens instead of
+      ~2, so sequences get long and the model wastes capacity relearning that <code>t-h-e</code> is "the".</li>
+  </ul>
+  <p><b>Subword tokenization</b> is the compromise everyone settled on: common words become a single token,
+  rare words break into a few meaningful pieces, and <em>any</em> string is representable (worst case, down
+  to bytes). BPE is the most common way to learn that subword vocabulary.</p>
+
+  <h2>The BPE idea: greedily merge the most frequent pair</h2>
+  <p>BPE starts with the most granular units — individual characters — and then <b>repeats one move</b>:
+  scan the whole corpus, find the <b>adjacent pair of symbols that occurs most often</b>, and merge it into
+  a single new symbol. Do that <em>N</em> times and you've learned <em>N</em> merge rules. Frequent
+  sequences (<code>e</code>+<code>s</code> → <code>es</code>, then <code>es</code>+<code>t</code> →
+  <code>est</code>) get welded into reusable chunks, while rare words simply never trigger a merge and stay
+  in pieces.</p>
+  <p>Below is BPE training on the classic toy corpus (each word shown with how often it appears). The
+  end-of-word marker <code>_</code> keeps word boundaries honest. Click <b>Next merge</b> and watch the most
+  frequent pair (highlighted) get glued together across every word:</p>
+
+  <div class="panel">
+    <div class="btnrow">
+      <button id="merge">Next merge ›</button>
+      <button class="ghost" id="resetbpe">↻ Restart</button>
+      <span class="small muted" id="mergeinfo"></span>
+    </div>
+    <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap:18px; align-items:start;">
+      <div>
+        <p class="small muted" style="margin:0 0 6px;">Corpus — each word as its current token sequence:</p>
+        <div id="corpus"></div>
+      </div>
+      <div>
+        <p class="small muted" style="margin:0 0 6px;">Next pair to merge (by frequency):</p>
+        <div id="pairs"></div>
+        <p class="small muted" style="margin:14px 0 6px;">Learned merge rules (the vocabulary grows):</p>
+        <div id="rules" style="font-family:var(--mono); font-size:13px;"></div>
+      </div>
+    </div>
+    <div class="note" id="bpenote" style="margin-top:12px;"></div>
+  </div>
+
+  <p class="small muted"><b>How to read it:</b> every word is a row of symbol-chips. The highlighted pair is
+  the most frequent adjacent pair in the whole corpus (counts weighted by each word's frequency). Merging it
+  adds one rule to the vocabulary and shortens the words that contained it. Notice <code>newest</code>
+  (frequency 6) drives its pieces to merge first — frequency is everything.</p>
+
+  <h2>Using the learned rules to tokenize new text</h2>
+  <p>Once the merges are learned, tokenizing is mechanical: split a word into characters, then apply the
+  merge rules <b>in the order they were learned</b>, gluing pairs wherever they appear, until no rule
+  applies. A word made of frequent pieces collapses to a few tokens; an unusual word stays in smaller
+  chunks. Type a word and watch it tokenize with the rules learned above:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl" style="min-width:240px; flex:1;"><label>word to tokenize</label>
+        <input id="tokin" type="text" value="newest" autocomplete="off"></div>
+    </div>
+    <p class="small muted" style="margin:4px 0;">applying the learned merges in order:</p>
+    <div id="tokout" style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;"></div>
+    <div class="small muted" id="tokcount" style="margin-top:8px;"></div>
+  </div>
+
+  <h2>Why tokenization quietly shapes everything</h2>
+  <ul>
+    <li><b>Cost &amp; context are measured in tokens.</b> API pricing and the context window are
+      <em>token</em> counts, not words. Code, JSON, and many non-English languages tokenize into
+      <em>more</em> tokens per character, so they're more expensive and eat the context budget faster.</li>
+    <li><b>It explains classic LLM "failures."</b> "How many R's in <em>strawberry</em>?" is hard because the
+      model sees a couple of subword tokens, not the letters. Arithmetic and rhyming wobble for the same
+      reason — the unit of perception isn't the character.</li>
+    <li><b>Real tokenizers work on <em>bytes</em>, not letters.</b> GPT-style models use <b>byte-level
+      BPE</b>: the starting alphabet is the 256 byte values, so <em>any</em> Unicode text, emoji, or binary
+      is representable with zero <code>&lt;UNK&gt;</code> tokens — the toy above just uses letters to stay
+      readable.</li>
+    <li><b>The vocabulary is frozen after training.</b> Merge rules are learned once on a big corpus and
+      shipped with the model; at inference you only ever <em>apply</em> them (as in the box above).</li>
+  </ul>
+
+  <div class="note green"><b>Takeaways:</b> BPE learns a subword vocabulary by repeatedly merging the most
+  frequent adjacent pair, balancing a small vocabulary against short sequences. Frequent words become one
+  token; rare words split into pieces; nothing is unrepresentable. Tokens — not words or characters — are
+  the LLM's true unit, which drives cost, context limits, and a whole class of quirky failures. Build a BPE
+  tokenizer end-to-end in <a href="../../challenges/byo-07-bpe/README.md">BYO-7</a>.</div>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 6B · LLM in-depth.
+    See <a href="../../phases/phase-6b-llm-indepth.md">the Phase 6B guide</a>; next:
+    <a href="llm-decoding.html">How LLMs pick the next token →</a>.
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+  const EOW = '_';
+  const INIT = [
+    { w: 'low', f: 5 }, { w: 'lower', f: 2 }, { w: 'newest', f: 6 }, { w: 'widest', f: 3 },
+  ];
+  let words, rules;
+
+  function reset() {
+    words = INIT.map((x) => ({ f: x.f, sym: x.w.split('').concat(EOW), raw: x.w }));
+    rules = [];
+    render();
+  }
+
+  function pairCounts() {
+    const counts = new Map();
+    words.forEach((wd) => {
+      for (let i = 0; i < wd.sym.length - 1; i++) {
+        const key = wd.sym[i] + '' + wd.sym[i + 1];
+        counts.set(key, (counts.get(key) || 0) + wd.f);
+      }
+    });
+    return counts;
+  }
+
+  function bestPair() {
+    const counts = pairCounts();
+    let best = null, bestC = 0;
+    // deterministic: highest count, then lexicographic
+    for (const [k, c] of counts) {
+      if (c > bestC || (c === bestC && best !== null && k < best)) { best = k; bestC = c; }
+    }
+    return best ? { pair: best.split(''), count: bestC, key: best } : null;
+  }
+
+  function doMerge() {
+    const bp = bestPair();
+    if (!bp) return;
+    const [a, b] = bp.pair;
+    const merged = a + b;
+    words.forEach((wd) => {
+      const out = [];
+      for (let i = 0; i < wd.sym.length; i++) {
+        if (i < wd.sym.length - 1 && wd.sym[i] === a && wd.sym[i + 1] === b) { out.push(merged); i++; }
+        else out.push(wd.sym[i]);
+      }
+      wd.sym = out;
+    });
+    rules.push([a, b, merged]);
+    render();
+  }
+
+  function symChip(s, hot) {
+    const disp = s.replace(EOW, '·');
+    return '<span class="chip' + (hot ? ' sel' : '') + '" style="font-size:13px;">' + disp + '</span>';
+  }
+
+  function render() {
+    const bp = bestPair();
+    const hotA = bp ? bp.pair[0] : null, hotB = bp ? bp.pair[1] : null;
+
+    // corpus
+    const corpus = Ill.$('#corpus');
+    corpus.innerHTML = words.map((wd) => {
+      let row = '<div style="display:flex; align-items:center; gap:8px; margin:7px 0;">';
+      row += '<span class="small muted" style="width:64px; font-family:var(--mono)">×' + wd.f + '</span>';
+      row += '<span style="display:flex; gap:4px; flex-wrap:wrap;">';
+      for (let i = 0; i < wd.sym.length; i++) {
+        const isHot = bp && wd.sym[i] === hotA && i < wd.sym.length - 1 && wd.sym[i + 1] === hotB;
+        const isHot2 = bp && i > 0 && wd.sym[i] === hotB && wd.sym[i - 1] === hotA;
+        row += symChip(wd.sym[i], isHot || isHot2);
+      }
+      row += '</span></div>';
+      return row;
+    }).join('');
+
+    // pairs / next merge
+    const pairs = Ill.$('#pairs');
+    if (bp) {
+      pairs.innerHTML = '<div style="font-family:var(--mono); font-size:14px;">' +
+        '<span class="chip sel">' + bp.pair[0].replace(EOW, '·') + '</span> + ' +
+        '<span class="chip sel">' + bp.pair[1].replace(EOW, '·') + '</span> ' +
+        '→ <span class="chip on">' + (bp.pair[0] + bp.pair[1]).replace(EOW, '·') + '</span>' +
+        '<div class="small muted" style="margin-top:6px;">appears <b>' + bp.count + '</b> times</div></div>';
+      Ill.$('#mergeinfo').textContent = rules.length + ' merges learned';
+      Ill.$('#merge').disabled = false;
+    } else {
+      pairs.innerHTML = '<div class="small muted">No pairs left to merge — every word is a single token.</div>';
+      Ill.$('#merge').disabled = true;
+    }
+
+    // rules
+    Ill.$('#rules').innerHTML = rules.length
+      ? rules.map((r, i) => (i + 1) + '. <b>' + r[0].replace(EOW, '·') + '</b>+<b>' + r[1].replace(EOW, '·') + '</b> → ' + r[2].replace(EOW, '·')).join('<br>')
+      : '<span class="muted">none yet — click “Next merge”.</span>';
+
+    // note
+    const bnote = Ill.$('#bpenote');
+    if (rules.length === 0) bnote.innerHTML = 'Start: every word is just characters plus an end-of-word marker <code>·</code>. The most frequent adjacent pair will merge first.';
+    else if (bp) { const last = rules[rules.length - 1]; bnote.innerHTML = 'Merged <code>' + last[0].replace(EOW, '·') + '·'.replace('·', '') + '</code>… → <code>' + last[2].replace(EOW, '·') + '</code>. Frequent pieces are gluing into reusable subwords; the next most frequent pair is now highlighted.'; }
+    else bnote.innerHTML = 'Done — further merges would just memorise whole words. A real vocabulary stops after thousands of merges.';
+
+    retokenize();
+  }
+
+  // ---- apply learned merges to a typed word ----
+  function tokenize(word) {
+    let sym = word.toLowerCase().replace(/[^a-z]/g, '').split('');
+    if (sym.length === 0) return { steps: [], tokens: [] };
+    sym = sym.concat(EOW);
+    const steps = [{ rule: null, sym: sym.slice() }];
+    rules.forEach((r) => {
+      const [a, b, m] = r;
+      let changed = false;
+      const out = [];
+      for (let i = 0; i < sym.length; i++) {
+        if (i < sym.length - 1 && sym[i] === a && sym[i + 1] === b) { out.push(m); i++; changed = true; }
+        else out.push(sym[i]);
+      }
+      sym = out;
+      if (changed) steps.push({ rule: r, sym: sym.slice() });
+    });
+    return { steps, tokens: sym };
+  }
+
+  function retokenize() {
+    const word = Ill.$('#tokin').value;
+    const { tokens } = tokenize(word);
+    const out = Ill.$('#tokout');
+    if (!tokens.length) { out.innerHTML = '<span class="muted small">type a word…</span>'; Ill.$('#tokcount').textContent = ''; return; }
+    out.innerHTML = tokens.map((t) => '<span class="chip on" style="font-size:14px;">' + t.replace(EOW, '·') + '</span>').join('<span class="muted"> </span>');
+    Ill.$('#tokcount').innerHTML = '<b>' + tokens.length + '</b> token' + (tokens.length === 1 ? '' : 's') +
+      ' (from ' + (word.replace(/[^a-zA-Z]/g, '').length) + ' letters). ' +
+      (tokens.length === 1 ? 'This whole word is in the vocabulary.' : 'Pieces that never merged stay separate.');
+  }
+
+  Ill.$('#merge').addEventListener('click', doMerge);
+  Ill.$('#resetbpe').addEventListener('click', reset);
+  Ill.$('#tokin').addEventListener('input', retokenize);
+  reset();
+})();
+</script>
+</body>
+</html>

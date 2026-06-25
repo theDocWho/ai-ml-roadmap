@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dict — Python's hash-map workhorse</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>The <code>dict</code></h1>
+    <p class="lede">Python's most-used container and the one that makes <code>x in d</code> and
+      <code>d[key]</code> feel instant. It's a <b>hash map</b> — Java's <code>HashMap</code> — and
+      understanding the one trick behind it (hashing) explains its speed, its rules about keys, and a
+      surprising amount of how Python itself is built.</p>
+    <div class="tagrow">
+      <span class="tag">hash map</span><span class="tag">key → bucket</span>
+      <span class="tag">O(1) lookup</span><span class="tag">hashable keys</span>
+      <span class="tag">collisions</span>
+    </div>
+  </div>
+
+  <h2>Why not just a list of pairs?</h2>
+  <p>You could store key→value pairs in a list and, to find a key, scan from the front comparing each one.
+  That's <b>O(n)</b>: with a million entries, a million comparisons. A dict avoids the scan with a single idea:
+  run the key through a <b>hash function</b> — a deterministic function that turns the key into an integer —
+  and use that integer to jump <em>directly</em> to the slot ("bucket") where the value lives. No scanning;
+  you compute the address. That's why lookup is roughly <b>O(1)</b>, independent of how many entries there are.</p>
+
+  <p>The flow for both storing and finding is identical:
+  <code>key&nbsp;→&nbsp;hash(key)&nbsp;→&nbsp;bucket&nbsp;index&nbsp;→&nbsp;value</code>. Add a few entries and
+  watch each key land in a bucket. (We use a tiny 8-bucket table and a toy hash so collisions are visible — a
+  real dict has many more buckets and grows as it fills.)</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl" style="flex:1;"><label for="k">key</label><input id="k" type="text" value="" placeholder="e.g. cat" autocomplete="off"></div>
+      <div class="ctrl" style="flex:1;"><label for="v">value</label><input id="v" type="text" value="" placeholder="e.g. 3" autocomplete="off"></div>
+      <div class="ctrl" style="justify-content:flex-end;"><button id="add">d[key] = value</button></div>
+    </div>
+    <p id="hashline" class="small" style="font-family:var(--mono); min-height:20px; color:var(--muted);"></p>
+    <div id="table"></div>
+    <div class="btnrow" style="margin-top:12px;">
+      <div class="ctrl" style="flex:1; min-width:140px;"><label for="lookup">look up a key</label><input id="lookup" type="text" placeholder="type a key…" autocomplete="off"></div>
+      <button class="ghost" id="reset">reset to demo</button>
+    </div>
+    <p id="lookline" class="note" style="margin-top:10px; min-height:20px;"></p>
+  </div>
+
+  <h2>The rule this explains: keys must be hashable</h2>
+  <p>For the trick to work, a key must (1) produce the <em>same</em> hash every time, and (2) compare equal to
+  itself reliably. Mutable objects break promise (1): if you used a <code>list</code> as a key and then
+  appended to it, its hash would change and the dict could never find it again. So Python forbids it — keys
+  must be <b>immutable / hashable</b>: numbers, strings, and tuples work; lists, sets, and dicts don't. This
+  is the exact same constraint that lets something be a <a href="python-collections.html">set member</a>, and
+  it's why <a href="python-data-model.html">immutability</a> matters so much in Python.</p>
+
+  <h2>Why the dict is everywhere</h2>
+  <p>Dicts aren't just a data structure you reach for — they're <em>load-bearing inside Python</em>. An
+  object's attributes live in a dict (<code>obj.__dict__</code>); a module's globals are a dict; keyword
+  arguments arrive as a dict. So fluency here pays off far beyond "mapping words to counts." Common idioms:</p>
+  <div style="font-family:var(--mono); font-size:13px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px;">
+counts = {}<br>
+for w in words:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;counts[w] = counts.get(w, 0) + 1&nbsp;&nbsp;<span style="color:#5b6678"># .get with a default</span><br>
+<br>
+for key, val in d.items(): ...&nbsp;&nbsp;<span style="color:#5b6678"># iterate pairs</span><br>
+{k: v for k, v in pairs}&nbsp;&nbsp;<span style="color:#5b6678"># dict comprehension</span>
+  </div>
+  <p>From Python 3.7 on, a dict also <b>preserves insertion order</b>, so iterating gives keys back in the
+  order you added them — handy, though you still shouldn't rely on a dict for <em>sorted</em> order.</p>
+
+  <div class="note green"><b>Takeaways:</b> a dict hashes each key to a bucket so <code>d[key]</code> and
+  <code>key in d</code> are ~O(1), not an O(n) scan. Keys must be <b>hashable</b> (immutable) — strings,
+  numbers, tuples yes; lists no. Two keys can <em>collide</em> into one bucket; the dict resolves it. Dicts
+  preserve insertion order and quietly power objects, modules, and <code>**kwargs</code>.</div>
+
+  <p class="small muted">Visual companions: step through dict operations in
+  <a href="https://pythontutor.com/" target="_blank" rel="noopener">Python Tutor</a>, or watch hashing &
+  collisions animate at <a href="https://visualgo.net/en/hashtable" target="_blank" rel="noopener">VisuAlgo — Hash Table</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0B, topic 7).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const NB = 8;
+  let buckets;
+
+  // toy, deterministic string hash (so collisions are visible)
+  function hashKey(key) {
+    const s = String(key);
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+    return h >>> 0;
+  }
+  const bucketOf = (key) => hashKey(key) % NB;
+
+  function reset() {
+    buckets = Array.from({ length: NB }, () => []);
+    [['cat', 3], ['dog', 5], ['bird', 2], ['fish', 9]].forEach(([k, v]) => put(k, v, true));
+    $('#hashline').textContent = '';
+    $('#lookline').textContent = '';
+    render();
+  }
+
+  function put(key, value, silent) {
+    const b = bucketOf(key);
+    const slot = buckets[b];
+    const found = slot.find((e) => e.k === key);
+    if (found) found.v = value; else slot.push({ k: key, v: value });
+    if (!silent) {
+      $('#hashline').innerHTML = "hash('" + key + "') % 8 = <b style='color:#1456b0'>" + b +
+        "</b> → store in bucket " + b + (slot.length > 1 ? ' (collision — chained)' : '');
+    }
+  }
+
+  function render() {
+    const root = $('#table'); root.innerHTML = '';
+    buckets.forEach((slot, i) => {
+      const row = el('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', margin: '5px 0' } });
+      row.appendChild(el('div', {
+        text: String(i),
+        style: { fontFamily: 'var(--mono)', fontWeight: '700', color: 'var(--muted)', width: '22px', textAlign: 'right' },
+      }));
+      row.appendChild(el('div', { text: '▸', style: { color: 'var(--border)' } }));
+      const cells = el('div', { class: 'chips', style: { flex: '1' } });
+      if (!slot.length) cells.appendChild(el('span', { class: 'small muted', text: '(empty)' }));
+      slot.forEach((e) => cells.appendChild(el('span', {
+        class: 'chip ' + (slot.length > 1 ? 'hot' : 'sel'),
+        text: "'" + e.k + "': " + e.v,
+      })));
+      row.appendChild(cells);
+      root.appendChild(row);
+    });
+  }
+
+  $('#add').addEventListener('click', () => {
+    const k = $('#k').value.trim(); if (!k) return;
+    const raw = $('#v').value.trim();
+    put(k, raw === '' ? 'None' : (isNaN(+raw) ? "'" + raw + "'" : +raw));
+    $('#k').value = ''; $('#v').value = ''; $('#k').focus();
+    render();
+  });
+  $('#lookup').addEventListener('input', () => {
+    const k = $('#lookup').value.trim();
+    if (!k) { $('#lookline').textContent = ''; return; }
+    const b = bucketOf(k);
+    const hit = buckets[b].find((e) => e.k === k);
+    $('#lookline').innerHTML = "Jump straight to bucket <b>" + b + "</b> (= hash('" + k + "') % 8). " +
+      (hit ? "Found <b style='color:#0a7d2c'>" + hit.v + "</b> — no scan of the other buckets needed."
+           : "Key not in that bucket → <code>'" + k + "' in d</code> is <b style='color:#c0392b'>False</b>.");
+  });
+  $('#reset').addEventListener('click', reset);
+  reset();
+})();
+</script>
+</body>
+</html>

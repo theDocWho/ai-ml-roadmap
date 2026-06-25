@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>*args & **kwargs — how Python binds arguments</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1><code>*args</code> &amp; <code>**kwargs</code></h1>
+    <p class="lede">Python lets a function accept <em>any number</em> of extra positional and keyword arguments,
+      collecting them into a tuple and a dict. It's the mechanism behind flexible APIs and decorators — and the
+      <code>*</code>/<code>**</code> symbols do double duty: they <b>collect</b> in a definition and
+      <b>spread</b> at a call site.</p>
+    <div class="tagrow">
+      <span class="tag">positional vs keyword</span><span class="tag">*args → tuple</span>
+      <span class="tag">**kwargs → dict</span><span class="tag">defaults</span>
+      <span class="tag">unpacking</span>
+    </div>
+  </div>
+
+  <h2>How a call binds to parameters</h2>
+  <p>When you call a function, Python matches the arguments to the parameters in a fixed order: fill the named
+  parameters left-to-right from the positional arguments, apply any <b>defaults</b> for ones you skipped, then
+  sweep up whatever's left over. A <code>*args</code> parameter catches all <em>extra positional</em> arguments
+  as a <b>tuple</b>; a <code>**kwargs</code> parameter catches all <em>extra keyword</em> arguments as a
+  <b>dict</b>. Pick a call and watch each argument land in its slot:</p>
+
+  <div class="panel">
+    <p style="font-family:var(--mono); font-size:14px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin:0 0 12px;">
+      def order(item, qty=1, *extras, **opts):</p>
+    <div class="ctrl" style="min-width:100%;"><label>the call</label>
+      <select id="call">
+        <option value="0">order("Latte")</option>
+        <option value="1">order("Latte", 2)</option>
+        <option value="2">order("Latte", 2, "extra shot", "oat milk")</option>
+        <option value="3">order("Latte", size="L", hot=True)</option>
+        <option value="4">order("Latte", 2, "decaf", size="L")</option>
+        <option value="5">order(*["Mocha", 3], **{"size": "M"})</option>
+      </select></div>
+
+    <div id="bind" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:14px;"></div>
+    <p class="note" id="msg" style="margin-top:12px;"></p>
+  </div>
+
+  <h2>The same symbols, the other direction: unpacking</h2>
+  <p>At a <em>call site</em>, <code>*</code> and <code>**</code> do the reverse — they <b>spread</b> an existing
+  sequence or dict into separate arguments. <code>order(*["Mocha", 3])</code> is identical to
+  <code>order("Mocha", 3)</code>; <code>order(**{"size": "M"})</code> is identical to
+  <code>order(size="M")</code>. This symmetry is why you'll constantly see the pattern
+  <code>def wrapper(*args, **kwargs): return func(*args, **kwargs)</code> — collect whatever came in, then pass
+  it straight through. That one line is the heart of how <b>decorators</b> wrap arbitrary functions.</p>
+  <div style="font-family:var(--mono); font-size:13px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px; line-height:1.7;">
+args = ("Mocha", 3)<br>
+opts = {"size": "M"}<br>
+order(*args, **opts)&nbsp;&nbsp;<span style="color:#5b6678"># → order("Mocha", 3, size="M")</span>
+  </div>
+
+  <h2>Naming &amp; good taste</h2>
+  <p>The names <code>args</code> and <code>kwargs</code> are pure convention — only the <code>*</code> and
+  <code>**</code> matter to Python, so <code>*coordinates</code> or <code>**options</code> are perfectly legal
+  and often clearer. Use them when the count genuinely varies (a <code>print</code>-like API, a pass-through
+  wrapper). Don't reach for them when a couple of explicit, named parameters would document the function
+  better — <code>*args, **kwargs</code> everywhere makes a signature say nothing about what it actually wants.</p>
+  <p>One related trap lives next door: a <b>mutable default argument</b> like <code>def f(x, acc=[])</code> is
+  evaluated <em>once</em> and shared across calls — see <a href="python-data-model.html">names &amp; objects</a>
+  (exam Q5). Use <code>None</code> as the default and create the list inside.</p>
+
+  <div class="note green"><b>Takeaways:</b> calls bind positional args left-to-right, fill <b>defaults</b> for
+  skipped params, then <code>*args</code> collects extra positional args into a <b>tuple</b> and
+  <code>**kwargs</code> collects extra keyword args into a <b>dict</b>. The same <code>*</code>/<code>**</code>
+  at a call site <b>unpack</b> a list/dict into arguments — the basis of pass-through wrappers and decorators.</div>
+
+  <p class="small muted">Watch the tuple and dict get built during a call in
+  <a href="https://pythontutor.com/" target="_blank" rel="noopener">Python Tutor</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0B, topic 10).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const CALLS = [
+    { item: "'Latte'", qty: '1  (default)', extras: '()', opts: '{}', dflt: true,
+      m: 'Only <code>item</code> is given. <code>qty</code> falls back to its <b>default</b> of 1; nothing extra, so <code>extras</code> is an empty tuple and <code>opts</code> an empty dict.' },
+    { item: "'Latte'", qty: '2', extras: '()', opts: '{}',
+      m: 'Two positional args fill <code>item</code> and <code>qty</code> exactly — no extras spill over.' },
+    { item: "'Latte'", qty: '2', extras: "('extra shot', 'oat milk')", opts: '{}',
+      m: 'After <code>item</code> and <code>qty</code> are filled, the two leftover positional args are swept into <code>*extras</code> as a <b>tuple</b>.' },
+    { item: "'Latte'", qty: '1  (default)', extras: '()', opts: "{'size': 'L', 'hot': True}",
+      m: '<code>qty</code> is skipped (default 1). The keyword args <code>size=</code> and <code>hot=</code> aren\'t real parameters, so they collect into <code>**opts</code> as a <b>dict</b>.' },
+    { item: "'Latte'", qty: '2', extras: "('decaf',)", opts: "{'size': 'L'}",
+      m: 'A bit of everything: <code>item</code>, <code>qty</code>, one extra positional → <code>extras</code>, one extra keyword → <code>opts</code>.' },
+    { item: "'Mocha'", qty: '3', extras: '()', opts: "{'size': 'M'}",
+      m: 'The call <em>unpacks</em>: <code>*["Mocha", 3]</code> spreads into <code>item</code> &amp; <code>qty</code>; <code>**{"size":"M"}</code> spreads into a keyword arg caught by <code>opts</code>.' },
+  ];
+  const SLOTS = [
+    { k: 'item', sub: 'required positional' },
+    { k: 'qty', sub: 'optional (default 1)' },
+    { k: 'extras', sub: '*args → tuple' },
+    { k: 'opts', sub: '**kwargs → dict' },
+  ];
+  function render() {
+    const c = CALLS[+$('#call').value];
+    const root = $('#bind'); root.innerHTML = '';
+    SLOTS.forEach((s) => {
+      const empty = (s.k === 'extras' && c.extras === '()') || (s.k === 'opts' && c.opts === '{}');
+      const def = s.k === 'qty' && c.dflt;
+      const w = el('div', { style: { border: '1px solid ' + (empty ? 'var(--border)' : '#a9c6f5'), borderRadius: '10px', overflow: 'hidden', opacity: empty ? '0.6' : '1' } });
+      w.appendChild(el('div', { style: { background: empty ? 'var(--light)' : '#e7efff', padding: '5px 10px', fontFamily: 'var(--mono)', fontWeight: '700', color: empty ? 'var(--muted)' : 'var(--blue)' }, text: s.k }));
+      w.appendChild(el('div', { class: 'small muted', text: s.sub, style: { padding: '4px 10px 0' } }));
+      w.appendChild(el('div', { style: { padding: '4px 10px 10px', fontFamily: 'var(--mono)', fontSize: '14px', color: def ? 'var(--amber)' : 'var(--ink)' }, text: '= ' + c[s.k] }));
+      root.appendChild(w);
+    });
+    $('#msg').innerHTML = c.m;
+  }
+  $('#call').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

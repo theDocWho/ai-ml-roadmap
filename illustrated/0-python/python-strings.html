@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strings & slicing — Python's index ruler</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Strings &amp; slicing</h1>
+    <p class="lede">Coming from Java's <code>substring(begin, end)</code>, Python's <code>s[start:stop:step]</code>
+      looks similar — but it's a tiny language of its own that also runs <em>backwards</em>, handles
+      <em>negative</em> indices, and works on <em>any</em> sequence (lists, tuples, NumPy arrays). Learn it
+      once here and you've learned indexing for the whole roadmap.</p>
+    <div class="tagrow">
+      <span class="tag">slicing</span><span class="tag">negative indices</span>
+      <span class="tag">step</span><span class="tag">f-strings</span>
+      <span class="tag">half-open ranges</span>
+    </div>
+  </div>
+
+  <h2>Two rulers, not one</h2>
+  <p>The key mental model: a string isn't indexed by one set of numbers but <b>two</b>. Reading left-to-right,
+  the first character is <code>0</code>, the next <code>1</code>, and so on. Reading right-to-left, the
+  <em>last</em> character is <code>-1</code>, the one before it <code>-2</code>. Negative indices are just a
+  shorthand for "count from the end" — <code>s[-1]</code> is always the last character, no matter how long the
+  string is. That single trick removes a whole class of <code>length - 1</code> arithmetic you'd write in Java.</p>
+
+  <p>The second idea is the <b>half-open range</b>. In <code>s[start:stop]</code> the <code>start</code> index
+  is <em>included</em> but the <code>stop</code> index is <em>excluded</em>. It feels odd at first, but it's
+  what makes <code>s[:3]</code> + <code>s[3:]</code> reconstruct the whole string with no overlap and no gap —
+  the <code>stop</code> of one slice is the <code>start</code> of the next. Think of the indices as the
+  <em>gaps between characters</em>, and a slice as "everything between gap <code>start</code> and gap
+  <code>stop</code>."</p>
+
+  <h2>The third number: <code>step</code></h2>
+  <p><code>s[start:stop:step]</code> adds a stride. <code>s[::2]</code> takes every second character;
+  <code>s[::-1]</code> — step of <code>-1</code> — walks the string <b>backwards</b>, which is the famous
+  one-liner for reversing a sequence. When you omit a bound, Python fills in a sensible default: for a forward
+  step that's "the very start" and "the very end"; for a negative step the defaults flip. Drive the three
+  numbers below and watch exactly which characters survive.</p>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%; margin-bottom:6px;">
+      <label for="str">the string <code>s</code></label>
+      <input id="str" type="text" value="machine" autocomplete="off">
+    </div>
+    <div class="controls">
+      <div class="ctrl"><label>start <span class="val" id="vstart"></span></label>
+        <input id="start" type="range" min="-7" max="7" value="0"></div>
+      <div class="ctrl"><label>stop <span class="val" id="vstop"></span></label>
+        <input id="stop" type="range" min="-7" max="7" value="7"></div>
+      <div class="ctrl"><label>step</label>
+        <select id="step">
+          <option value="1">1 (forward)</option>
+          <option value="2">2 (every other)</option>
+          <option value="3">3</option>
+          <option value="-1">-1 (reverse)</option>
+          <option value="-2">-2</option>
+        </select></div>
+    </div>
+    <div class="btnrow">
+      <span class="small muted">Presets:</span>
+      <button class="ghost" data-p="all">s[:]</button>
+      <button class="ghost" data-p="rev">s[::-1]</button>
+      <button class="ghost" data-p="every2">s[::2]</button>
+      <button class="ghost" data-p="first3">s[:3]</button>
+      <button class="ghost" data-p="last3">s[-3:]</button>
+      <button class="ghost" data-p="nolast">s[:-1]</button>
+    </div>
+
+    <div id="ruler" style="overflow-x:auto; padding:6px 0 2px;"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:14px;">
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">Expression:</p>
+        <div id="expr" style="font-family:var(--mono); font-size:16px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px;"></div>
+      </div>
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">Result:</p>
+        <div id="res" style="font-family:var(--mono); font-size:16px; background:#e7efff; border:1px solid #a9c6f5; border-radius:10px; padding:12px 14px; color:var(--blue); word-break:break-word; min-height:24px;"></div>
+      </div>
+    </div>
+    <p class="note" id="explain" style="margin-top:14px;"></p>
+  </div>
+
+  <h2>f-strings: formatting without the noise</h2>
+  <p>The other half of "string fluency" is building strings from values. Forget <code>"x = " + str(x)</code>
+  concatenation and forget <code>String.format</code>'s positional <code>%s</code> placeholders — Python's
+  <b>f-string</b> drops the expression right inside the literal, prefixed with <code>f</code>:</p>
+  <div style="font-family:var(--mono); font-size:14px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:12px 14px; color:#1d5b30;">
+n = 3<br>
+f"{n} squared is {n*n}"&nbsp;&nbsp;→&nbsp;&nbsp;'3 squared is 9'<br>
+f"{n=}"&nbsp;&nbsp;→&nbsp;&nbsp;'n=3'&nbsp;&nbsp;<span style="color:#5b6678"># the = is a debugging shortcut</span><br>
+f"{3.14159:.2f}"&nbsp;&nbsp;→&nbsp;&nbsp;'3.14'&nbsp;&nbsp;<span style="color:#5b6678"># :.2f = 2 decimal places</span><br>
+f"{42:>6}"&nbsp;&nbsp;→&nbsp;&nbsp;'&nbsp;&nbsp;&nbsp;&nbsp;42'&nbsp;&nbsp;<span style="color:#5b6678"># >6 = right-align in 6 cols</span>
+  </div>
+  <p>Anything inside the <code>{…}</code> is evaluated as real Python — a variable, arithmetic, a method call.
+  The optional <code>:</code> format spec controls decimals, padding, and alignment, which is exactly what you
+  want when printing tidy tables of numbers later in the roadmap.</p>
+
+  <h2>Why this matters beyond strings</h2>
+  <p>Slicing isn't a string feature — it's a <em>sequence</em> feature. The identical
+  <code>[start:stop:step]</code> grammar selects rows of a list, elements of a tuple, and (crucially)
+  sub-arrays of a NumPy array in <a href="../../phases/phase-1-scientific-stack.md">Phase 1</a>. When you write
+  <code>X[:, 0]</code> to grab the first column of a matrix, that's this same slice notation. Master it on a
+  7-character word now and the matrix version will feel obvious.</p>
+
+  <div class="note green"><b>Takeaways:</b> indices run <code>0,1,2…</code> from the left and
+  <code>-1,-2…</code> from the right. <code>s[start:stop]</code> is <b>half-open</b> — includes
+  <code>start</code>, excludes <code>stop</code> — so adjacent slices tile perfectly. The third number is a
+  <b>step</b>; <code>s[::-1]</code> reverses. Omitted bounds default to the ends. f-strings embed live
+  expressions with <code>f"{…}"</code> and format with <code>:spec</code>.</div>
+
+  <p class="small muted">See it execute step-by-step: paste any slice into
+  <a href="https://pythontutor.com/" target="_blank" rel="noopener">Python Tutor</a> (visual execution) — a
+  great companion to this page.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0A, topic 3).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  let state = { start: 0, stop: 7, step: 1, startNull: false, stopNull: false };
+
+  const strI = $('#str'), startI = $('#start'), stopI = $('#stop'), stepI = $('#step');
+
+  // faithful CPython slice.indices(): returns the list of indices selected
+  function sliceIndices(len, start, stop, step) {
+    step = step || 1;
+    let lower, upper;
+    if (step < 0) { lower = -1; upper = len - 1; } else { lower = 0; upper = len; }
+    let s;
+    if (start == null) s = step < 0 ? upper : lower;
+    else s = start < 0 ? Math.max(start + len, lower) : Math.min(start, upper);
+    let e;
+    if (stop == null) e = step < 0 ? lower : upper;
+    else e = stop < 0 ? Math.max(stop + len, lower) : Math.min(stop, upper);
+    const idx = [];
+    if (step > 0) { for (let i = s; i < e; i += step) idx.push(i); }
+    else { for (let i = s; i > e; i += step) idx.push(i); }
+    return idx;
+  }
+
+  function exprText(L) {
+    const a = state.startNull ? '' : state.start;
+    const b = state.stopNull ? '' : state.stop;
+    const c = state.step === 1 ? '' : ':' + state.step;
+    return 's[' + a + ':' + b + c + ']';
+  }
+
+  function render() {
+    const s = strI.value.length ? strI.value : ' ';
+    const L = s.length;
+    // keep sliders in range of the current string
+    startI.min = stopI.min = -L; startI.max = stopI.max = L;
+    const start = state.startNull ? null : state.start;
+    const stop = state.stopNull ? null : state.stop;
+    const idx = sliceIndices(L, start, stop, state.step);
+    const sel = new Set(idx);
+
+    $('#vstart').textContent = state.startNull ? 'None' : state.start;
+    $('#vstop').textContent = state.stopNull ? 'None' : state.stop;
+
+    // ruler
+    const ruler = $('#ruler'); ruler.innerHTML = '';
+    const row = el('div', { style: { display: 'flex', gap: '4px', minWidth: 'min-content' } });
+    for (let i = 0; i < L; i++) {
+      const on = sel.has(i);
+      const cell = el('div', { style: { textAlign: 'center', minWidth: '34px' } });
+      cell.appendChild(el('div', { class: 'small muted', text: String(i), style: { fontFamily: 'var(--mono)' } }));
+      const box = el('div', {
+        text: s[i] === ' ' ? '␣' : s[i],
+        style: {
+          fontFamily: 'var(--mono)', fontSize: '18px', padding: '8px 0', borderRadius: '8px',
+          border: '1px solid ' + (on ? '#b6e3c4' : 'var(--border)'),
+          background: on ? '#eafaef' : '#fff', color: on ? '#1d5b30' : 'var(--ink)',
+          fontWeight: on ? '700' : '400',
+        },
+      });
+      cell.appendChild(box);
+      cell.appendChild(el('div', { class: 'small', text: String(i - L), style: { fontFamily: 'var(--mono)', color: '#b9770e' } }));
+      row.appendChild(cell);
+    }
+    ruler.appendChild(row);
+
+    $('#expr').textContent = exprText(L);
+    const out = idx.map((i) => s[i]).join('');
+    $('#res').textContent = "'" + out + "'";
+
+    let msg;
+    if (state.step < 0) msg = 'Negative step → walk right-to-left, so the result reads backwards.';
+    else if (Math.abs(state.step) > 1) msg = 'Step ' + state.step + ' → keep every ' + state.step + 'ᵗʰ character, skipping the rest.';
+    else msg = 'Forward step: characters from index ' + (state.startNull ? 0 : state.start) +
+      ' up to but NOT including ' + (state.stopNull ? L : state.stop) + '.';
+    $('#explain').textContent = idx.length + ' character' + (idx.length === 1 ? '' : 's') + ' selected. ' + msg;
+  }
+
+  startI.addEventListener('input', () => { state.start = +startI.value; state.startNull = false; render(); });
+  stopI.addEventListener('input', () => { state.stop = +stopI.value; state.stopNull = false; render(); });
+  stepI.addEventListener('change', () => { state.step = +stepI.value; render(); });
+  strI.addEventListener('input', render);
+
+  const PRESETS = {
+    all:    { startNull: true, stopNull: true, step: 1 },
+    rev:    { startNull: true, stopNull: true, step: -1 },
+    every2: { startNull: true, stopNull: true, step: 2 },
+    first3: { startNull: true, start: 0, stop: 3, stopNull: false, step: 1 },
+    last3:  { startNull: false, start: -3, stopNull: true, step: 1 },
+    nolast: { startNull: true, stop: -1, stopNull: false, step: 1 },
+  };
+  Ill.$$('button[data-p]').forEach((b) => b.addEventListener('click', () => {
+    const p = PRESETS[b.dataset.p];
+    state = Object.assign({ start: 0, stop: strI.value.length, step: 1, startNull: false, stopNull: false }, p);
+    stepI.value = String(state.step);
+    if (!state.startNull) startI.value = String(state.start);
+    if (!state.stopNull) stopI.value = String(state.stop);
+    render();
+  }));
+
+  render();
+})();
+</script>
+</body>
+</html>

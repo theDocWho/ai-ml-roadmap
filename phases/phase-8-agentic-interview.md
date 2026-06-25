@@ -12,7 +12,7 @@ workflow/agent taxonomy) and **interview fundamentals** are stable.
 - [Anthropic — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) + [cookbook patterns](https://github.com/anthropics/anthropic-cookbook/tree/main/patterns/agents)
 - [HF Agents Course](https://huggingface.co/learn/agents-course) · [LangChain Academy (free)](https://academy.langchain.com) · [DeepLearning.AI agent short courses](https://www.deeplearning.ai/short-courses/)
 - [Chip Huyen — *Introduction to ML Interviews* (free book)](https://huyenchip.com/ml-interviews-book/) · [NeetCode (DSA)](https://neetcode.io) · 🆕 [Vizuara](https://www.youtube.com/@vizuara)
-- 🎨 **[Illustrated explainer](../illustrated/index.html)** (interactive, offline): [Agent patterns — workflows vs agents](../illustrated/agent-patterns.html) (chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer).
+- 🎨 **[Illustrated explainer](../illustrated/index.html)** (interactive, offline): [Agent patterns — workflows vs agents](../illustrated/8-agentic/agent-patterns.html) (chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer).
 
 ---
 
@@ -20,8 +20,8 @@ workflow/agent taxonomy) and **interview fundamentals** are stable.
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 1 | **Workflow vs agent** + when NOT to use an agent | [Anthropic — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) · 🎨 [Visualize: workflow vs agent](../illustrated/agent-patterns.html) | 1h |
-| 2 | Patterns: chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer | [Anthropic cookbook — agent patterns](https://github.com/anthropics/anthropic-cookbook/tree/main/patterns/agents) · 🎨 [Visualize: the 5 patterns](../illustrated/agent-patterns.html) | 2h |
+| 1 | **Workflow vs agent** + when NOT to use an agent | [Anthropic — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) · 🎨 [Visualize: workflow vs agent](../illustrated/8-agentic/agent-patterns.html) | 1h |
+| 2 | Patterns: chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer | [Anthropic cookbook — agent patterns](https://github.com/anthropics/anthropic-cookbook/tree/main/patterns/agents) · 🎨 [Visualize: the 5 patterns](../illustrated/8-agentic/agent-patterns.html) | 2h |
 | 3 | **Multi-agent orchestration** (CrewAI) | [DeepLearning.AI — "Multi AI Agent Systems with crewAI" (free)](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) · 📖 [CrewAI docs](https://docs.crewai.com) | 1.5h |
 | 4 | Stateful multi-agent with LangGraph | [LangChain Academy](https://academy.langchain.com) — **"LangGraph"** modules · 📖 [LangGraph docs](https://langchain-ai.github.io/langgraph/) | 2h |
 | 5 | Agent **evaluation & guardrails** | [HF Agents Course](https://huggingface.co/learn/agents-course) — **"Evaluation"** unit | 1h |

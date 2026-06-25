@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Illustrated RAG Pipeline</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 6 · ties to BYO-9</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>The Illustrated RAG Pipeline</h1>
+    <p class="lede">Retrieval-Augmented Generation, end to end — type a question and watch it
+      <b>chunk → embed → retrieve → ground → generate</b>, fully offline, no API calls.</p>
+    <div class="tagrow">
+      <span class="tag">retrieval</span><span class="tag">embeddings</span>
+      <span class="tag">cosine similarity</span><span class="tag byo">BYO-9 RAG engine</span>
+    </div>
+  </div>
+
+  <h2>The problem RAG solves</h2>
+  <p>A large language model is, at heart, a very sophisticated <em>autocomplete</em>: it predicts the next
+  word using patterns frozen into its weights during training. That gives it two stubborn limitations.
+  First, its knowledge is <b>frozen and generic</b> — it knows nothing about your company's wiki, last
+  night's incident report, or a PDF you just downloaded. Second, when it doesn't know something, it often
+  <b>makes up</b> a fluent, confident, wrong answer (a "hallucination"), because generating plausible text
+  is exactly what it was trained to do.</p>
+  <p>You could re-train the model on your documents, but that's slow, expensive, and goes stale the moment
+  your data changes. <b>Retrieval-Augmented Generation (RAG)</b> takes a cheaper, smarter route: instead of
+  forcing the model to <em>memorize</em> your knowledge, you let it <em>look things up</em> at the moment it
+  answers.</p>
+
+  <div class="callout"><b>The open-book exam analogy.</b> A closed-book exam tests what you memorized — and
+  you'll bluff when you forget. RAG turns it into an <b>open-book exam</b>: right before answering, you flip
+  to the most relevant pages and write your answer <em>from them</em>. The model's reasoning ability stays;
+  the facts come from your documents. That's why a good RAG answer is both fluent <em>and</em> grounded — and
+  can point to its sources.</p></div>
+
+  <h2>How it works, end to end</h2>
+  <p>RAG is two halves glued together. <b>Retrieval</b> finds the passages most relevant to the question;
+  <b>generation</b> writes an answer using only those passages. The trick that makes retrieval work is
+  <b>embeddings</b>: every passage (and the question) is converted into a vector of numbers so that text with
+  <em>similar meaning</em> ends up <em>close together</em> in vector space. We then rank passages by how close
+  they are to the question — usually with <b>cosine similarity</b> (the angle between two vectors). The
+  closest few get pasted into the prompt as context.</p>
+  <p>Below is a tiny but <em>real</em> RAG engine running entirely in your browser — a bag-of-words embedder,
+  cosine search, and a templated generator (no API calls). Type a question and watch each stage light up;
+  the same five stages run in every production RAG system, just with stronger components.</p>
+
+  <!-- pipeline diagram -->
+  <div class="panel">
+    <h4>The pipeline</h4>
+    <svg id="pipe" viewBox="0 0 860 120" role="img" aria-label="RAG pipeline stages"></svg>
+    <div class="btnrow">
+      <button id="run">▶ Run the pipeline</button>
+      <button class="ghost" id="step">Step ▸</button>
+      <span class="muted small" id="stagecap">Type a question and press Run.</span>
+    </div>
+  </div>
+
+  <!-- query -->
+  <div class="panel">
+    <h4>1 · Your question</h4>
+    <div class="controls">
+      <div class="ctrl" style="flex:1; min-width:280px;">
+        <label for="q">Ask the knowledge base <span class="val"></span></label>
+        <input id="q" type="text" value="How does RAG ground an LLM?">
+      </div>
+      <div class="ctrl" style="min-width:120px;">
+        <label for="k">top-k retrieved <span class="val" id="kval">2</span></label>
+        <input id="k" type="range" min="1" max="4" value="2">
+      </div>
+    </div>
+    <div class="chips" id="qchips"></div>
+    <p class="small muted">Try: “what is a vector database?”, “what is prompt injection?”, “why split documents?”</p>
+  </div>
+
+  <h3>Step 2, in depth — turning meaning into numbers</h3>
+  <p>This is the heart of RAG, so it's worth slowing down. To find "relevant" passages we need a way to
+  measure <em>relevance</em> mathematically. The idea: convert each passage into a list of numbers (a
+  <b>vector</b>, or "embedding") chosen so that passages about similar things have similar vectors. Real
+  systems use a trained neural network (like <code>sentence-transformers</code>) for this; our toy uses a
+  simpler <b>bag-of-words</b> vector — one slot per vocabulary word, counting how often it appears — which
+  is enough to see the mechanics.</p>
+  <p>To compare two vectors we use <b>cosine similarity</b>: the cosine of the angle between them. It runs
+  from <code>1.0</code> (pointing the same way → very similar) through <code>0</code> (perpendicular →
+  unrelated). We use the <em>angle</em>, not the distance, so a long document and a short query can still
+  match if they point the same direction. We embed the question, compare it to every passage, and keep the
+  <b>top-k</b> highest-scoring ones. (Curious about the geometry? The
+  <a href="embeddings.html">embeddings explainer</a> lets you drag vectors and watch cosine change.)</p>
+  <p>One detail hides a real tradeoff: <b>chunking</b>. Documents are split into small passages
+  <em>before</em> embedding. Chunks too large dilute the signal (one vector tries to represent many ideas);
+  too small and you lose context. Chunk size and overlap are among the biggest levers on RAG quality.</p>
+
+  <!-- knowledge base + retrieval -->
+  <div class="panel">
+    <h4>2 · Knowledge base → embed → retrieve (cosine similarity)</h4>
+    <p class="small muted">Each passage is embedded into a vector; we rank passages by cosine similarity to the question.
+      Retrieved passages are <span class="chip on">highlighted</span>.</p>
+    <div id="kb"></div>
+  </div>
+
+  <h3>Step 3, in depth — grounding the model</h3>
+  <p>Now we do something almost embarrassingly simple: we paste the retrieved passages straight into the
+  prompt, with an instruction like <em>"Answer using only the context below, and cite your sources."</em>
+  The model never "knew" these facts — it's reading them right now, the way you'd read the page you just
+  flipped to in an open-book exam. This single move is what makes RAG answers <b>grounded</b>: the facts
+  come from your documents, and instructing the model to stick to them sharply reduces hallucination.</p>
+  <p>The numbered tags <code>[1]</code>, <code>[2]</code> aren't decoration — they let the model (and the
+  reader) <b>cite</b> exactly which passage supports each claim, so a human can verify the answer instead
+  of trusting it. In regulated domains (finance, security, medicine) this traceability is often the whole
+  point. Watch the prompt rebuild as you change the question or <code>top-k</code>.</p>
+
+  <!-- prompt -->
+  <div class="panel">
+    <h4>3 · Grounded prompt (what the LLM actually sees)</h4>
+    <pre id="prompt" style="white-space:pre-wrap; font-family:var(--mono); font-size:13px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:14px; margin:0;"></pre>
+  </div>
+
+  <!-- answer -->
+  <div class="panel">
+    <h4>4 · Generated answer (with citations)</h4>
+    <div id="answer" style="font-size:1.02rem;"></div>
+  </div>
+
+  <h2>What RAG is good at — and where it breaks</h2>
+  <p>RAG shines when answers should come from a <b>specific, changing, or private</b> body of knowledge:
+  company docs, product manuals, legal/financial filings, a security knowledge base. You can update the
+  knowledge by changing documents — no retraining — and every answer can cite its evidence.</p>
+  <p>But RAG is only as good as its <b>retrieval</b>. If the right passage isn't retrieved, the model can't
+  use it — "garbage in, garbage out." Common failure modes and their fixes:</p>
+  <ul>
+    <li><b>Wrong chunks retrieved</b> → tune chunk size/overlap; add a <em>re-ranker</em> that re-scores the
+      top candidates more carefully.</li>
+    <li><b>Vocabulary mismatch</b> (question and answer use different words) → real embedding models handle
+      this far better than our bag-of-words toy; you can also rewrite/expand the query first.</li>
+    <li><b>The answer spans many passages</b> → retrieve more, or summarize retrieved context before answering.</li>
+    <li><b>The model ignores the context and bluffs anyway</b> → stronger "use only the context" instructions,
+      and <em>evaluation</em> (e.g. RAGAS faithfulness) to catch it.</li>
+  </ul>
+
+  <div class="note green"><b>The big picture:</b> the model never "memorized" your docs — it just read the
+  retrieved context. Swap the bag-of-words embedder for <code>sentence-transformers</code>, the in-memory
+  search for a real vector database, and the templated generator for an LLM, and you have a production RAG
+  app. Build exactly that, piece by piece, in <a href="../../challenges/byo-09-rag/README.md">BYO-9</a>, and
+  see the retrieval internals in the <a href="vector-search.html">vector-search explainer</a>.</div>
+
+  <div class="footer">
+    Next: <a href="vector-search.html">Vector search (brute-force vs ANN) →</a> ·
+    <a href="embeddings.html">Embeddings & cosine →</a> · <a href="../index.html">All explainers</a>
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+const { el, cosine, $, $$ } = Ill;
+
+// ---- tiny knowledge base (security/RAG themed to match the roadmap) ----
+const DOCS = [
+  "Retrieval augmented generation grounds an LLM by retrieving relevant documents and adding them to the prompt as context.",
+  "Embeddings map text to vectors so that semantically similar text has high cosine similarity.",
+  "A vector database stores embeddings and returns the nearest neighbors for a query vector.",
+  "Prompt injection is an attack where malicious text overrides the system instructions of an LLM.",
+  "Chunking splits long documents into smaller passages before embedding them for retrieval.",
+  "Citations let a RAG answer point back to the source passages it used, improving trust.",
+];
+const STOP = new Set("a an the of to and is are by that it its into them so for as with on in be can has have you your".split(" "));
+function toks(s){ return s.toLowerCase().replace(/[^a-z\s]/g," ").split(/\s+/).filter(w=>w && !STOP.has(w)); }
+const VOCAB = [...new Set(DOCS.flatMap(toks))].sort();
+function embed(s){ const t = toks(s); return VOCAB.map(w => t.filter(x=>x===w).length); }
+const DOC_VECS = DOCS.map(embed);
+
+// ---- pipeline diagram ----
+const STAGES = ["Question","Embed","Retrieve","Ground","Generate"];
+const pipe = $("#pipe");
+function drawPipe(active){
+  pipe.innerHTML = "";
+  const W = 860, n = STAGES.length, bw = 150, gap = (W - n*bw)/(n-1);
+  STAGES.forEach((s,i)=>{
+    const x = i*(bw+gap), on = i===active, done = active>i;
+    pipe.appendChild(el("rect",{x, y:34, width:bw, height:52, rx:11,
+      fill: on?"#1456b0":done?"#eafaef":"#f3f6fb", stroke: on?"#1456b0":"#cfd8e6", "stroke-width":on?0:1}));
+    pipe.appendChild(el("text",{x:x+bw/2, y:65, "text-anchor":"middle",
+      "font-size":15, "font-family":"var(--sans)", "font-weight":on?700:600,
+      fill: on?"#fff":done?"#0a7d2c":"#1a2b4a", text:(done?"✓ ":"")+s}));
+    if(i<n-1){ const ax=x+bw, ay=60;
+      pipe.appendChild(el("path",{d:`M${ax} ${ay} L${ax+gap} ${ay}`, stroke:"#9fb2cf","stroke-width":2}));
+      pipe.appendChild(el("path",{d:`M${ax+gap-8} ${ay-5} L${ax+gap} ${ay} L${ax+gap-8} ${ay+5}`, fill:"none", stroke:"#9fb2cf","stroke-width":2}));
+    }
+  });
+}
+drawPipe(-1);
+
+// ---- run ----
+function compute(){
+  const q = $("#q").value.trim() || "?";
+  const k = +$("#k").value;
+  const qv = embed(q);
+  const scored = DOCS.map((d,i)=>({i, d, s: cosine(qv, DOC_VECS[i])}))
+                     .sort((a,b)=>b.s-a.s);
+  const top = scored.slice(0,k).filter(x=>x.s>0);
+  return { q, k, qv, scored, top };
+}
+
+function renderQChips(){
+  const box = $("#qchips"); box.innerHTML="";
+  toks($("#q").value).forEach(w=> box.appendChild(el("span",{class:"chip sel",text:w})));
+  if(!box.children.length) box.appendChild(el("span",{class:"muted small",text:"(no keywords)"}));
+}
+
+function renderKB(state){
+  const kb = $("#kb"); kb.innerHTML="";
+  const topIdx = new Set(state.top.map(t=>t.i));
+  state.scored.forEach(({i,d,s})=>{
+    const row = el("div",{class:"barrow", style:{gridTemplateColumns:"34px 1fr 200px", margin:"10px 0"}});
+    row.appendChild(el("div",{class:"chip "+(topIdx.has(i)?"on":""), text:"["+(i+1)+"]"}));
+    row.appendChild(el("div",{class:topIdx.has(i)?"":"muted", style:{fontSize:"14px"}, text:d}));
+    const meter = el("div",{});
+    const bar = el("div",{class:"bar", style:{width:Math.round(s*100)+"%", height:"10px",
+      background: topIdx.has(i)?"#0a7d2c":"#9fb2cf"}});
+    meter.appendChild(bar);
+    meter.appendChild(el("div",{class:"small muted", style:{fontFamily:"var(--mono)"}, text:"cos = "+s.toFixed(2)}));
+    row.appendChild(meter);
+    kb.appendChild(row);
+  });
+}
+
+function buildPrompt(state){
+  const ctx = state.top.map((t,n)=>`[${n+1}] ${t.d}`).join("\n");
+  return `Answer the question using ONLY the context. Cite sources as [n].\n\nContext:\n${ctx||"(nothing retrieved)"}\n\nQuestion: ${state.q}\nAnswer:`;
+}
+
+function generate(state){
+  if(!state.top.length) return el("span",{class:"muted",text:"No relevant passage found — the model would say it doesn't know."});
+  // templated "LLM": stitch the retrieved passages and cite them
+  const span = el("div");
+  span.appendChild(document.createTextNode("Based on the retrieved context: "));
+  state.top.forEach((t,n)=>{
+    const sent = t.d.replace(/\.$/,"");
+    span.appendChild(document.createTextNode(sent + " "));
+    const cite = el("a",{href:"#", class:"chip on", style:{textDecoration:"none"},
+      text:"["+(n+1)+"]", title:t.d});
+    cite.addEventListener("click",(e)=>e.preventDefault());
+    span.appendChild(cite);
+    span.appendChild(document.createTextNode(n<state.top.length-1?". " : "."));
+  });
+  return span;
+}
+
+let timer=null, stage=-1;
+function fullRun(){
+  renderQChips();
+  const st = compute();
+  renderKB(st);
+  $("#prompt").textContent = buildPrompt(st);
+  const ans = $("#answer"); ans.innerHTML=""; ans.appendChild(generate(st));
+  return st;
+}
+function animate(){
+  clearInterval(timer); stage=0; drawPipe(0);
+  const caps=["Reading your question…","Embedding query + passages…","Ranking by cosine similarity…","Assembling the grounded prompt…","Generating the answer with citations…"];
+  $("#stagecap").textContent = caps[0];
+  fullRun();
+  timer=setInterval(()=>{
+    stage++;
+    if(stage>=STAGES.length){ clearInterval(timer); drawPipe(STAGES.length); $("#stagecap").textContent="Done — answer grounded in retrieved passages."; return; }
+    drawPipe(stage); $("#stagecap").textContent=caps[stage];
+  }, 750);
+}
+
+$("#run").addEventListener("click", animate);
+$("#step").addEventListener("click", ()=>{ stage=Math.min(stage+1, STAGES.length); drawPipe(stage===STAGES.length?STAGES.length:stage); fullRun(); });
+$("#q").addEventListener("input", ()=>{ fullRun(); });
+$("#k").addEventListener("input", (e)=>{ $("#kval").textContent=e.target.value; fullRun(); });
+fullRun();
+</script>
+</body>
+</html>

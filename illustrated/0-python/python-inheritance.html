@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inheritance & the MRO — how Python finds a method</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Inheritance &amp; the MRO</h1>
+    <p class="lede">Subclassing in Python looks like Java's <code>extends</code>, but method lookup is governed
+      by an explicit, inspectable list called the <b>method resolution order</b> (MRO). Calling
+      <code>obj.method()</code> is just "walk the MRO until a class defines it." <code>super()</code> means
+      "continue from <em>here</em> in that same list."</p>
+    <div class="tagrow">
+      <span class="tag">extends → (Base)</span><span class="tag">override</span>
+      <span class="tag">super()</span><span class="tag">MRO</span>
+      <span class="tag">is-a</span>
+    </div>
+  </div>
+
+  <h2>A subclass is its parent, plus a little</h2>
+  <p><code>class SavingsAccount(Account)</code> declares that a savings account <b>is an</b> account: it gets
+  every attribute and method of <code>Account</code> for free, and may <b>add</b> new ones or <b>override</b>
+  existing ones. Every class also implicitly inherits from <code>object</code>, the root of all Python types —
+  which is where <code>__init__</code>, <code>__str__</code>, and friends ultimately come from.</p>
+  <p>When you call a method, Python doesn't guess — it consults the class's MRO, a definite ordering of the
+  class and its ancestors, and uses the <b>first</b> class in that list that defines the method. For a simple
+  chain the MRO is exactly bottom-to-top: <code>[SavingsAccount, Account, object]</code>. Toggle whether the
+  subclass overrides <code>describe()</code>, pick a method to call, and watch the search walk the chain:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>SavingsAccount overrides describe()?</label>
+        <select id="override">
+          <option value="yes">yes — defines its own describe()</option>
+          <option value="no">no — inherits Account.describe()</option>
+        </select></div>
+      <div class="ctrl"><label>call on a SavingsAccount instance</label>
+        <select id="call">
+          <option value="describe">obj.describe()</option>
+          <option value="add_interest">obj.add_interest()</option>
+          <option value="deposit">obj.deposit(10)</option>
+          <option value="explode">obj.explode()</option>
+        </select></div>
+    </div>
+
+    <div id="chain" style="display:flex; flex-direction:column; gap:0; align-items:center; margin:8px 0;"></div>
+    <p class="note" id="msg" style="min-height:22px;"></p>
+  </div>
+
+  <h2><code>super()</code>: extend, don't replace</h2>
+  <p>Overriding usually means "do what the parent did, <em>and then</em> a bit more" — not "throw the parent's
+  work away." <code>super()</code> gives you the parent's version (precisely: the <em>next</em> class in the
+  MRO). The canonical use is in <code>__init__</code>, so the subclass sets up its own fields <em>and</em> lets
+  the base class set up the shared ones:</p>
+  <div style="font-family:var(--mono); font-size:13px; background:#eafaef; border:1px solid #b6e3c4; border-radius:10px; padding:12px 14px; color:#1d5b30; line-height:1.7;">
+class SavingsAccount(Account):<br>
+&nbsp;&nbsp;def __init__(self, owner, balance, rate):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;super().__init__(owner, balance)&nbsp;&nbsp;<span style="color:#5b6678"># run Account.__init__ first</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;self.rate = rate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#5b6678"># then add savings-specific state</span>
+  </div>
+  <p>Without that <code>super().__init__(...)</code>, the parent's setup never runs and <code>self.owner</code>
+  wouldn't exist. The same pattern works for any overridden method: call <code>super().describe()</code> to
+  reuse the parent's behaviour and append to it.</p>
+
+  <h2>Inspect it yourself; prefer composition when "is-a" is a stretch</h2>
+  <p>Because the MRO is explicit, you can print it: <code>SavingsAccount.__mro__</code> (or
+  <code>.mro()</code>) lists exactly the classes Python will search, in order. For multiple inheritance Python
+  computes the order with an algorithm called <b>C3 linearization</b> that keeps it consistent — but if you
+  find yourself reasoning hard about diamond hierarchies, that's usually a sign to prefer <b>composition</b>
+  (hold an object as an attribute) over deep inheritance. Subclass only for a genuine <em>is-a</em>
+  relationship.</p>
+
+  <div class="note green"><b>Takeaways:</b> <code>class Sub(Base)</code> inherits everything and may override.
+  <code>obj.method()</code> searches the <b>MRO</b> — <code>[Sub, …, object]</code> — and uses the first match.
+  <code>super()</code> calls the <em>next</em> class in that list, letting you extend rather than replace
+  (especially <code>__init__</code>). Inspect with <code>__mro__</code>; favour composition over tall trees.</div>
+
+  <p class="small muted">Builds on <a href="python-oop.html">classes &amp; the namespace model</a>. Step through
+  a <code>super()</code> call in <a href="https://pythontutor.com/" target="_blank" rel="noopener">Python Tutor</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0C, topic 15).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+
+  // which methods each class defines
+  function defs() {
+    const override = $('#override').value === 'yes';
+    return {
+      SavingsAccount: ['add_interest'].concat(override ? ['describe'] : []),
+      Account: ['describe', 'deposit', '__init__'],
+      object: ['__init__', '__str__', '__repr__'],
+    };
+  }
+  const MRO = ['SavingsAccount', 'Account', 'object'];
+  const SUB = { SavingsAccount: 'extends Account', Account: 'extends object', object: 'the root type' };
+
+  function render() {
+    const method = $('#call').value;
+    const D = defs();
+    // find first class in MRO that defines the method
+    let foundAt = -1;
+    for (let i = 0; i < MRO.length; i++) { if (D[MRO[i]].includes(method)) { foundAt = i; break; } }
+
+    const chain = $('#chain'); chain.innerHTML = '';
+    MRO.forEach((cname, i) => {
+      const searched = foundAt === -1 || i <= foundAt;
+      const isHit = i === foundAt;
+      const passedOver = searched && !isHit && foundAt !== -1;
+      const card = el('div', {
+        style: {
+          width: '320px', maxWidth: '100%', borderRadius: '10px', padding: '10px 14px',
+          border: '2px solid ' + (isHit ? '#0a7d2c' : passedOver ? '#e0a0a0' : 'var(--border)'),
+          background: isHit ? '#eafaef' : passedOver ? '#fdecea' : '#fff',
+          opacity: searched ? '1' : '0.5',
+        },
+      });
+      const head = el('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' } });
+      head.appendChild(el('b', { text: 'class ' + cname, style: { fontFamily: 'var(--mono)', color: 'var(--navy)' } }));
+      head.appendChild(el('span', { class: 'small muted', text: SUB[cname] }));
+      card.appendChild(head);
+      card.appendChild(el('div', { class: 'small muted', style: { fontFamily: 'var(--mono)', marginTop: '4px' }, text: 'defines: ' + D[cname].join(', ') }));
+      let badge = '';
+      if (isHit) badge = '✓ found here — run this one';
+      else if (passedOver) badge = "✗ no " + method + "() here → keep walking";
+      else if (!searched) badge = '(not reached)';
+      if (badge) card.appendChild(el('div', { class: 'small', style: { marginTop: '4px', color: isHit ? '#0a7d2c' : passedOver ? '#c0392b' : 'var(--muted)', fontWeight: '600' }, text: badge }));
+      chain.appendChild(card);
+      if (i < MRO.length - 1) chain.appendChild(el('div', { text: '↓', style: { color: 'var(--muted)', fontSize: '20px', lineHeight: '1.2' } }));
+    });
+
+    const D2 = defs(); void D2;
+    if (foundAt === -1) {
+      $('#msg').innerHTML = 'No class in the MRO defines <code>' + method + '()</code> → walking the whole chain finds nothing → <b style="color:#c0392b">AttributeError</b>.';
+    } else {
+      const cname = MRO[foundAt];
+      const note = foundAt === 0 ? ' — the subclass\'s own version wins (this is what "override" means).'
+        : ' — inherited from <code>' + cname + '</code> because no closer class defined it.';
+      $('#msg').innerHTML = 'Search <code>[' + MRO.join(', ') + ']</code> → first match at <b>' + cname + '</b>' + note;
+    }
+  }
+  $('#override').addEventListener('change', render);
+  $('#call').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

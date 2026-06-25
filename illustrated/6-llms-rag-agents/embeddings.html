@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embeddings & Cosine Similarity</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 6 · embeddings</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Embeddings & Cosine Similarity</h1>
+    <p class="lede">Embeddings turn meaning into <b>vectors</b>; <b>cosine similarity</b> measures whether
+      two vectors point the same way. Drag the arrows, search by meaning, and do the famous
+      <code>king − man + woman ≈ queen</code> analogy.</p>
+    <div class="tagrow"><span class="tag">vectors</span><span class="tag">cosine</span><span class="tag">semantic search</span><span class="tag">analogies</span></div>
+  </div>
+
+  <h2>What is an embedding?</h2>
+  <p>Computers don't understand words — they understand numbers. An <b>embedding</b> is how we bridge that
+  gap: it's a vector (a list of numbers) that represents a piece of meaning — a word, a sentence, an image,
+  even a user. The magic isn't the numbers themselves; it's <em>how they're arranged</em>. Embedding models
+  are trained so that things with <b>similar meaning land close together</b> in the vector space, and
+  unrelated things land far apart.</p>
+  <p>That one property is enormously powerful, because it turns <b>meaning into geometry</b>. Once meaning is
+  geometry, three hard problems become easy:</p>
+  <ul>
+    <li>"How similar are these?" → <b>measure the angle</b> between their vectors (Part 1).</li>
+    <li>"Find me things like this" → <b>nearest-neighbor search</b> in the space (Part 2).</li>
+    <li>"king is to man as ? is to woman" → <b>do algebra</b> on the vectors (Part 3).</li>
+  </ul>
+  <p>Real embeddings live in hundreds or thousands of dimensions (you can't draw those), but every intuition
+  below works the same in 2-D, so we'll stay where you can see it.</p>
+
+  <h2>1 · Cosine similarity = direction, not length</h2>
+  <p>To use embeddings we need to <em>measure</em> similarity. The standard tool is <b>cosine
+  similarity</b>: the cosine of the angle between two vectors, <code>(A·B)/(|A||B|)</code>. Why the angle
+  and not plain distance? Because in embedding spaces, <b>direction carries the meaning</b> and length
+  often just reflects incidental things like text length or word frequency. Cosine deliberately
+  <em>ignores length</em> — a short query and a long document can score a perfect <code>1.0</code> if they
+  point the same way. It ranges from <code>1</code> (same direction → very similar), through <code>0</code>
+  (perpendicular → unrelated), to <code>−1</code> (opposite → contrasting).</p>
+  <p>Drag the tips of <b style="color:#1456b0">A</b> and <b style="color:#0a7d2c">B</b> and watch the number
+  move. Then tick "show unit vectors": both arrows snap to length 1 but the cosine <em>doesn't change</em> —
+  proof that only the angle matters.</p>
+  <div class="panel">
+    <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+      <svg id="vec" viewBox="0 0 360 300" style="border:1px solid var(--border); border-radius:10px; background:#fff; touch-action:none; flex:1; min-width:300px;" role="img" aria-label="two draggable vectors"></svg>
+      <div style="min-width:200px;">
+        <div class="barrow" style="grid-template-columns:120px 1fr;"><span class="lbl">cosine(A,B)</span><b id="cos" style="font-size:1.4rem; color:#1456b0; font-family:var(--mono)"></b></div>
+        <div class="barrow" style="grid-template-columns:120px 1fr;"><span class="lbl">angle</span><span id="ang" class="num"></span></div>
+        <div class="barrow" style="grid-template-columns:120px 1fr;"><span class="lbl">A · B (dot)</span><span id="dot" class="num"></span></div>
+        <div class="barrow" style="grid-template-columns:120px 1fr;"><span class="lbl">|A|, |B|</span><span id="mags" class="num"></span></div>
+        <label class="small" style="display:flex; gap:8px; align-items:center; margin-top:10px;"><input type="checkbox" id="unit"> show unit vectors (length 1)</label>
+        <p class="small muted" id="interp" style="margin-top:8px;"></p>
+      </div>
+    </div>
+  </div>
+
+  <h2>2 · Search by meaning</h2>
+  <p>Old-style <b>keyword search</b> matches exact words: search "car" and you miss a document that only
+  says "automobile." <b>Semantic search</b> fixes this by comparing <em>embeddings</em> instead of words —
+  so text with the same meaning scores high even when it shares no vocabulary. Below, each sentence is
+  embedded and ranked by cosine similarity to your chosen query. Watch the pairs that mean the same thing
+  ("the cat sat on the warm mat" / "a kitten rested on a cozy rug") rise to the top.</p>
+  <p class="small muted">(Our toy uses bag-of-words vectors, so it leans on shared words; a real embedding
+  model would match "cat"↔"kitten" and "fell"↔"dropped" even more strongly. Same mechanism, stronger vectors —
+  and exactly what powers <a href="rag-pipeline.html">RAG retrieval</a>.)</p>
+  <div class="panel">
+    <div class="ctrl" style="max-width:420px;">
+      <label for="qsel">Query</label>
+      <select id="qsel"></select>
+    </div>
+    <div id="results" style="margin-top:10px;"></div>
+  </div>
+
+  <h2>3 · Word arithmetic — the analogy trick</h2>
+  <p>Here's the result that made embeddings famous (word2vec, 2013). Because related words end up in
+  <em>related directions</em>, you can do <b>algebra on meaning</b>. The vector from <b>man</b> to
+  <b>woman</b> turns out to be roughly the same as the vector from <b>king</b> to <b>queen</b> — a
+  consistent "gender direction." So if you take <code>king</code>, subtract the male part, and add the
+  female part — <code>king − man + woman</code> — you land almost exactly on <code>queen</code>. Nobody
+  programmed that in; the model discovered these directions purely from how words co-occur in text.</p>
+  <p>Press the button to compute the result vector (✦) and find its nearest word. This is why embeddings
+  feel like they "understand" — relationships in the world show up as <b>geometry</b> in the space.</p>
+  <div class="panel">
+    <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+      <svg id="words" viewBox="-260 -150 520 300" style="border:1px solid var(--border); border-radius:10px; background:#fff; flex:1; min-width:300px;" role="img" aria-label="word vector space"></svg>
+      <div style="min-width:200px;">
+        <div class="btnrow"><button id="analogy">▶ king − man + woman = ?</button></div>
+        <div id="analogyout" class="callout small" style="display:none;"></div>
+        <p class="small muted">The result vector (✦) lands nearest to <b>queen</b> — the model learned the
+        "royal" and "gender" directions from data.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li><b>An embedding turns meaning into a vector</b> — trained so similar things are close.</li>
+    <li><b>Cosine similarity</b> measures <em>direction</em> (angle), ignoring length — the standard way to
+      score "how similar."</li>
+    <li><b>Semantic search</b> = nearest neighbors in embedding space; it matches meaning, not keywords.</li>
+    <li><b>Analogies</b> work because relationships become consistent directions you can add and subtract.</li>
+    <li>Where do they come from? A neural network trained on huge text (word2vec, GloVe, or modern
+      <code>sentence-transformers</code>) learns the layout from data — you just <em>use</em> the vectors.</li>
+  </ul>
+  <div class="note green"><b>The big picture:</b> embeddings + cosine similarity are the quiet foundation of
+  modern AI retrieval — they power semantic search, recommendations, and the retrieval step in
+  <a href="rag-pipeline.html">RAG</a>. The "find the nearest vectors fast" problem is its own engineering
+  challenge — see the <a href="vector-search.html">vector-search explainer</a>.</div>
+
+  <div class="footer"><a href="../index.html">All explainers</a> · <a href="../../phases/phase-6-llms-rag-agents.md">Phase 6 guide</a></div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+const { el, $, $$, cosine, dot, norm } = Ill;
+
+/* ---- Part 1: draggable vectors ---- */
+const vec=$("#vec"), OX=180, OY=160, S=46;
+let A={x:2,y:-1.4}, B={x:1.2,y:1.6}, drag=null;
+const toPix=(p)=>({x:OX+p.x*S, y:OY-p.y*S});
+function drawVec(){
+  const unit=$("#unit").checked;
+  const a = unit? scale(A,1/Math.hypot(A.x,A.y)) : A, b = unit? scale(B,1/Math.hypot(B.x,B.y)) : B;
+  vec.innerHTML="";
+  // axes
+  vec.appendChild(el("line",{x1:10,y1:OY,x2:350,y2:OY,stroke:"#e3e9f2"}));
+  vec.appendChild(el("line",{x1:OX,y1:10,x2:OX,y2:290,stroke:"#e3e9f2"}));
+  // unit circle hint
+  if(unit) vec.appendChild(el("circle",{cx:OX,cy:OY,r:S,fill:"none",stroke:"#eef2f8"}));
+  arrow(a,"#1456b0","A"); arrow(b,"#0a7d2c","B");
+  // angle arc
+  stats();
+}
+function scale(p,s){return {x:p.x*s,y:p.y*s};}
+function arrow(p,color,label){
+  const t=toPix(p);
+  vec.appendChild(el("line",{x1:OX,y1:OY,x2:t.x,y2:t.y,stroke:color,"stroke-width":3}));
+  vec.appendChild(el("circle",{cx:t.x,cy:t.y,r:7,fill:color,style:{cursor:"grab"},"data-h":label}));
+  vec.appendChild(el("text",{x:t.x+(p.x>=0?10:-16),y:t.y-8,fill:color,"font-weight":700,"font-size":15,text:label}));
+}
+function stats(){
+  const c=cosine([A.x,A.y],[B.x,B.y]);
+  $("#cos").textContent=c.toFixed(3);
+  $("#ang").textContent=(Math.acos(Ill.clamp(c,-1,1))*180/Math.PI).toFixed(0)+"°";
+  $("#dot").textContent=dot([A.x,A.y],[B.x,B.y]).toFixed(2);
+  $("#mags").textContent=`${norm([A.x,A.y]).toFixed(2)}, ${norm([B.x,B.y]).toFixed(2)}`;
+  $("#cos").style.color = c>0.6?"#0a7d2c":c<0?"#c0392b":"#1456b0";
+  $("#interp").textContent = c>0.8?"≈ same direction → very similar." : c>0.2?"partly aligned → somewhat similar." : c>-0.2?"≈ perpendicular → unrelated." : "opposite directions → dissimilar.";
+}
+function pointerPos(e){ const r=vec.getBoundingClientRect(); return {x:((e.clientX-r.left)/r.width*360 - OX)/S, y:-((e.clientY-r.top)/r.height*300 - OY)/S}; }
+vec.addEventListener("pointerdown",(e)=>{ const h=e.target.getAttribute&&e.target.getAttribute("data-h"); if(h){drag=h; vec.setPointerCapture(e.pointerId);} });
+vec.addEventListener("pointermove",(e)=>{ if(!drag) return; const p=pointerPos(e); p.x=Ill.clamp(p.x,-3.6,3.6); p.y=Ill.clamp(p.y,-3,3); if(drag==="A")A=p; else B=p; drawVec(); });
+vec.addEventListener("pointerup",()=>drag=null);
+$("#unit").addEventListener("change",drawVec);
+drawVec();
+
+/* ---- Part 2: semantic search (BoW) ---- */
+const SENTS=[
+  "the cat sat on the warm mat",
+  "a kitten rested on a cozy rug",
+  "the stock market fell sharply today",
+  "share prices dropped a lot this afternoon",
+  "he trained a neural network on images",
+  "a deep learning model was fit to photos",
+];
+const STOP=new Set("the a on of to and is are in".split(" "));
+const tok=s=>s.toLowerCase().replace(/[^a-z\s]/g," ").split(/\s+/).filter(w=>w&&!STOP.has(w));
+const VOC=[...new Set(SENTS.flatMap(tok))];
+const emb=s=>VOC.map(w=>tok(s).filter(x=>x===w).length);
+const SVEC=SENTS.map(emb);
+const qsel=$("#qsel"); SENTS.forEach((s,i)=>qsel.appendChild(el("option",{value:i,text:s})));
+function search(){
+  const qi=+qsel.value, res=$("#results"); res.innerHTML="";
+  SENTS.map((s,i)=>({i,s,c:cosine(SVEC[qi],SVEC[i])})).sort((a,b)=>b.c-a.c)
+    .forEach(({i,s,c})=>{
+      const row=el("div",{class:"barrow",style:{gridTemplateColumns:"1fr 130px 56px",margin:"6px 0"}});
+      row.appendChild(el("div",{style:{fontSize:"14px",fontWeight:i===qi?700:400}, text:(i===qi?"▶ ":"")+s}));
+      const m=el("div"); m.appendChild(el("div",{class:"bar",style:{width:Math.round(c*100)+"%",background:i===qi?"#1a2b4a":c>0.4?"#0a7d2c":"#9fb2cf"}}));
+      row.appendChild(m);
+      row.appendChild(el("div",{class:"num",text:c.toFixed(2)}));
+      res.appendChild(row);
+    });
+}
+qsel.addEventListener("change",search); search();
+
+/* ---- Part 3: word analogy ---- */
+const WORDS={king:[2,1], queen:[2,-1], prince:[1.5,1.2], princess:[1.5,-1.2], man:[0.2,1], woman:[0.2,-1], boy:[-0.1,1.2], girl:[-0.1,-1.2]};
+const words=$("#words"), WS=60;
+function wpix(v){return {x:v[0]*WS, y:-v[1]*WS};}
+function drawWords(extra){
+  words.innerHTML="";
+  words.appendChild(el("line",{x1:-260,y1:0,x2:260,y2:0,stroke:"#eef2f8"}));
+  words.appendChild(el("line",{x1:0,y1:-150,x2:0,y2:150,stroke:"#eef2f8"}));
+  words.appendChild(el("text",{x:250,y:-6,"font-size":10,fill:"#9fb2cf","text-anchor":"end",text:"royalty →"}));
+  words.appendChild(el("text",{x:6,y:-140,"font-size":10,fill:"#9fb2cf",text:"↑ male"}));
+  for(const w in WORDS){ const p=wpix(WORDS[w]);
+    words.appendChild(el("circle",{cx:p.x,cy:p.y,r:5,fill:"#1456b0"}));
+    words.appendChild(el("text",{x:p.x+8,y:p.y+4,"font-size":13,fill:"#1a2b4a",text:w}));
+  }
+  if(extra){ const p=wpix(extra.v);
+    // arrows: king -> (king-man) -> (+woman)
+    words.appendChild(el("circle",{cx:p.x,cy:p.y,r:7,fill:"#c0392b"}));
+    words.appendChild(el("text",{x:p.x+9,y:p.y-6,"font-size":14,"font-weight":700,fill:"#c0392b",text:"✦ result"}));
+    const q=wpix(WORDS[extra.nearest]);
+    words.appendChild(el("line",{x1:p.x,y1:p.y,x2:q.x,y2:q.y,stroke:"#c0392b","stroke-dasharray":"4 3"}));
+  }
+}
+drawWords(null);
+$("#analogy").addEventListener("click",()=>{
+  const v=[WORDS.king[0]-WORDS.man[0]+WORDS.woman[0], WORDS.king[1]-WORDS.man[1]+WORDS.woman[1]];
+  let best=null,bd=1e9;
+  for(const w in WORDS){ if(["king","man","woman"].includes(w))continue; const d=(WORDS[w][0]-v[0])**2+(WORDS[w][1]-v[1])**2; if(d<bd){bd=d;best=w;} }
+  drawWords({v,nearest:best});
+  const out=$("#analogyout"); out.style.display="block";
+  out.innerHTML=`<b>king</b> (${WORDS.king}) − <b>man</b> (${WORDS.man}) + <b>woman</b> (${WORDS.woman}) = <b>(${v})</b> → nearest word: <b style="color:#0a7d2c">${best}</b> ✓`;
+});
+</script>
+</body>
+</html>

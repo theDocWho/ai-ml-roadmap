@@ -14,7 +14,7 @@ needed for most of it.
 - [Made With ML](https://madewithml.com) (design→develop→deploy→iterate; the best free production-ML course)
 - [MLOps Zoomcamp (DataTalks.Club)](https://github.com/DataTalksClub/mlops-zoomcamp) (free, self-paced) · [Full Stack Deep Learning (free)](https://fullstackdeeplearning.com/course/)
 - [Chip Huyen — MLOps guide](https://huyenchip.com/mlops/) · [Google — Rules of ML / MLOps](https://developers.google.com/machine-learning/guides/rules-of-ml)
-- 🎨 **[Illustrated explainer](../illustrated/index.html)** (interactive, offline): [MLOps lifecycle & drift](../illustrated/mlops-lifecycle.html) — click the loop, then simulate drift, monitoring & auto-retrain.
+- 🎨 **[Illustrated explainer](../illustrated/index.html)** (interactive, offline): [MLOps lifecycle & drift](../illustrated/7-mlops/mlops-lifecycle.html) — click the loop, then simulate drift, monitoring & auto-retrain.
 
 ---
 

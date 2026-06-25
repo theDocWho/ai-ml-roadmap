@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backpropagation — the chain rule on a computation graph</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 4 · Deep Learning · ties to BYO-1 / BYO-5</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Backpropagation</h1>
+    <p class="lede">How a network learns: run inputs <b>forward</b> to a loss, then push gradients
+      <b>backward</b> through the same graph using the chain rule — so every weight learns exactly how it
+      nudged the error. It's just bookkeeping for derivatives.</p>
+    <div class="tagrow">
+      <span class="tag">computation graph</span><span class="tag">chain rule</span>
+      <span class="tag">forward & backward pass</span><span class="tag byo">BYO-1 autograd</span>
+    </div>
+  </div>
+
+  <h2>The goal: how should each weight change?</h2>
+  <p>Training is gradient descent: nudge each parameter a little in the direction that reduces the loss. To
+  do that you need the <b>gradient of the loss with respect to every parameter</b> — <code>∂L/∂w</code> for
+  millions of weights. Computing each one independently would be hopeless. <b>Backpropagation</b> is the
+  algorithm that gets <em>all</em> of them in a single backward sweep, by reusing intermediate results.</p>
+  <p>The trick is to see the network as a <b>computation graph</b>: a chain of small operations, each of
+  which knows its own <em>local</em> derivative. The chain rule says the derivative along a path is the
+  <b>product</b> of the local derivatives, and when a value feeds several places you <b>sum</b> over paths.
+  Backprop just walks the graph from the loss backward, multiplying local derivatives as it goes.</p>
+
+  <h2>One neuron, end to end</h2>
+  <p>Here's the smallest example that shows everything: a single neuron with a sigmoid activation and a
+  squared error. Forward, it computes <code>z = w·x + b</code>, then <code>a = σ(z)</code>, then the loss
+  <code>L = (a − y)²</code>. Set the inputs, then step the <b>backward pass</b> and watch each gradient
+  (in red) get built by multiplying the next gradient by a local derivative:</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>w (weight) <span class="val" id="wv">0.8</span></label><input id="w" type="range" min="-2" max="2" step="0.1" value="0.8"></div>
+      <div class="ctrl"><label>x (input) <span class="val" id="xv">1.5</span></label><input id="x" type="range" min="-2" max="2" step="0.1" value="1.5"></div>
+      <div class="ctrl"><label>b (bias) <span class="val" id="bv">-0.5</span></label><input id="b" type="range" min="-2" max="2" step="0.1" value="-0.5"></div>
+      <div class="ctrl"><label>y (target) <span class="val" id="yv">1.0</span></label><input id="y" type="range" min="0" max="1" step="0.1" value="1"></div>
+    </div>
+    <svg id="graph" viewBox="0 0 660 230" role="img" aria-label="computation graph"></svg>
+    <div class="btnrow">
+      <button id="fwd" class="ghost">① Forward pass</button>
+      <button id="back">② Step backward ›</button>
+      <button class="ghost" id="resetbp">↻ Reset</button>
+    </div>
+    <div class="note" id="bpnote" style="margin-top:10px;"></div>
+  </div>
+
+  <p class="small muted"><b>How to read it:</b> the black number in each node is its <em>forward</em> value.
+  The <span style="color:var(--red)">red number</span> that appears is the gradient
+  <code>∂L/∂(node)</code> — how much the loss changes if you wiggle that value. Each red number is the red
+  number after it times a small <em>local</em> derivative written on the edge. That product <em>is</em> the
+  chain rule.</p>
+
+  <h2>Why it's done this way</h2>
+  <ul>
+    <li><b>Forward then backward.</b> The forward pass caches each node's value; the backward pass reuses
+      those cached values to compute local derivatives, so the whole gradient costs about the same as one
+      extra forward pass — not one pass per parameter.</li>
+    <li><b>Local + chain = global.</b> Every operation only needs to know how to turn the gradient flowing
+      <em>into</em> it into the gradient flowing <em>out</em> (multiply by its local derivative). String
+      these together and you get <code>∂L/∂w</code> for the deepest weight in a 100-layer net.</li>
+    <li><b>Sum at forks.</b> If a value is used in two places, its gradient is the <em>sum</em> of the
+      gradients coming back from both — that's how shared weights and skip connections work.</li>
+    <li><b>Then descend.</b> Once you have <code>∂L/∂w</code>, the update is just
+      <code>w ← w − lr · ∂L/∂w</code>. (See the <a href="../../illustrated/index.html">optimizer comparison</a>
+      for smarter update rules.)</li>
+  </ul>
+  <p>This is exactly what <b>autograd</b> engines (PyTorch's <code>.backward()</code>, TensorFlow's tape) do
+  automatically: they record the graph during the forward pass, then replay it in reverse. Vanishing /
+  exploding gradients come straight from this picture too — multiply many small (or large) local
+  derivatives down a deep chain and the product shrinks toward 0 (or blows up).</p>
+
+  <div class="note green"><b>Takeaways:</b> backprop computes <code>∂L/∂w</code> for every parameter in one
+  backward sweep of the computation graph. Forward caches values; backward multiplies <em>local</em>
+  derivatives (chain rule) and sums at forks. It makes training deep networks tractable. Build a working
+  autograd engine from scratch in <a href="../../challenges/byo-01-autograd/README.md">BYO-1</a>, then a
+  mini-PyTorch in <a href="../../challenges/byo-05-minitorch/README.md">BYO-5</a>.</div>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 4 · Deep Learning.
+    See <a href="../../phases/phase-4-deep-learning.md">the Phase 4 guide</a>; for the bigger picture try
+    <a href="https://playground.tensorflow.org/" target="_blank" rel="noopener">TensorFlow Playground</a>.
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el;
+  const sig = (z) => 1 / (1 + Math.exp(-z));
+  let reveal = 0; // 0 forward, 1..4 backward stages
+
+  const ids = ['w', 'x', 'b', 'y'];
+  const inp = {};
+  ids.forEach((k) => { inp[k] = Ill.$('#' + k); });
+
+  function vals() {
+    const w = +inp.w.value, x = +inp.x.value, b = +inp.b.value, y = +inp.y.value;
+    const z = w * x + b, a = sig(z), L = (a - y) * (a - y);
+    const gL = 1, ga = 2 * (a - y), gz = ga * a * (1 - a), gw = gz * x, gb = gz, gx = gz * w;
+    return { w, x, b, y, z, a, L, gL, ga, gz, gw, gb, gx };
+  }
+
+  function node(x, y, label, fwd, grad, showGrad, w, h) {
+    w = w || 92; h = h || 50;
+    let s = '<rect x="' + (x - w / 2) + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h + '" rx="9" fill="#fff" stroke="#9aa9c2"/>';
+    s += '<text x="' + x + '" y="' + (y - h / 2 + 15) + '" text-anchor="middle" font-size="11" fill="#5b6678" font-family="var(--mono)">' + label + '</text>';
+    s += '<text x="' + x + '" y="' + (y - h / 2 + 32) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937" font-family="var(--mono)">' + fwd + '</text>';
+    if (showGrad) s += '<text x="' + x + '" y="' + (y + h / 2 + 13) + '" text-anchor="middle" font-size="11.5" font-weight="700" fill="#c0392b" font-family="var(--mono)">∂L=' + grad + '</text>';
+    return s;
+  }
+  function edge(x1, y1, x2, y2, label, showLocal) {
+    let s = '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#cfd8e6" stroke-width="2" marker-end="url(#ah3)"/>';
+    if (label) s += '<text x="' + ((x1 + x2) / 2) + '" y="' + ((y1 + y2) / 2 - 6) + '" text-anchor="middle" font-size="9.5" fill="' + (showLocal ? '#c0392b' : '#8a93a6') + '" font-family="var(--mono)">' + label + '</text>';
+    return s;
+  }
+
+  function render() {
+    const v = vals();
+    const f = (n) => (Math.round(n * 100) / 100).toFixed(2);
+    const g = Ill.$('#graph');
+    // positions
+    const Xx = 70, Xz = 300, Xa = 470, XL = 610;
+    const yW = 45, yX = 110, yB = 175, yMid = 110;
+    let svg = '<defs><marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9aa9c2"/></marker></defs>';
+    // edges
+    svg += edge(Xx + 46, yW, Xz - 46, yMid - 6, '×x=' + f(v.x), reveal >= 3);
+    svg += edge(Xx + 46, yX, Xz - 46, yMid, '×w=' + f(v.w), reveal >= 3);
+    svg += edge(Xx + 46, yB, Xz - 46, yMid + 6, '+1', reveal >= 3);
+    svg += edge(Xz + 46, yMid, Xa - 46, yMid, "σ'=" + f(v.a * (1 - v.a)), reveal >= 2);
+    svg += edge(Xa + 46, yMid, XL - 46, yMid, '2(a−y)=' + f(2 * (v.a - v.y)), reveal >= 1);
+    // nodes
+    svg += node(Xx, yW, 'w (param)', f(v.w), f(v.gw), reveal >= 3);
+    svg += node(Xx, yX, 'x (input)', f(v.x), f(v.gx), reveal >= 3);
+    svg += node(Xx, yB, 'b (param)', f(v.b), f(v.gb), reveal >= 3);
+    svg += node(Xz, yMid, 'z = w·x+b', f(v.z), f(v.gz), reveal >= 2);
+    svg += node(Xa, yMid, 'a = σ(z)', f(v.a), f(v.ga), reveal >= 1);
+    svg += node(XL, yMid, 'L = (a−y)²', f(v.L), f(v.gL), reveal >= 1, 96);
+    g.innerHTML = svg;
+
+    // notes
+    const notes = [
+      '<b>Forward pass done.</b> Inputs flowed left→right to the loss <code>L = ' + f(v.L) + '</code>. Now click “Step backward” to compute gradients from the loss back to the weights.',
+      '<b>Backward — at the loss:</b> <code>∂L/∂L = 1</code>, and <code>∂L/∂a = 2(a−y) = ' + f(v.ga) + '</code>. We start the chain at the output.',
+      '<b>Through the sigmoid:</b> <code>∂L/∂z = ∂L/∂a · σ′(z) = ' + f(v.ga) + ' × ' + f(v.a * (1 - v.a)) + ' = ' + f(v.gz) + '</code>. Each step multiplies by one local derivative.',
+      '<b>To the parameters:</b> <code>∂L/∂w = ∂L/∂z · x = ' + f(v.gz) + ' × ' + f(v.x) + ' = ' + f(v.gw) + '</code>, and <code>∂L/∂b = ∂L/∂z = ' + f(v.gb) + '</code>. These tell gradient descent how to update w and b.',
+    ];
+    Ill.$('#bpnote').innerHTML = notes[Math.min(reveal, 3)];
+    Ill.$('#back').disabled = reveal >= 3;
+  }
+
+  ids.forEach((k) => inp[k].addEventListener('input', () => {
+    Ill.$('#' + k + 'v').textContent = (+inp[k].value).toFixed(1);
+    render();
+  }));
+  Ill.$('#fwd').addEventListener('click', () => { reveal = 0; render(); });
+  Ill.$('#back').addEventListener('click', () => { if (reveal < 3) reveal++; render(); });
+  Ill.$('#resetbp').addEventListener('click', () => { reveal = 0; render(); });
+  render();
+})();
+</script>
+</body>
+</html>

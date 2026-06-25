@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generators & yield — lazy sequences in Python</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a href="../index.html">← All explainers</a>
+  <span class="spacer"></span>
+  <span class="pill">Phase 0 · Python</span>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Generators &amp; <code>yield</code></h1>
+    <p class="lede">A function that can <em>pause</em>. Where a normal function runs to <code>return</code> and
+      forgets everything, a generator <code>yield</code>s a value, freezes its place, and resumes from exactly
+      there next time you ask. That one capability gives you <b>lazy</b>, memory-cheap sequences — and it's the
+      idea behind iterating huge datasets without loading them.</p>
+    <div class="tagrow">
+      <span class="tag">yield</span><span class="tag">lazy evaluation</span>
+      <span class="tag">one at a time</span><span class="tag">constant memory</span>
+      <span class="tag">iterator</span>
+    </div>
+  </div>
+
+  <h2>return forgets; yield remembers</h2>
+  <p>A normal function is one-shot: you call it, it computes, it <code>return</code>s a single result, and its
+  local variables vanish. To produce a sequence it must build the <em>whole thing</em> first — a list of all
+  the values — and hand it back at once.</p>
+  <p>A function containing <code>yield</code> is a <b>generator</b>. Calling it doesn't run the body at all; it
+  hands you a <em>generator object</em>, paused before the first line. Each time you call <code>next()</code>
+  on it (which is what a <code>for</code> loop does under the hood), it runs until it hits a
+  <code>yield</code>, emits that value, and <b>freezes</b> — local variables and all — until you ask again.
+  Step through one and watch the function pause and resume at the <code>yield</code>:</p>
+
+  <div class="panel">
+    <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:18px;">
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">the generator function:</p>
+        <div id="code" style="font-family:var(--mono); font-size:13px; line-height:1.7; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px;"></div>
+        <div class="btnrow">
+          <button id="next">next( )</button>
+          <button class="ghost" id="restart">restart</button>
+        </div>
+        <p class="small muted" style="margin:2px 0 0;">frozen state between calls:</p>
+        <div id="frame" style="font-family:var(--mono); font-size:14px; background:#fff3df; border:1px solid #e6cf8a; border-radius:10px; padding:10px 12px; color:#6b5a16;"></div>
+      </div>
+      <div>
+        <p class="small muted" style="margin:0 0 4px;">values produced (one per <code>next</code>):</p>
+        <div id="out" class="chips" style="min-height:40px;"></div>
+        <p class="note" id="status" style="margin-top:12px;"></p>
+      </div>
+    </div>
+  </div>
+
+  <h2>The payoff: memory</h2>
+  <p>Because a generator only ever holds <em>one</em> value at a time, it costs essentially constant memory no
+  matter how long the sequence is. The eager list version must materialise <em>every</em> value first. For a
+  one-pass computation like a sum, that difference is enormous:</p>
+  <div style="font-family:var(--mono); font-size:13px; background:var(--light); border:1px solid var(--border); border-radius:10px; padding:12px 14px;">
+sum([n*n for n in range(N)])&nbsp;&nbsp;<span style="color:#c0392b"># builds a list of N numbers, then sums</span><br>
+sum(n*n for n in range(N))&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#0a7d2c"># generator: one number at a time</span>
+  </div>
+  <p>Drag <code>N</code> and compare what each approach keeps in memory at its peak:</p>
+
+  <div class="panel">
+    <div class="ctrl" style="min-width:100%;"><label>N <span class="val" id="vn"></span></label>
+      <input id="n" type="range" min="10" max="1000000" value="1000" step="10"></div>
+    <div class="barrow"><span class="lbl">list&nbsp;[…]</span><div><div class="bar" id="barlist" style="background:var(--red)"></div></div><span class="num" id="numlist"></span></div>
+    <div class="barrow"><span class="lbl">generator</span><div><div class="bar" id="bargen" style="background:var(--green)"></div></div><span class="num" id="numgen"></span></div>
+    <p class="small muted" id="memnote" style="margin:8px 0 0;"></p>
+  </div>
+
+  <h2>When to use one (and when not)</h2>
+  <ul>
+    <li><b>Use a generator</b> when the sequence is large or infinite, and you consume it <em>once</em> —
+      feeding <code>sum</code>, <code>any</code>, <code>max</code>, a <code>for</code> loop, or streaming rows
+      from a file. It's the natural tool for "process this 10&nbsp;GB log line by line."</li>
+    <li><b>Use a list</b> when you need to index it (<code>x[5]</code>), get its <code>len()</code>, or iterate
+      it more than once. A generator is exhausted after one pass — ask for the next value past the end and you
+      get <code>StopIteration</code> (the loop simply stops).</li>
+  </ul>
+  <p>The lightest way to make one is a <b>generator expression</b> — a
+  <a href="python-comprehensions.html">comprehension</a> with parentheses: <code>(n*n for n in range(8))</code>.
+  Same laziness, no <code>def</code> needed.</p>
+
+  <div class="note green"><b>Takeaways:</b> a function with <code>yield</code> is a generator; calling it gives a
+  paused object that runs to the next <code>yield</code> on each <code>next()</code>, <em>remembering</em> its
+  locals in between. That makes sequences <b>lazy</b> — one value at a time, ~constant memory — ideal for big
+  or infinite data consumed once. Lists are eager but re-iterable and indexable.</div>
+
+  <p class="small muted">Watch a generator pause and resume frame-by-frame in
+  <a href="https://pythontutor.com/" target="_blank" rel="noopener">Python Tutor</a>.</p>
+
+  <div class="footer">
+    Part of the <a href="../index.html">Illustrated AI/ML</a> catalog · Phase 0 · Python.
+    Practise in <a href="../../phases/phase-0-python.md">the Phase 0 guide</a> (Module 0B, topic 11).
+  </div>
+</div>
+
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  const el = Ill.el, $ = Ill.$;
+  const N_GEN = 5; // squares(5)
+  const LINES = [
+    'def squares(n):',
+    '    i = 0',
+    '    while i < n:',
+    '        yield i * i',
+    '        i = i + 1',
+  ];
+  let st;
+
+  function reset() {
+    st = { i: 0, produced: [], done: false, active: -1, started: false };
+    render();
+  }
+
+  // advance the generator one .next() step
+  function step() {
+    if (st.done) return;
+    if (!st.started) { st.started = true; }
+    if (st.i < N_GEN) {
+      st.active = 3;               // the yield line
+      st.produced.push(st.i * st.i);
+      st.i = st.i + 1;             // resume runs i+=1, loops back, pauses at yield
+    } else {
+      st.active = 2;               // while test fails
+      st.done = true;
+    }
+    render();
+  }
+
+  function render() {
+    const code = $('#code'); code.innerHTML = '';
+    LINES.forEach((ln, i) => {
+      const on = i === st.active;
+      code.appendChild(el('div', {
+        style: {
+          padding: '1px 6px', borderRadius: '5px',
+          background: on ? '#fff3df' : 'transparent',
+          borderLeft: on ? '3px solid #b9770e' : '3px solid transparent',
+          whiteSpace: 'pre',
+        },
+        text: ln,
+      }));
+    });
+    $('#frame').textContent = st.done ? 'i = ' + st.i + '  ·  generator exhausted'
+      : (st.started ? 'i = ' + st.i + '  (paused at yield)' : 'not started — paused before first line');
+
+    const out = $('#out'); out.innerHTML = '';
+    if (!st.produced.length) out.appendChild(el('span', { class: 'small muted', text: 'press next( ) …' }));
+    st.produced.forEach((v) => out.appendChild(el('span', { class: 'chip on', text: String(v) })));
+
+    $('#next').disabled = st.done;
+    $('#status').innerHTML = st.done
+      ? 'The <code>while</code> test failed → the generator <b>returns</b>, raising <code>StopIteration</code>, which a <code>for</code> loop treats as "stop". Produced ' + st.produced.length + ' values total.'
+      : st.started
+        ? 'Paused <b>inside</b> the function at <code>yield</code>, holding <code>i = ' + st.i + '</code>. Nothing after it ran yet.'
+        : 'Calling <code>squares(5)</code> ran <b>no</b> code — it returned a paused generator object. Press <code>next( )</code>.';
+  }
+
+  $('#next').addEventListener('click', step);
+  $('#restart').addEventListener('click', reset);
+  reset();
+
+  // ---- memory bars ----
+  function fmt(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(n >= 1e4 ? 0 : 1) + 'k';
+    return String(n);
+  }
+  function renderMem(N) {
+    $('#vn').textContent = fmt(N);
+    // log scale so 1 vs N is legible across 5 orders of magnitude
+    const span = Math.log10(1e6);
+    $('#barlist').style.width = (100 * Math.log10(N) / span) + '%';
+    $('#bargen').style.width = '3%';
+    $('#numlist').textContent = fmt(N);
+    $('#numgen').textContent = '1';
+    $('#memnote').innerHTML = 'At its peak the list holds <b>' + fmt(N) + '</b> numbers in memory; the generator holds <b>1</b>. Same answer from <code>sum</code>, ' + fmt(N) + '× the memory.';
+  }
+  Ill.slider($('#n'), null, renderMem);
+})();
+</script>
+</body>
+</html>
