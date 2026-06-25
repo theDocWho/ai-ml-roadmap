@@ -64,6 +64,8 @@ Legend: 🎨 **ours** (interactive, in this folder) · 🔗 **curated** (best ex
 - 🎨 **LSTM / GRU gates** — [lstm-gru.html](lstm-gru.html)
 
 ## Phase 5 · NLP & Transformers
+- 🎨 **TF-IDF** — [tfidf.html](tfidf.html)
+- 🎨 **Positional encoding** — [positional-encoding.html](positional-encoding.html) · exam Q46
 - 🔗 The Illustrated Transformer (Alammar) — https://jalammar.github.io/illustrated-transformer/
 - 🔗 Transformer Explainer, live GPT-2 (poloclub) — https://poloclub.github.io/transformer-explainer/
 - 🔗 The Illustrated Word2vec (Alammar) — https://jalammar.github.io/illustrated-word2vec/
