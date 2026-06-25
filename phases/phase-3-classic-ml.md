@@ -4,6 +4,9 @@
 the right tool. Covers exam **Q9, Q11, Q14, Q16–Q31** and many *(beyond-exam)* topics. This is where
 you start the **Decision Lens** habit and dip into [research skills](research-skills.md).
 
+> 🏗️ **Production project (this phase):** the **[car-damage repair-cost estimator (India)](../capstones/car-damage-cost-india/README.md)**
+> capstone uses an **XGBoost cost regressor** — the tabular-regression + honest-evaluation skills from here, on a real ₹ problem.
+
 **Environment:** **🖥️ Local** or **📊 Kaggle** — classic ML needs **no GPU**. Use Kaggle for its
 datasets + competitions.
 

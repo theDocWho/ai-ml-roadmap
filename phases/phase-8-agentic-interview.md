@@ -3,6 +3,9 @@
 **Goal:** master **designing** agentic systems (not just calling a library) and convert everything into
 **interview-ready** capability — ML system design, concepts, DSA, and a portfolio you can narrate.
 
+> 🏗️ **Production projects (this phase):** [Permissioned agent sandbox](../projects/proj-08-agent-sandbox/README.md) ·
+> [Evaluation-as-a-service](../projects/proj-07-eval-as-service/README.md) · [AI policy guardrail service](../projects/proj-03-guardrail-service/README.md) — see [all projects](../projects/README.md).
+
 **Environment:** mostly **🖥️ Local** (build agents, mock interviews) with **free API/Ollama** for agent runs.
 
 **🔄 Freshness:** agent frameworks move monthly — use **latest** docs; the **patterns** (Anthropic's

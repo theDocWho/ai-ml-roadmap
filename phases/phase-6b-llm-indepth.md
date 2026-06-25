@@ -4,6 +4,9 @@
 **quantization**, **serving**, **evaluation**, and **security**. This is what separates an "API caller"
 from an "LLM engineer." Builds on **BYO-7 (tokenizer)** and **BYO-8 (mini-GPT)**.
 
+> 🏗️ **Production projects (this phase):** [AI policy guardrail service](../projects/proj-03-guardrail-service/README.md) ·
+> [Fine-tune vs RAG decision lab](../projects/proj-04-finetune-vs-rag/README.md) · [Multimodal document intake](../projects/proj-05-multimodal-intake/README.md) — see [all projects](../projects/README.md).
+
 **Environment:** **☁️ Colab** / **📊 Kaggle** for the **free GPU** (QLoRA fine-tuning, quantization).
 Local **Ollama**/**llama.cpp** for serving experiments.
 

@@ -530,6 +530,11 @@ finance one doubles as a real tool for your own investing.
   **Markowitz** efficient-frontier optimization, and a **backtested** strategy with an honest tear
   sheet — *plus* a RAG assistant over filings to support decisions. Quantify expected return, risk,
   and the distribution of outcomes **before** you invest, instead of guessing.
+- **Insurance × computer vision:** a **[car-damage repair-cost estimator (India)](capstones/car-damage-cost-india/README.md)**
+  — from a photo, detect damaged parts and estimate the repair cost in **₹** (Indian makes, INR-native parts
+  catalogs, hardened + monitored service). Spans CV detection (Phase 4), tabular regression (Phase 3), and
+  productionization (Phase 7); builds on your own [v1 repo](https://github.com/theDocWho/car-crash-fix-amount-predictor).
+  *Decision-support estimate, not a binding quote.*
 
 ---
 
@@ -563,6 +568,18 @@ checklist, and `pytest` tests. Core logic is hand-built (no high-level libs) to 
 
 Reference implementations to study (not copy): Karpathy **micrograd** (https://github.com/karpathy/micrograd),
 **minBPE** (https://github.com/karpathy/minbpe), **nanoGPT** (https://github.com/karpathy/nanoGPT).
+
+---
+
+## 🏗️ Production AI-engineering projects (the "system around the model")
+
+Where **Build-Your-Own** teaches the *engine* from scratch, the [**`projects/`**](projects/README.md) track
+teaches the **deployable system** around a model — RAG with verified citations, guardrails, agent sandboxes,
+evals-as-a-service, local LLM serving — each a FastAPI/UI/eval-suite you can defend in an interview. Re-cut
+from Kushal Vijay's *AI Engineering Projects Guide* into a curated **core 8** (+ 7 optional infra extras),
+and made **100% free**: every paid LLM is swapped for a **free-but-capable** model (Ollama/Qwen2.5/Llama-3.1,
+free Colab/Kaggle GPUs, free Groq/Gemini tiers), with a **"make it better — local ↔ cloud"** path in every
+brief. Do them in **Phases 6 → 8** (each brief lists its phase). See [`projects/README.md`](projects/README.md).
 
 ---
 
@@ -675,6 +692,12 @@ stubs until the tests pass. Located in `challenges/`.
 |----------|-------|-------|--------|
 | DQN trading agent | Reinforcement Learning x Finance | 7 | Done |
 | GNN fraud-ring detector | Graph Neural Networks x Cyber/Finance | 6 | Done |
+| [Car-damage cost (India)](capstones/car-damage-cost-india/README.md) | Computer Vision x Tabular x MLOps (Insurance) | — | Spec/brief (scaffold on request) |
 
 Total: **16 challenges (101 tests) + 2 capstones (13 tests)**, all reference-verified. Build progress
 is also tracked in `challenges/README.md`.
+
+**Production projects** (`projects/`): a curated **core 8** spec briefs (RAG+citations, NL→API, guardrails,
+fine-tune-vs-RAG, multimodal intake, local-LLM deploy, eval-as-a-service, agent sandbox) + 7 optional infra
+extras — all free-path. Briefs are ready to build; ask to **scaffold any `proj-NN`** with code + tests when you
+reach its phase. Tracked in [`projects/README.md`](projects/README.md).

@@ -4,6 +4,11 @@
 tracking, packaging, **REST APIs**, **Docker**, **CI/CD**, and **monitoring/drift**. This is what
 separates "did a Kaggle notebook" from "shipped ML."
 
+> 🏗️ **Production projects (this phase):** [Local LLM deployment kit](../projects/proj-06-local-llm-deploy/README.md) ·
+> [Evaluation-as-a-service](../projects/proj-07-eval-as-service/README.md) · [Multimodal document intake](../projects/proj-05-multimodal-intake/README.md) ·
+> harden the **[car-damage estimator (India)](../capstones/car-damage-cost-india/README.md)** (container + drift). Optional infra extras
+> (prompt-safety gate, spend control, log-to-eval, RAG drift monitor, trace explorer, semantic cache, rollout monitor) are in [`projects/`](../projects/README.md).
+
 **Environment:** **🖥️ Local** (Docker, FastAPI, CI) + a **free cloud/HF Spaces** deploy target. No GPU
 needed for most of it.
 

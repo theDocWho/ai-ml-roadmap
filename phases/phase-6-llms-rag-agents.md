@@ -14,6 +14,9 @@ The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change mo
 > [ReAct agent loop](../illustrated/6-llms-rag-agents/react-agent.html) · [Vector search: brute-force vs ANN](../illustrated/6-llms-rag-agents/vector-search.html) ·
 > [Embeddings & cosine similarity](../illustrated/6-llms-rag-agents/embeddings.html) — see [all explainers](../illustrated/index.html).
 
+> 🏗️ **Production projects (build the system around the model):** [Support copilot w/ verified citations](../projects/proj-01-rag-citations/README.md) ·
+> [Natural-language → API assistant](../projects/proj-02-nl-to-api/README.md) · [Permissioned agent sandbox](../projects/proj-08-agent-sandbox/README.md) — see [all projects](../projects/README.md).
+
 **Primary resources** (open the link, then the **bold** item):
 - [Hugging Face — *LLM Course*](https://huggingface.co/learn/llm-course) · [*Agents Course*](https://huggingface.co/learn/agents-course) · 🆕 [Vizuara](https://www.youtube.com/@vizuara) (RAG/agents)
 - [DeepLearning.AI — Short Courses (free)](https://www.deeplearning.ai/short-courses/) · [LangChain Academy (free)](https://academy.langchain.com) · [Activeloop — free RAG course](https://learn.activeloop.ai/courses/rag)

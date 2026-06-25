@@ -65,6 +65,15 @@ agents, vector search, embeddings, prompt injection), and MLOps — **plus curat
 existing ones (Illustrated Transformer, CNN Explainer, MLU-Explain, R2D3, Setosa, Seeing Theory…). Fully
 offline, no dependencies. Topic rows across the guides link to these with a 🎨 marker.
 
+## 🏗️ Production AI-engineering projects
+Beyond the from-scratch [`../challenges/`](../challenges/README.md) (build the *engine*), the
+[**`../projects/`**](../projects/README.md) track has you build the **deployable system around a model** —
+RAG with verified citations, guardrails, agent sandboxes, evals-as-a-service, local LLM serving. A curated
+**core 8** (+ 7 optional infra extras), **100% free** (every paid LLM swapped for a free-but-capable one, with
+a "make it better — local ↔ cloud" path). Do them in **Phases 6 → 8**; topic rows link to them with a 🏗️ marker.
+The insurance/CV flagship — a **[car-damage repair-cost estimator (India)](../capstones/car-damage-cost-india/README.md)**
+— lives in [`../capstones/`](../capstones/) and spans Phases 3, 4 and 7.
+
 ## Guides
 | Phase | Guide | Status |
 |-------|-------|--------|

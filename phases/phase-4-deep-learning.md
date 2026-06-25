@@ -3,6 +3,9 @@
 **Goal:** build and train neural nets — and understand them from the inside (you'll re-implement the
 core). Covers exam **Q26–Q45** plus *(beyond-exam)* training tricks and advanced architectures.
 
+> 🏗️ **Production project (this phase):** the **[car-damage repair-cost estimator (India)](../capstones/car-damage-cost-india/README.md)**
+> capstone uses a **YOLOv8 damage detector** — the CV skills from this phase feeding a downstream cost model.
+
 **Environment:** **☁️ Colab** or **📊 Kaggle** for the **free GPU** (training is slow on CPU). Develop
 locally, push to git, then `!git clone` into the GPU session.
 
