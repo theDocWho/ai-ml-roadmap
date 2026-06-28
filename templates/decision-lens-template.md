@@ -43,3 +43,8 @@ What outcome does someone actually want? (Not "use ML" — the business/user out
 ---
 **Result after building:** baseline score ___ → model score ___ · top error category (from error
 analysis) ___ · next improvement you'd make ___
+
+> **Escalate to an ADR:** when a project hinges on a significant, hard-to-reverse *technology* choice
+> (open-weight vs managed, which vector DB, build vs buy), record it in an
+> [Architecture Decision Record](adr-template.md) — the architect-level upgrade of this Lens (see
+> [Phase 9](../phases/phase-9-architecture.md)).

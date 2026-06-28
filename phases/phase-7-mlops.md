@@ -9,6 +9,10 @@ separates "did a Kaggle notebook" from "shipped ML."
 > harden the **[car-damage estimator (India)](../capstones/car-damage-cost-india/README.md)** (container + drift). Optional infra extras
 > (prompt-safety gate, spend control, log-to-eval, RAG drift monitor, trace explorer, semantic cache, rollout monitor) are in [`projects/`](../projects/README.md).
 
+> 🏛️ **Going further (architect track):** [Phase 9 — AI Solution Architecture](phase-9-architecture.md)
+> deepens this into **data architecture** (lakes, streaming, feature stores), **Kubernetes/Terraform**, and
+> **FinOps** cost modeling — the design-and-tradeoffs layer above MLOps.
+
 **Environment:** **🖥️ Local** (Docker, FastAPI, CI) + a **free cloud/HF Spaces** deploy target. No GPU
 needed for most of it.
 

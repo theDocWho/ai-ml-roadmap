@@ -74,6 +74,14 @@ a "make it better — local ↔ cloud" path). Do them in **Phases 6 → 8**; top
 The insurance/CV flagship — a **[car-damage repair-cost estimator (India)](../capstones/car-damage-cost-india/README.md)**
 — lives in [`../capstones/`](../capstones/) and spans Phases 3, 4 and 7.
 
+## 🏛️ AI Solution Architecture (optional architect track)
+After Phases 6–8, **[Phase 9](phase-9-architecture.md)** takes you from *engineer* to *architect*: data &
+infra architecture, system-design (diagrams, **ADRs**, build-vs-buy), scale/reliability/**FinOps**, and
+**governance** (NIST AI RMF, EU AI Act, Well-Architected). It produces **deliverables, not code** — assembled
+in the **[AI-solution-architecture capstone](../capstones/ai-solution-architecture/README.md)** into a design
+package for a system you already built. Reusable artifact templates (ADR, decision-matrix, cost-model,
+governance checklist) live in [`../templates/`](../templates/).
+
 ## Guides
 | Phase | Guide | Status |
 |-------|-------|--------|
@@ -87,6 +95,7 @@ The insurance/CV flagship — a **[car-damage repair-cost estimator (India)](../
 | 6B | [LLM in-depth](phase-6b-llm-indepth.md) | ✅ |
 | 7 | [MLOps & Productionization](phase-7-mlops.md) | ✅ |
 | 8 | [Agentic systems + Interview readiness](phase-8-agentic-interview.md) | ✅ |
+| 9 | [AI Solution Architecture *(optional — architect track)*](phase-9-architecture.md) | ✅ |
 | — | [**Research skills: reading, verifying & writing papers**](research-skills.md) | ✅ |
 
 ### Optional specialization modules (pick by interest / target role)

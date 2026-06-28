@@ -37,6 +37,7 @@ This roadmap is built backwards from the capabilities you want, not just the top
 | **Improve a model with confidence** (tune/fine-tune existing or build new) | "Model-Improvement" thread (error analysis, bias/variance, data-centric) + the **Build-Your-Own** from-scratch series, so you're **not tool-dependent** |
 | **Design & get the best from agents/tools** (high demand) | **Phase 6** (RAG/agents) + **Phase 8 — Agentic Systems** (architectures, multi-agent, eval, production) |
 | **Clear the toughest interviews** with practical, usable knowledge | **Phase 8 — Interview Readiness** (ML system design, ML/DL concepts, DSA, portfolio narrative, mock interviews) |
+| **Architect end-to-end AI systems & own the tradeoffs** (Staff+ / Architect roles) | **Phase 9 — AI Solution Architecture** (optional): diagrams, ADRs, decision matrices, cost models, governance — built on systems you already shipped |
 
 **Dual competency principle:** the from-scratch challenges make you *independent* (you can build it
 yourself); Phases 6–8 make you *leveraged* (you get the best out of agents/tools). You'll be able to
@@ -60,13 +61,24 @@ so improvement is never a black box you depend on a tool for.
   analysis, ceilings, bias/variance) — https://info.deeplearning.ai/machine-learning-yearning-book
 - Chip Huyen — **MLOps guide** (free, practical) — https://huyenchip.com/mlops/
 
-**C) Responsible AI & Interpretability** — *apply from Phase 3 on.* Fairness/bias auditing,
-**interpretability** (SHAP, LIME, permutation importance), privacy (differential privacy, federated
-learning), and model cards. Especially important in **security & finance**, where decisions must be
-explainable and auditable.
+**C) Responsible AI, Interpretability & Governance** — *apply from Phase 3 on; formalize in Phase 9.*
+Fairness/bias auditing, **interpretability** (SHAP, LIME, permutation importance), privacy (differential
+privacy, federated learning), **model cards**, plus the **governance frameworks** an architect must name:
+**NIST AI Risk Management Framework**, the **EU AI Act** (risk tiers), and the **AWS Well-Architected**
+security/reliability pillars + data governance. Especially important in **security & finance**, where
+decisions must be explainable and auditable.
 - Christoph Molnar — **Interpretable Machine Learning** (free book) — https://christophm.github.io/interpretable-ml-book/
 - Google — **ML Crash Course: Fairness** module — https://developers.google.com/machine-learning/crash-course/fairness
 - Amazon ML University — **Responsible AI** (free) — https://aws.amazon.com/machine-learning/mlu/
+- **NIST AI RMF** — https://www.nist.gov/itl/ai-risk-management-framework · **EU AI Act Explorer** — https://artificialintelligenceact.eu/ · checklist: [`templates/ai-governance-checklist.md`](templates/ai-governance-checklist.md)
+
+**D) Architecture & Business Value** — *start Phase 6, formalize in Phase 9.* The architect habits:
+think in **components / interfaces / failure modes**, capture significant choices as **ADRs**, justify
+build-vs-buy with a **decision matrix**, model **cost at volume** (FinOps), and express tradeoffs in
+**cost/risk/outcome** terms a stakeholder understands (define success metrics *before* shipping). The
+Decision Lens you write per project is the seed; **[Phase 9](phases/phase-9-architecture.md)** grows it
+into a full design package.
+- [System Design Primer](https://github.com/donnemartin/system-design-primer) (free) · Chip Huyen — **Designing ML Systems / AI Engineering** · templates: [`templates/`](templates/) (ADR, decision-matrix, cost-model, governance)
 
 ---
 
@@ -143,6 +155,7 @@ explainable and auditable.
 ### Systems, MLOps & Responsible AI
 - Data pipelines, experiment tracking, API, Docker, CI/CD, monitoring/drift — Phase 7
 - *(beyond)* **Responsible AI**: fairness/bias, **interpretability (SHAP/LIME)**, privacy (differential privacy, federated learning), model cards — Thread C
+- *(beyond)* **Solution architecture** *(optional, Phase 9)*: data architecture (lakes, **streaming**, feature stores), infra (**Kubernetes**, **Terraform/IaC**, managed AI platforms), **system-design** (diagrams, loose coupling, **ADRs**, build-vs-buy), **scale/reliability** (queuing, graceful degradation, fallback), **FinOps** cost modeling, **governance** (NIST AI RMF, EU AI Act, Well-Architected), business/ROI — Thread D
 
 ---
 
@@ -453,6 +466,30 @@ and narrate every portfolio project under interview pressure.
 
 ---
 
+## Phase 9 — AI Solution Architecture  (optional, ≈4–6 weeks) — *the Architect track*
+
+**Goal:** move from *engineer* (implements components) to **architect** (designs the end-to-end system and
+**owns the tradeoffs**). No new ML — you learn to **specify, select, scale, govern, and justify** AI systems
+and to produce the artifacts an architect is judged on. Do it **after Phases 6–8**, on systems you've built.
+Full guide: [`phases/phase-9-architecture.md`](phases/phase-9-architecture.md).
+
+- **9A Data & infra architecture** — data lakes/lakehouse, **batch vs streaming** (Kafka/Spark/Airflow),
+  feature stores; **Kubernetes** (local k3d/minikube), **Terraform/IaC**, managed AI platforms (SageMaker/
+  Bedrock, Vertex, Azure AI Foundry) — *concepts + free-tier/local; real cloud only where required.*
+- **9B System-design** — components/interfaces/state/failure modes; **architecture diagrams** (C4) as the
+  deliverable; established AI patterns; loose coupling & changeability.
+- **9C Tech selection & build-vs-buy** — open-weight vs managed; **ADRs**; weighted **decision matrix**.
+- **9D Scale, reliability & cost** — horizontal scaling, **queuing**, graceful degradation, fallback,
+  semantic caching; **FinOps** cost modeling; Ray/Kubeflow awareness.
+- **9E Governance & business** — **NIST AI RMF**, **EU AI Act**, **AWS Well-Architected**, data governance,
+  model cards; **stakeholder communication** & **ROI/value** definition.
+
+**Capstone:** [`capstones/ai-solution-architecture`](capstones/ai-solution-architecture/README.md) — a
+portfolio-grade **design package** (diagram + ADR + decision matrix + cost model + governance checklist) for
+one of your `projects/`. Reusable templates in [`templates/`](templates/). *Portfolio of decisions > certs.*
+
+---
+
 ## Optional specialization modules (add by interest / target role)
 
 These cover major areas the 50 questions skip. Slot them in where they fit (RL & diffusion sit well
@@ -599,6 +636,7 @@ Do these **alongside** the phases — they validate skills for recruiters. Free 
 - **Google Cloud — Professional Machine Learning Engineer** — top recognition for ML roles — https://cloud.google.com/learn/certification/machine-learning-engineer → after Phase 4–5
 - **AWS Certified Machine Learning Engineer – Associate** (replaced the old ML Specialty) — https://aws.amazon.com/certification/certified-machine-learning-engineer-associate/ → after Phase 4
 - **Microsoft Azure AI Engineer** — note **AI-102 retires 30 Jun 2026**; take the successor **AI-103 (Azure AI App & Agent Developer Associate)** which adds agents/GenAI — https://learn.microsoft.com/credentials/ → after Phase 6
+- **Architect track (optional, after Phase 9):** **AWS Solutions Architect – Associate (SAA-C03)**, **Google Professional Cloud Architect**, or **Azure Solutions Architect Expert (AZ-305)** — for AI-architect roles; study free via the Zoomcamps + free tiers, sit the exam once your design package exists — https://aws.amazon.com/certification/certified-solutions-architect-associate/
 
 > Skip the **TensorFlow Developer Certificate** — Google **discontinued** it (May 2024). The
 > ecosystem is PyTorch-first, which this roadmap already uses. Course completion "certificates"

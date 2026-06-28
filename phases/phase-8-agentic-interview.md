@@ -6,6 +6,10 @@
 > 🏗️ **Production projects (this phase):** [Permissioned agent sandbox](../projects/proj-08-agent-sandbox/README.md) ·
 > [Evaluation-as-a-service](../projects/proj-07-eval-as-service/README.md) · [AI policy guardrail service](../projects/proj-03-guardrail-service/README.md) — see [all projects](../projects/README.md).
 
+> 🏛️ **Going further (architect track):** [Phase 9 — AI Solution Architecture](phase-9-architecture.md) turns
+> ML system design into architect **deliverables** — diagrams, **ADRs**, decision matrices, cost models, and
+> governance (NIST AI RMF, EU AI Act) — for systems you already built.
+
 **Environment:** mostly **🖥️ Local** (build agents, mock interviews) with **free API/Ollama** for agent runs.
 
 **🔄 Freshness:** agent frameworks move monthly — use **latest** docs; the **patterns** (Anthropic's
