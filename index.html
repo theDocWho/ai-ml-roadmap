@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI/ML Learning Roadmap — Free, Project-Based</title>
+<meta name="description" content="A free, beginner-to-advanced AI/ML roadmap: phases, from-scratch challenges, production projects, and interactive illustrated explainers.">
+<style>
+  :root{ --navy:#1a2b4a; --green:#0a7d2c; --light:#f3f6fb; --ink:#172033; --muted:#5b667e; --line:#dfe6f2; }
+  *{box-sizing:border-box}
+  body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:linear-gradient(160deg,#eef3fb 0%,#f7faff 60%,#fff 100%);min-height:100vh}
+  .wrap{max-width:880px;margin:0 auto;padding:64px 22px 80px}
+  .badge{display:inline-block;font-size:13px;font-weight:600;color:var(--green);
+         background:#e6f5ec;border:1px solid #c7e8d3;border-radius:999px;padding:4px 12px;letter-spacing:.02em}
+  h1{font-size:34px;line-height:1.15;margin:18px 0 8px;color:var(--navy);letter-spacing:-.01em}
+  .lede{font-size:18px;color:#3a465c;margin:0 0 30px;max-width:62ch}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0 34px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}.wrap{padding-top:40px}h1{font-size:28px}}
+  .card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);
+        border-radius:14px;padding:20px 20px 18px;transition:transform .12s ease,box-shadow .12s ease,border-color .12s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,43,74,.10);border-color:#c3d2ea}
+  .card h2{margin:0 0 6px;font-size:18px;color:var(--navy)}
+  .card p{margin:0;color:#54607a;font-size:14.5px}
+  .card .go{margin-top:12px;font-weight:600;color:var(--green);font-size:14px}
+  .primary{background:var(--navy);border-color:var(--navy)}
+  .primary h2,.primary p{color:#fff}.primary p{color:#cdd9ef}.primary .go{color:#7fe0a0}
+  ul.tracks{columns:2;gap:26px;margin:6px 0 0;padding:0 0 0 18px;color:#46526b;font-size:14.5px}
+  @media(max-width:620px){ul.tracks{columns:1}}
+  ul.tracks li{margin:3px 0}
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:#6b7790;font-size:13.5px}
+  a.inline{color:var(--green);font-weight:600;text-decoration:none}a.inline:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="badge">Free · project-based · beginner → RAG/LLM/agentic</span>
+    <h1>AI/ML Learning Roadmap</h1>
+    <p class="lede">A self-built path from Python fundamentals to LLMs, RAG, agents, MLOps and AI
+      solution architecture — with from-scratch challenges, production projects, and interactive
+      explainers you can poke at in the browser.</p>
+
+    <div class="grid">
+      <a class="card primary" href="illustrated/index.html">
+        <h2>🎨 Interactive explainers</h2>
+        <p>49 offline, hands-on visualizations across every phase — backprop, attention, RAG, agents and more.</p>
+        <div class="go">Open the explainers →</div>
+      </a>
+      <a class="card" href="https://github.com/theDocWho/ai-ml-roadmap">
+        <h2>📚 The full roadmap</h2>
+        <p>Phases, study guides, build-your-own challenges, production projects and capstones — on GitHub.</p>
+        <div class="go">Browse on GitHub →</div>
+      </a>
+    </div>
+
+    <strong style="color:var(--navy)">What's inside</strong>
+    <ul class="tracks">
+      <li>Phases 0–9 (Python → architecture)</li>
+      <li>16 build-your-own challenges</li>
+      <li>8 production AI-engineering projects</li>
+      <li>Domain tracks: cybersecurity &amp; finance</li>
+      <li>Capstones (RL, GNN, CV insurance)</li>
+      <li>AI Solution Architecture track</li>
+    </ul>
+
+    <footer>
+      Start with the <a class="inline" href="illustrated/index.html">illustrated explainers</a>, then follow
+      the phase guides on <a class="inline" href="https://github.com/theDocWho/ai-ml-roadmap">GitHub</a>.
+      Fully offline &amp; dependency-free.
+    </footer>
+  </div>
+</body>
+</html>
