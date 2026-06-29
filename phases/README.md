@@ -25,7 +25,7 @@ topic they verify (e.g. "(T8)" = topic 8 in that module).
 - 📖 **Read companion:** every topic gives you at least one *written* resource (official docs, a free
   book, or a high-quality article) — look for the **📖** marker next to a row. Where the primary link is
   a video, the 📖 read covers the **same topic** in text, so you can learn by reading instead of (or as
-  well as) watching. 🎨 marks an interactive [illustrated explainer](../illustrated/index.html).
+  well as) watching. 🎨 marks an interactive [illustrated explainer](https://thedocwho.github.io/ai-ml-roadmap/illustrated/index.html).
 - **Freshness rule:** for fast-moving tools (Python, NumPy/Pandas, PyTorch, LLM libraries) always use
   the **latest stable docs/version** — links go to "current" docs (e.g. Python **3.12+**). For
   **timeless** material (math, core stats, classic algorithms) an older-but-excellent reference is
@@ -57,7 +57,7 @@ jupyter notebook        # or use VS Code's notebook support
 > locally, push, then `!git clone` your repo into the Colab/Kaggle session for the GPU run.
 
 ## 🎨 Illustrated, interactive explainers
-For visual intuition, see [`../illustrated/`](../illustrated/index.html) — **22 interactive** explainers we
+For visual intuition, see [`../illustrated/`](https://thedocwho.github.io/ai-ml-roadmap/illustrated/index.html) — **22 interactive** explainers we
 built, spanning every phase: Python (mutability, truthiness, comprehensions), the NumPy/Pandas stack
 (broadcasting, axis, indexing, DataFrames, GroupBy), classic ML/DL (k-means, backprop, optimizers,
 LSTM/GRU), transformers (self-attention), the modern LLM stack (BPE, decoding, LoRA/quant, RAG, ReAct
