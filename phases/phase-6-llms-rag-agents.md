@@ -10,9 +10,9 @@ GPU work and free API tiers. This Claude Code env also exposes the **Claude API*
 docs and current models**; treat any specific model name below as an *example*, not a fixed choice.
 The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change monthly.
 
-> 🎨 **Visualize this phase (interactive, offline):** [RAG pipeline](../illustrated/6-llms-rag-agents/rag-pipeline.html) ·
-> [ReAct agent loop](../illustrated/6-llms-rag-agents/react-agent.html) · [Vector search: brute-force vs ANN](../illustrated/6-llms-rag-agents/vector-search.html) ·
-> [Embeddings & cosine similarity](../illustrated/6-llms-rag-agents/embeddings.html) — see [all explainers](../illustrated/index.html).
+> 🎨 **Visualize this phase (interactive, offline):** [RAG pipeline](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/rag-pipeline.html) ·
+> [ReAct agent loop](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/react-agent.html) · [Vector search: brute-force vs ANN](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/vector-search.html) ·
+> [Embeddings & cosine similarity](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/embeddings.html) — see [all explainers](https://thedocwho.github.io/ai-ml-roadmap/illustrated/index.html).
 
 > 🏗️ **Production projects (build the system around the model):** [Support copilot w/ verified citations](../projects/proj-01-rag-citations/README.md) ·
 > [Natural-language → API assistant](../projects/proj-02-nl-to-api/README.md) · [Permissioned agent sandbox](../projects/proj-08-agent-sandbox/README.md) — see [all projects](../projects/README.md).
@@ -47,9 +47,9 @@ The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change mo
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 6 | **Embeddings** (semantic vectors) | [SBERT docs](https://www.sbert.net) — **"Sentence Transformers → Quickstart"** · 🎨 [Visualize: embeddings & cosine](../illustrated/6-llms-rag-agents/embeddings.html) | 40m |
+| 6 | **Embeddings** (semantic vectors) | [SBERT docs](https://www.sbert.net) — **"Sentence Transformers → Quickstart"** · 🎨 [Visualize: embeddings & cosine](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/embeddings.html) | 40m |
 | 7 | Cosine similarity & semantic search | [SBERT docs](https://www.sbert.net/examples/applications/semantic-search/README.html) — **"Semantic Search"** | 30m |
-| 8 | **Vector databases** (Chroma / FAISS) | [Chroma docs](https://docs.trychroma.com) — **"Getting Started"** · 🎨 [Visualize: vector search](../illustrated/6-llms-rag-agents/vector-search.html) | 40m |
+| 8 | **Vector databases** (Chroma / FAISS) | [Chroma docs](https://docs.trychroma.com) — **"Getting Started"** · 🎨 [Visualize: vector search](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/vector-search.html) | 40m |
 
 **✅ Checkpoint 6B** — 🖥️ Local — one per topic:
 - **(T6)** Embed 5 sentences with `sentence-transformers`; print the embedding dimension.
@@ -62,7 +62,7 @@ The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change mo
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 9 | The RAG pipeline (chunk→embed→retrieve→generate) | [DeepLearning.AI — "LangChain: Chat with Your Data" (free)](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) · 📖 [Pinecone: Retrieval-Augmented Generation](https://www.pinecone.io/learn/retrieval-augmented-generation/) · 🎨 [Visualize: RAG pipeline](../illustrated/6-llms-rag-agents/rag-pipeline.html) | 1.5h |
+| 9 | The RAG pipeline (chunk→embed→retrieve→generate) | [DeepLearning.AI — "LangChain: Chat with Your Data" (free)](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) · 📖 [Pinecone: Retrieval-Augmented Generation](https://www.pinecone.io/learn/retrieval-augmented-generation/) · 🎨 [Visualize: RAG pipeline](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/rag-pipeline.html) | 1.5h |
 | 10 | RAG from scratch (deep understanding) | [freeCodeCamp — "RAG From Scratch"](https://www.youtube.com/@freecodecamp) (LangChain engineer) · 📖 [LangChain: RAG tutorial](https://python.langchain.com/docs/tutorials/rag/) | 2h |
 | 11 | Chunking strategies & citations | [LangChain docs](https://python.langchain.com/docs/concepts/text_splitters/) — **"Text splitters"** | 30m |
 | 12 | **Evaluating RAG** (faithfulness, relevance) | [RAGAS docs](https://docs.ragas.io) — **"Getting Started / Metrics"** | 45m |
@@ -82,7 +82,7 @@ The *patterns* (RAG, ReAct, tool use) are stable; the models/libraries change mo
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 14 | What an agent is; **when NOT to use one** | [Anthropic — "Building Effective AI Agents"](https://www.anthropic.com/research/building-effective-agents) | 45m |
-| 15 | **ReAct** (reason + act + tools) | [HF Agents Course](https://huggingface.co/learn/agents-course) — **Unit 1 "Introduction to Agents"** · 🎨 [Visualize: ReAct loop](../illustrated/6-llms-rag-agents/react-agent.html) | 2h |
+| 15 | **ReAct** (reason + act + tools) | [HF Agents Course](https://huggingface.co/learn/agents-course) — **Unit 1 "Introduction to Agents"** · 🎨 [Visualize: ReAct loop](https://thedocwho.github.io/ai-ml-roadmap/illustrated/6-llms-rag-agents/react-agent.html) | 2h |
 | 16 | LangGraph (stateful agents) | [DeepLearning.AI — "AI Agents in LangGraph" (free)](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/) · 📖 [LangGraph docs](https://langchain-ai.github.io/langgraph/) | 1.5h |
 | 17 | Agent memory (short/long-term) | [DeepLearning.AI — "Long-Term Agentic Memory with LangGraph"](https://www.deeplearning.ai/short-courses/long-term-agentic-memory-with-langgraph/) · 📖 [LangGraph: Memory concepts](https://langchain-ai.github.io/langgraph/concepts/memory/) | 1h |
 | 18 | Agent tools = your RAG retriever | [LangChain docs](https://python.langchain.com/docs/concepts/tools/) — **"Tools"** | 30m |

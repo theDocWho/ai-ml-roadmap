@@ -15,16 +15,16 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 - [Corey Schafer — *Python Beginners* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) · [Corey Schafer — *Python OOP* playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc)
 - [Real Python](https://realpython.com) (free articles) · [Official Python Tutorial (3.12+)](https://docs.python.org/3/tutorial/)
 - 🆕 [Vizuara](https://www.youtube.com/@vizuara) is more ML/DL-focused — bookmark it now; it becomes a primary source from Phase 2 on.
-- 🎨 **[Illustrated explainers](../illustrated/index.html)** (interactive, offline) — a visual page for *every*
-  topic in this phase: [Java ↔ Python mindset](../illustrated/0-python/python-java-mindset.html),
-  [Names, objects & mutability](../illustrated/0-python/python-data-model.html) (Q5),
-  [Truthiness & min/max](../illustrated/0-python/python-truthiness.html) (Q3),
-  [Strings & slicing](../illustrated/0-python/python-strings.html), [list/tuple/set](../illustrated/0-python/python-collections.html),
-  [dict & hashing](../illustrated/0-python/python-dicts.html), [Comprehensions](../illustrated/0-python/python-comprehensions.html),
-  [zip & enumerate](../illustrated/0-python/python-zip-enumerate.html), [*args & **kwargs](../illustrated/0-python/python-args-kwargs.html),
-  [Generators & yield](../illustrated/0-python/python-generators.html), [Classes & namespaces](../illustrated/0-python/python-oop.html),
-  [Inheritance & MRO](../illustrated/0-python/python-inheritance.html), [Dunder methods](../illustrated/0-python/python-dunder.html),
-  [Exceptions](../illustrated/0-python/python-exceptions.html), [with / context managers](../illustrated/0-python/python-context-managers.html).
+- 🎨 **[Illustrated explainers](https://thedocwho.github.io/ai-ml-roadmap/illustrated/index.html)** (interactive, offline) — a visual page for *every*
+  topic in this phase: [Java ↔ Python mindset](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-java-mindset.html),
+  [Names, objects & mutability](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-data-model.html) (Q5),
+  [Truthiness & min/max](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-truthiness.html) (Q3),
+  [Strings & slicing](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-strings.html), [list/tuple/set](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-collections.html),
+  [dict & hashing](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-dicts.html), [Comprehensions](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-comprehensions.html),
+  [zip & enumerate](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-zip-enumerate.html), [*args & **kwargs](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-args-kwargs.html),
+  [Generators & yield](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-generators.html), [Classes & namespaces](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-oop.html),
+  [Inheritance & MRO](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-inheritance.html), [Dunder methods](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-dunder.html),
+  [Exceptions](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-exceptions.html), [with / context managers](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-context-managers.html).
   Each pairs with a 🔗 visual companion ([Python Tutor](https://pythontutor.com/) steps through real execution).
 
 ---
@@ -34,10 +34,10 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 1 | Install Python 3.12+, venv, pip, run scripts | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#1 Install and Setup** + [Real Python — "Python Virtual Environments: A Primer"](https://realpython.com/python-virtual-environments-a-primer/) | 30m |
-| 2 | Java→Python mindset (dynamic typing, indentation, no `;`) | [Official Tutorial (3.12+)](https://docs.python.org/3/tutorial/introduction.html) — **"An Informal Introduction to Python"** · 🎨 [Visualize: Java ↔ Python](../illustrated/0-python/python-java-mindset.html) | 20m |
-| 3 | Strings (f-strings, slicing) & numbers | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#2 Strings** + **#3 Integers and Floats** · 🎨 [Visualize: slicing & f-strings](../illustrated/0-python/python-strings.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 40m |
-| 4 | **Mutability vs immutability** (exam Q5) | [Real Python — "Python's Mutable vs Immutable Types"](https://realpython.com/python-mutable-vs-immutable-types/) · 🎨 [Visualize](../illustrated/0-python/python-data-model.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 25m |
-| 5 | Truthiness & `min/max/bool` (exam Q3) | [Real Python — "Python Booleans"](https://realpython.com/python-boolean/) + run the exam Q3 snippet · 🎨 [Visualize](../illustrated/0-python/python-truthiness.html) | 20m |
+| 2 | Java→Python mindset (dynamic typing, indentation, no `;`) | [Official Tutorial (3.12+)](https://docs.python.org/3/tutorial/introduction.html) — **"An Informal Introduction to Python"** · 🎨 [Visualize: Java ↔ Python](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-java-mindset.html) | 20m |
+| 3 | Strings (f-strings, slicing) & numbers | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#2 Strings** + **#3 Integers and Floats** · 🎨 [Visualize: slicing & f-strings](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-strings.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 40m |
+| 4 | **Mutability vs immutability** (exam Q5) | [Real Python — "Python's Mutable vs Immutable Types"](https://realpython.com/python-mutable-vs-immutable-types/) · 🎨 [Visualize](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-data-model.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 25m |
+| 5 | Truthiness & `min/max/bool` (exam Q3) | [Real Python — "Python Booleans"](https://realpython.com/python-boolean/) + run the exam Q3 snippet · 🎨 [Visualize](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-truthiness.html) | 20m |
 
 **✅ Checkpoint 0A** — 🖥️ Local REPL, no notes — one item per topic:
 - **(T1)** Create & activate a venv, `pip install numpy`, run a script that prints `numpy.__version__`.
@@ -52,12 +52,12 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 6 | list / tuple / set | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#4 Lists, Tuples, and Sets** · 🎨 [Visualize: list/tuple/set](../illustrated/0-python/python-collections.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 30m |
-| 7 | dict (the workhorse) | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#5 Dictionaries** · 🎨 [Visualize: hashing](../illustrated/0-python/python-dicts.html) · 🔗 [VisuAlgo: Hash Table](https://visualgo.net/en/hashtable) | 20m |
-| 8 | Comprehensions (list/dict/set) | [Corey Schafer — "Python Tutorial: Comprehensions"](https://www.youtube.com/@coreyms/search?query=comprehensions) · 🎨 [Visualize](../illustrated/0-python/python-comprehensions.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
-| 9 | `enumerate`, `zip`, unpacking | [Corey Schafer — "Python Tutorial: Zip"](https://www.youtube.com/@coreyms/search?query=zip) + [Real Python — "enumerate()"](https://realpython.com/python-enumerate/) · 🎨 [Visualize: zip & enumerate](../illustrated/0-python/python-zip-enumerate.html) | 20m |
-| 10 | `*args` / `**kwargs`, default args | [Corey Schafer — "Python Tutorial: *args and **kwargs"](https://www.youtube.com/@coreyms/search?query=args%20kwargs) · 🎨 [Visualize: argument binding](../illustrated/0-python/python-args-kwargs.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
-| 11 | Generators & `yield` | [Corey Schafer — "Python Tutorial: Generators"](https://www.youtube.com/@coreyms/search?query=generators) · 🎨 [Visualize: yield & laziness](../illustrated/0-python/python-generators.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
+| 6 | list / tuple / set | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#4 Lists, Tuples, and Sets** · 🎨 [Visualize: list/tuple/set](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-collections.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 30m |
+| 7 | dict (the workhorse) | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#5 Dictionaries** · 🎨 [Visualize: hashing](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-dicts.html) · 🔗 [VisuAlgo: Hash Table](https://visualgo.net/en/hashtable) | 20m |
+| 8 | Comprehensions (list/dict/set) | [Corey Schafer — "Python Tutorial: Comprehensions"](https://www.youtube.com/@coreyms/search?query=comprehensions) · 🎨 [Visualize](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-comprehensions.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
+| 9 | `enumerate`, `zip`, unpacking | [Corey Schafer — "Python Tutorial: Zip"](https://www.youtube.com/@coreyms/search?query=zip) + [Real Python — "enumerate()"](https://realpython.com/python-enumerate/) · 🎨 [Visualize: zip & enumerate](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-zip-enumerate.html) | 20m |
+| 10 | `*args` / `**kwargs`, default args | [Corey Schafer — "Python Tutorial: *args and **kwargs"](https://www.youtube.com/@coreyms/search?query=args%20kwargs) · 🎨 [Visualize: argument binding](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-args-kwargs.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
+| 11 | Generators & `yield` | [Corey Schafer — "Python Tutorial: Generators"](https://www.youtube.com/@coreyms/search?query=generators) · 🎨 [Visualize: yield & laziness](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-generators.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
 
 **✅ Checkpoint 0B** — 🖥️ Local — one item per topic:
 - **(T6)** From `[1,1,2,3]` make a `list`, `tuple`, `set`; show the set de-dupes; say when you'd use each.
@@ -73,12 +73,12 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
-| 12 | Classes & instances | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#1 Classes and Instances** · 🎨 [Visualize: objects & namespaces](../illustrated/0-python/python-oop.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
-| 13 | Class vs instance variables | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#2 Class Variables** · 🎨 [Visualize: instance vs class vars](../illustrated/0-python/python-oop.html) | 12m |
-| 14 | `classmethod` / `staticmethod` | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#3 classmethods and staticmethods** · 🎨 [Visualize: method types](../illustrated/0-python/python-oop.html) | 15m |
-| 15 | Inheritance (vs Java `extends`) | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#4 Inheritance** · 🎨 [Visualize: MRO & super()](../illustrated/0-python/python-inheritance.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 20m |
-| 16 | **Dunder/magic methods** (`__init__`, `__repr__`, `__eq__`) | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#5 Special (Magic/Dunder) Methods** · 🎨 [Visualize: operator dispatch](../illustrated/0-python/python-dunder.html) | 18m |
-| 17 | `@property` (vs Java getters/setters) | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#6 Property Decorators** · 🎨 [Visualize: @property](../illustrated/0-python/python-oop.html) | 12m |
+| 12 | Classes & instances | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#1 Classes and Instances** · 🎨 [Visualize: objects & namespaces](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-oop.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 15m |
+| 13 | Class vs instance variables | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#2 Class Variables** · 🎨 [Visualize: instance vs class vars](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-oop.html) | 12m |
+| 14 | `classmethod` / `staticmethod` | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#3 classmethods and staticmethods** · 🎨 [Visualize: method types](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-oop.html) | 15m |
+| 15 | Inheritance (vs Java `extends`) | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#4 Inheritance** · 🎨 [Visualize: MRO & super()](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-inheritance.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 20m |
+| 16 | **Dunder/magic methods** (`__init__`, `__repr__`, `__eq__`) | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#5 Special (Magic/Dunder) Methods** · 🎨 [Visualize: operator dispatch](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-dunder.html) | 18m |
+| 17 | `@property` (vs Java getters/setters) | [Corey Schafer OOP](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) — **#6 Property Decorators** · 🎨 [Visualize: @property](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-oop.html) | 12m |
 | 18 | `dataclasses` (concise model classes) | [Real Python — "Data Classes in Python 3.7+ (Guide)"](https://realpython.com/python-data-classes/) | 25m |
 | 19 | Duck typing & EAFP vs LBYL | [Real Python — "Duck Typing in Python"](https://realpython.com/duck-typing-python/) | 15m |
 
@@ -99,8 +99,8 @@ docs (the links below auto-point to current). Concepts are stable, but use moder
 | # | Topic | Open exactly this | ~Time |
 |---|-------|-------------------|-------|
 | 20 | Modules, packages, imports | [Corey Schafer Beginners](https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7) — **#9 import Modules** · 📖 [Real Python: Modules & Packages](https://realpython.com/python-modules-packages/) | 20m |
-| 21 | Exceptions (`try/except/finally`, custom) | [Corey Schafer — "Using Try/Except Blocks for Error Handling"](https://www.youtube.com/@coreyms/search?query=try%20except) · 🎨 [Visualize: try/except/finally](../illustrated/0-python/python-exceptions.html) | 20m |
-| 22 | File I/O + context managers (`with`) | [Corey Schafer — "File Objects - Reading and Writing to Files"](https://www.youtube.com/@coreyms/search?query=file%20objects) · 🎨 [Visualize: with & __exit__](../illustrated/0-python/python-context-managers.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 18m |
+| 21 | Exceptions (`try/except/finally`, custom) | [Corey Schafer — "Using Try/Except Blocks for Error Handling"](https://www.youtube.com/@coreyms/search?query=try%20except) · 🎨 [Visualize: try/except/finally](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-exceptions.html) | 20m |
+| 22 | File I/O + context managers (`with`) | [Corey Schafer — "File Objects - Reading and Writing to Files"](https://www.youtube.com/@coreyms/search?query=file%20objects) · 🎨 [Visualize: with & __exit__](https://thedocwho.github.io/ai-ml-roadmap/illustrated/0-python/python-context-managers.html) · 🔗 [Python Tutor](https://pythontutor.com/) | 18m |
 | 23 | Standard library you'll use (`collections`, `itertools`, `pathlib`) | [Official docs (3.12+) — "The Python Standard Library"](https://docs.python.org/3/library/index.html) (skim `collections`, `itertools`, `pathlib`) | 30m |
 | 24 | `pytest` basics (needed for the challenges) | [Real Python — "Effective Python Testing With Pytest"](https://realpython.com/pytest-python-testing/) (first half) | 30m |
 | 25 | DSA in Python (map your Java knowledge) | [NeetCode roadmap](https://neetcode.io) — do 5 Easy problems in Python | 2–3h |

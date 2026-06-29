@@ -164,7 +164,7 @@ into a full design package.
 The phases below are the **overview**. For each phase there's a companion guide in
 [`phases/`](phases/README.md) that breaks the phase into **specific topics**, maps **each topic to
 the exact video/chapter/article** that covers it (so a course's own flow can't derail you), and adds
-**🎨 Visual learners:** there's also an [`illustrated/`](illustrated/index.html) section — interactive,
+**🎨 Visual learners:** there's also an [`illustrated/`](https://thedocwho.github.io/ai-ml-roadmap/illustrated/index.html) section — interactive,
 offline explainers (RAG, agents, vector search, embeddings…) plus curated links to the best existing
 ones (Illustrated Transformer, CNN Explainer, MLU-Explain, R2D3, Setosa…).
 
